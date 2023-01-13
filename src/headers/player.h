@@ -1,26 +1,31 @@
 #pragma once
 
+#include "animation.h"
 #include "attack.h"
 #include "raylib.h"
 #include <vector>
 
-enum Animation {
-  IDLE,
-  ATTACK,
-};
-
 class Player {
 private:
   Animation currentAnimation;
-  int health;
-  int energy;
+
+  int maxHealth;
+  int currentHealth;
+
+  int maxEnergy;
+  int currentEnergy;
+
+  int speed;
+
   std::vector<Attack> attacks;
 
 public:
-  void draw(Rectangle pos);
-  void update();
+  Player(int health, int energy);
 
   void addAttack(Attack a);
 
-  Player(int health, int energy);
+  void performAttack(Attack *attack);
+
+  void draw(Rectangle pos);
+  void update();
 };

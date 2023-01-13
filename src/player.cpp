@@ -4,8 +4,8 @@
 #include <vector>
 
 Player::Player(int health, int energy) {
-  this->health = health;
-  this->energy = energy;
+  this->maxHealth = health;
+  this->maxEnergy = energy;
   this->attacks = std::vector<Attack>();
 }
 

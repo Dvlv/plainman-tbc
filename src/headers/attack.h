@@ -20,5 +20,6 @@ public:
   int damage;
   int animationFrames; // TODO better type
 
+  // TODO energy cost
   Attack(std::string name, AttackType atkType, int damage);
 };
