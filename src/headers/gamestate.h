@@ -11,6 +11,7 @@ private:
   Player *player;
   std::vector<Attack> allAttacks;
   std::vector<Enemy> enemies;
+  PlayerAttackMenu *playerAtkMenu;
 
 public:
   GameState();

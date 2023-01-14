@@ -2,12 +2,14 @@
 #include "headers/attack.h"
 #include "headers/enemy.h"
 #include "headers/player.h"
+#include "headers/ui.h"
 #include "raylib.h"
 #include <vector>
 
 // TODO make this constructor
 GameState::GameState() {
   this->player = new Player(10, 5);
+  this->playerAtkMenu = new PlayerAttackMenu(this->player);
 
   // TODO read these from a resource file
   Attack atkPunch = Attack("Punch", AttackType::PUNCH, 1);
@@ -25,7 +27,13 @@ GameState::GameState() {
   this->enemies = std::vector<Enemy>{turtle};
 }
 
-void GameState::update() {}
+void GameState::update() {
+  if (IsKeyPressed(KEY_RIGHT)) {
+    this->playerAtkMenu->changeHighlighted(1);
+  } else if (IsKeyPressed(KEY_LEFT)) {
+    this->playerAtkMenu->changeHighlighted(-1);
+  }
+}
 
 void GameState::draw() {
   // TODO calculate positions for player and enemy
@@ -41,4 +49,5 @@ void GameState::draw() {
   // TODO state, player or enemy turn etc.
 
   // drawPlayerAttackMenu
+  drawPlayerAttackMenu(this->playerAtkMenu);
 }

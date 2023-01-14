@@ -26,6 +26,8 @@ public:
 
   void performAttack(Attack *attack);
 
+  std::vector<Attack> *getAttacks();
+
   void draw(Rectangle pos);
   void update();
 };

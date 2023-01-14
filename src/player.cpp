@@ -9,6 +9,8 @@ Player::Player(int health, int energy) {
   this->attacks = std::vector<Attack>();
 }
 
+std::vector<Attack> *Player::getAttacks() { return &this->attacks; }
+
 void Player::addAttack(Attack a) { this->attacks.push_back(a); }
 
 void Player::draw(Rectangle pos) { DrawRectangleRec(pos, RAYWHITE); }
