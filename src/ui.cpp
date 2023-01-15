@@ -8,6 +8,7 @@
 PlayerAttackMenu::PlayerAttackMenu(Player *player) {
   this->player = player;
   this->highlightedOption = 0;
+  this->attackSelected = false;
 }
 
 void PlayerAttackMenu::changeHighlighted(int dir) {
@@ -23,6 +24,8 @@ void PlayerAttackMenu::changeHighlighted(int dir) {
 
 int PlayerAttackMenu::getHighlightedAttack() { return this->highlightedOption; }
 
+void PlayerAttackMenu::selectAttack() { this->attackSelected = true; }
+
 std::vector<Attack> *PlayerAttackMenu::getPlayerAttacks() {
   return this->player->getAttacks();
 }
@@ -31,11 +34,12 @@ void drawArrowOverEnemy(Rectangle pos) {
   const int indicatorHeight = 30;
   const int gap = 15;
 
-  Vector2 topLeft = Vector2{pos.x, pos.y - indicatorHeight - gap};
-  Vector2 topRight = Vector2{pos.x + pos.width, pos.y - indicatorHeight - gap};
+  Vector2 topLeft = Vector2{pos.x + gap, pos.y - indicatorHeight - gap};
+  Vector2 topRight =
+      Vector2{pos.x + pos.width - gap, pos.y - indicatorHeight - gap};
   Vector2 bottom = Vector2{pos.x + (pos.width / 2), pos.y - gap};
 
-  DrawTriangle(topLeft, topRight, bottom, DARKGRAY);
+  DrawTriangle(topRight, topLeft, bottom, DARKGRAY);
 }
 
 void drawPlayerAttackMenu(PlayerAttackMenu *pam) {
@@ -57,8 +61,9 @@ void drawPlayerAttackMenu(PlayerAttackMenu *pam) {
     int textWidth = MeasureText(atk.name.c_str(), 20);
 
     if (idx == pam->getHighlightedAttack()) {
+      Color boxClr = pam->attackSelected ? RED : DARKGRAY;
       DrawRectangleLines(nextTextPosX - 5, nextTextPosY - 5, textWidth + 10, 30,
-                         DARKGRAY);
+                         boxClr);
     }
 
     nextTextPosX += textWidth + gap;

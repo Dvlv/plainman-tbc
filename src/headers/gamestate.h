@@ -9,9 +9,16 @@
 class GameState {
 private:
   Player *player;
+
+  PlayerAttackMenu *playerAtkMenu;
+
+  int selectedEnemy;
+  bool performingAttack;
+  bool animationsPlaying;
+
   std::vector<Attack> allAttacks;
   std::vector<Enemy> enemies;
-  PlayerAttackMenu *playerAtkMenu;
+  std::vector<Rectangle> enemyPositions;
 
 public:
   GameState();

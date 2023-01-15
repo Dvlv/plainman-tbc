@@ -11,8 +11,10 @@ private:
   int highlightedOption;
 
 public:
+  bool attackSelected;
   PlayerAttackMenu(Player *player);
   void changeHighlighted(int dir);
+  void selectAttack();
   int getHighlightedAttack();
   std::vector<Attack> *getPlayerAttacks();
 };

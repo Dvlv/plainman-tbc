@@ -8,6 +8,7 @@
 class Player {
 private:
   Animation currentAnimation;
+  Animation previousAnimation;
 
   int maxHealth;
   int currentHealth;
@@ -24,7 +25,7 @@ public:
 
   void addAttack(Attack a);
 
-  void performAttack(Attack *attack);
+  void performAttack(Attack *attack, bool *animationStillPlaying);
 
   std::vector<Attack> *getAttacks();
 
