@@ -10,8 +10,9 @@ GameState::GameState() {
   // state management
   this->selectedEnemy = 0;
   this->performingAttack = false;
+  this->isPlayerTurn = true;
 
-  this->player = new Player(10, 5);
+  this->player = new Player(Rectangle{350, 350, 100, 100}, 10, 5);
   this->playerAtkMenu = new PlayerAttackMenu(this->player);
 
   this->enemyPositions = std::vector<Rectangle>{Rectangle{750, 350, 100, 100},
@@ -28,18 +29,27 @@ GameState::GameState() {
 
   // TODO read these from a level file, or random gen
   std::vector<Attack> enAtks{atkKick, atkShout};
-  Enemy turtle = Enemy("Turtle", 5, 1, 1, enAtks);
-  Enemy turtle2 = Enemy("Turtle", 5, 1, 1, enAtks);
+  Enemy turtle = Enemy("Turtle", 1, 1, 1, enAtks);
+  Enemy turtle2 = Enemy("Turtle", 1, 1, 1, enAtks);
 
   this->enemies = std::vector<Enemy>{turtle, turtle2};
 }
 
-void GameState::update() {
+void GameState::updatePlayerTurn() {
+  // Player Performing Attack
   if (this->performingAttack) {
-    if (this->animationsPlaying) {
+    if (this->animationPlaying) {
       // No logic, wait for animations to draw
       return;
     }
+
+    Attack *selectedAttack = &this->player->getAttacks()->at(
+        this->playerAtkMenu->getHighlightedAttack());
+
+    this->enemies[this->selectedEnemy].takeDamage(selectedAttack->damage);
+
+    this->performingAttack = false;
+    this->isPlayerTurn = false;
   }
 
   // select attack
@@ -57,7 +67,9 @@ void GameState::update() {
   } else {
     // select enemy or change attack
     if (IsKeyPressed(KEY_BACKSPACE)) {
+      // change attack
       this->playerAtkMenu->attackSelected = false;
+
     } else if (IsKeyPressed(KEY_RIGHT)) {
       this->selectedEnemy += 1;
 
@@ -75,23 +87,37 @@ void GameState::update() {
     } else if (IsKeyPressed(KEY_ENTER)) {
       // choose enemy and perform attack
       this->performingAttack = true;
-      // TODO tell player to play atk animation
       int selectedAttackIdx = this->playerAtkMenu->getHighlightedAttack();
       Attack *selectedAttack =
           &this->player->getAttacks()->at(selectedAttackIdx);
 
-      this->animationsPlaying = true;
-      this->player->performAttack(selectedAttack, &this->animationsPlaying);
-      // TODO swap state to "enemy turn"
+      Rectangle selectedEnemyBounds = this->enemyPositions[this->selectedEnemy];
+
+      this->animationPlaying = true;
+      this->player->performAttack(selectedAttack, selectedEnemyBounds,
+                                  &this->animationPlaying);
+    }
+  }
+}
+
+void GameState::updateEnemyTurn() {}
+
+void GameState::update() {
+  if (this->isPlayerTurn) {
+    updatePlayerTurn();
+    this->player->update();
+  } else {
+    updateEnemyTurn();
+
+    for (auto &e : this->enemies) {
+      e.update();
     }
   }
 }
 
 void GameState::draw() {
   // TODO calculate positions for player and enemy
-  Rectangle playerPos = Rectangle{350, 350, 100, 100};
-
-  this->player->draw(playerPos);
+  this->player->draw();
 
   int idx = 0;
   for (auto &e : this->enemies) {
@@ -111,8 +137,6 @@ void GameState::draw() {
 
     idx++;
   }
-
-  // TODO state, player or enemy turn etc.
 
   drawPlayerAttackMenu(this->playerAtkMenu);
 }

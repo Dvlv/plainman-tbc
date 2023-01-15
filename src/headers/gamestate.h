@@ -14,7 +14,8 @@ private:
 
   int selectedEnemy;
   bool performingAttack;
-  bool animationsPlaying;
+  bool animationPlaying;
+  bool isPlayerTurn;
 
   std::vector<Attack> allAttacks;
   std::vector<Enemy> enemies;
@@ -22,6 +23,10 @@ private:
 
 public:
   GameState();
+
+  void updatePlayerTurn();
+  void updateEnemyTurn();
+
   void update();
   void draw();
 };
