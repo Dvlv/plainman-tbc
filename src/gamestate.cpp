@@ -7,10 +7,10 @@
 #include <vector>
 
 GameState::GameState() {
-  // state management
   this->selectedEnemy = 0;
   this->performingAttack = false;
   this->isPlayerTurn = true;
+  this->currentlyAttackingEnemy = -1; // this gets ++'d to 0 on updateEnemyTurn
 
   this->player = new Player(Rectangle{350, 350, 100, 100}, 10, 5);
   this->playerAtkMenu = new PlayerAttackMenu(this->player);
@@ -29,8 +29,8 @@ GameState::GameState() {
 
   // TODO read these from a level file, or random gen
   std::vector<Attack> enAtks{atkKick, atkShout};
-  Enemy turtle = Enemy("Turtle", 1, 1, 1, enAtks);
-  Enemy turtle2 = Enemy("Turtle", 1, 1, 1, enAtks);
+  Enemy turtle = Enemy(this->enemyPositions[0], "Turtle", 2, 1, 1, enAtks);
+  Enemy turtle2 = Enemy(this->enemyPositions[1], "Turtle", 3, 1, 1, enAtks);
 
   this->enemies = std::vector<Enemy>{turtle, turtle2};
 }
@@ -50,6 +50,7 @@ void GameState::updatePlayerTurn() {
 
     this->performingAttack = false;
     this->isPlayerTurn = false;
+    this->playerAtkMenu->attackSelected = false;
   }
 
   // select attack
@@ -100,7 +101,41 @@ void GameState::updatePlayerTurn() {
   }
 }
 
-void GameState::updateEnemyTurn() {}
+void GameState::updateEnemyTurn() {
+  if (this->isEnemyAttacking) {
+    if (this->animationPlaying) {
+      // no logic, wait for animation to play
+      return;
+    } else {
+      // enemy attack animation is done, perform damage calcs and finish turn
+      // TODO this and the player one both fetch twice
+      Enemy *attackingEnemy = &this->enemies[this->currentlyAttackingEnemy];
+      Attack *bestAtk = attackingEnemy->selectBestAttack();
+      this->player->takeDamage(bestAtk->damage);
+      this->isEnemyAttacking = false;
+    }
+  } else {
+    // next enemy attacks, or if last enemy, back to player's turn
+    this->currentlyAttackingEnemy++;
+
+    if (this->currentlyAttackingEnemy >= this->enemies.size()) {
+      // last enemy, player's turn
+      this->currentlyAttackingEnemy = -1;
+      this->isPlayerTurn = true;
+
+      return;
+    }
+
+    // enemy chooses attack and performs animation
+    this->isEnemyAttacking = true;
+    this->animationPlaying = true;
+
+    Enemy *attackingEnemy = &this->enemies[this->currentlyAttackingEnemy];
+    Attack *bestAtk = attackingEnemy->selectBestAttack();
+    attackingEnemy->performAttack(bestAtk, this->player->pos,
+                                  &this->animationPlaying);
+  }
+}
 
 void GameState::update() {
   if (this->isPlayerTurn) {
@@ -108,6 +143,19 @@ void GameState::update() {
     this->player->update();
   } else {
     updateEnemyTurn();
+
+    // delete marked enemies
+    std::vector<int> markedEnemies;
+
+    for (int i = 0; i < this->enemies.size(); i++) {
+      if (this->enemies[i].canBeDeleted) {
+        markedEnemies.push_back(i);
+      }
+    }
+
+    for (int i = 0; i < markedEnemies.size(); i++) {
+      this->enemies.erase(this->enemies.begin() + markedEnemies[i]);
+    }
 
     for (auto &e : this->enemies) {
       e.update();
@@ -126,12 +174,12 @@ void GameState::draw() {
       break;
     }
 
-    e.draw(this->enemyPositions[idx]);
+    e.draw();
 
     // if player selecting enemy to attack, draw arrow
     if (this->playerAtkMenu->attackSelected) {
       if (idx == this->selectedEnemy) {
-        drawArrowOverEnemy(this->enemyPositions[idx]);
+        drawArrowOverEnemy(this->enemies[idx].pos);
       }
     }
 

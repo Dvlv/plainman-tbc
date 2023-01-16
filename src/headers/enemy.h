@@ -22,14 +22,20 @@ private:
 
   int speed;
 
-  bool canBeDeleted;
-
 public:
-  Enemy(std::string name, int health, int energy, int speed,
+  Enemy(Rectangle pos, std::string name, int health, int energy, int speed,
         std::vector<Attack> attacks);
-  void draw(Rectangle pos);
-  void update();
-  void performAttack(Attack *attack);
-  void takeDamage(int dmg);
   bool isDead();
+  bool canBeDeleted;
+  Rectangle pos;
+
+  void drawHealthBar();
+  void draw();
+
+  void performAttack(Attack *atk, Rectangle targetBounds,
+                     bool *animationPlaying);
+  Attack *selectBestAttack();
+  void takeDamage(int dmg);
+
+  void update();
 };

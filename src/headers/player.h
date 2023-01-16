@@ -10,8 +10,6 @@ private:
   Animation currentAnimation;
   Animation previousAnimation;
 
-  Rectangle pos;
-
   int maxHealth;
   int currentHealth;
 
@@ -25,10 +23,12 @@ private:
 public:
   Player(Rectangle pos, int health, int energy);
 
+  Rectangle pos;
+
   void addAttack(Attack a);
 
   void performAttack(Attack *attack, Rectangle targetBounds,
-                     bool *animationStillPlaying);
+                     bool *animationPlaying);
 
   std::vector<Attack> *getAttacks();
 

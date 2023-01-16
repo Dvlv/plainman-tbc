@@ -17,6 +17,9 @@ private:
   bool animationPlaying;
   bool isPlayerTurn;
 
+  int currentlyAttackingEnemy;
+  bool isEnemyAttacking;
+
   std::vector<Attack> allAttacks;
   std::vector<Enemy> enemies;
   std::vector<Rectangle> enemyPositions;
