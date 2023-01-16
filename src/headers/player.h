@@ -34,6 +34,8 @@ public:
 
   void takeDamage(int dmg);
 
+  void drawHealthBar();
+
   void draw();
   void update();
 };
