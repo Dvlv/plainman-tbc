@@ -22,6 +22,13 @@ private:
 
   int speed;
 
+  Attack *currentAttack;
+
+  Rectangle attackTarget;
+  Rectangle startingPos;
+  bool *animationPlaying;
+  MeleeAnimationState meleeAnimationState;
+
 public:
   Enemy(Rectangle pos, std::string name, int health, int energy, int speed,
         std::vector<Attack> attacks);

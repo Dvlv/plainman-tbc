@@ -5,19 +5,12 @@
 #include "raylib.h"
 #include <vector>
 
-enum MeleeAnimationState {
-  FORWARD,
-  ATTACKING,
-  BACKWARD,
-};
-
 class Player {
 private:
   Animation currentAnimation;
   Animation previousAnimation;
 
   int maxHealth;
-  int currentHealth;
 
   int maxEnergy;
   int currentEnergy;
@@ -35,6 +28,7 @@ private:
 public:
   Player(Rectangle pos, int health, int energy);
 
+  int currentHealth;
   Rectangle pos;
 
   void addAttack(Attack a);

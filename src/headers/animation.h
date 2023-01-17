@@ -5,3 +5,9 @@ enum Animation {
   ATTACK,
   TAKE_DAMAGE,
 };
+
+enum MeleeAnimationState {
+  FORWARD,
+  ATTACKING,
+  BACKWARD,
+};

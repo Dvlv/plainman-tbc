@@ -1,12 +1,12 @@
 #include "raylib.h"
 
-#include "headers/gamestate.h"
+#include "headers/combatstate.h"
 
 void init();
 void update();
 void draw();
 
-GameState *gs = new GameState();
+CombatState *cs = new CombatState();
 
 int main() {
   init();
@@ -26,12 +26,21 @@ void draw() {
 
   ClearBackground(GREEN);
 
-  gs->draw();
+  cs->draw();
 
   EndDrawing();
 }
 
-void update() { gs->update(); }
+void update() {
+  if (!cs->shouldQuit) {
+    cs->update();
+  } else {
+    // new game state
+    // TODO go to map screen
+    delete cs;
+    cs = new CombatState();
+  }
+}
 
 void init() {
   SetTargetFPS(60);

@@ -1,7 +1,7 @@
 clang++ \
     src/main.cpp \
     src/player.cpp \
-    src/gamestate.cpp \
+    src/combatstate.cpp \
     src/ui.cpp \
     src/attack.cpp \
     src/enemy.cpp \
