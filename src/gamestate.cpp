@@ -92,7 +92,7 @@ void GameState::updatePlayerTurn() {
       Attack *selectedAttack =
           &this->player->getAttacks()->at(selectedAttackIdx);
 
-      Rectangle selectedEnemyBounds = this->enemyPositions[this->selectedEnemy];
+      Rectangle selectedEnemyBounds = this->enemies[this->selectedEnemy].pos;
 
       this->animationPlaying = true;
       this->player->performAttack(selectedAttack, selectedEnemyBounds,
@@ -102,6 +102,11 @@ void GameState::updatePlayerTurn() {
 }
 
 void GameState::updateEnemyTurn() {
+  // if all enemies are dead, return
+  if (this->enemies.size() == 0) {
+    return;
+  }
+
   if (this->isEnemyAttacking) {
     if (this->animationPlaying) {
       // no logic, wait for animation to play
@@ -153,8 +158,12 @@ void GameState::update() {
       }
     }
 
-    for (int i = 0; i < markedEnemies.size(); i++) {
-      this->enemies.erase(this->enemies.begin() + markedEnemies[i]);
+    // if marked enemies, remove selectedEnemy
+    if (markedEnemies.size() > 0) {
+      this->selectedEnemy = 0;
+      for (int i = 0; i < markedEnemies.size(); i++) {
+        this->enemies.erase(this->enemies.begin() + markedEnemies[i]);
+      }
     }
 
     for (auto &e : this->enemies) {
@@ -165,7 +174,11 @@ void GameState::update() {
 
 void GameState::draw() {
   // TODO calculate positions for player and enemy
-  this->player->draw();
+
+  // Draw player on bottom if enemy's turn
+  if (!this->isPlayerTurn) {
+    this->player->draw();
+  }
 
   int idx = 0;
   for (auto &e : this->enemies) {
@@ -186,5 +199,9 @@ void GameState::draw() {
     idx++;
   }
 
-  drawPlayerAttackMenu(this->playerAtkMenu);
+  // draw player on top if player's turn
+  if (this->isPlayerTurn) {
+    this->player->draw();
+    drawPlayerAttackMenu(this->playerAtkMenu);
+  }
 }

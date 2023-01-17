@@ -12,7 +12,9 @@ Player::Player(Rectangle pos, int health, int energy) {
   this->currentEnergy = energy;
   this->attacks = std::vector<Attack>();
   this->pos = pos;
+  this->startingPos = pos;
   this->currentAnimation = Animation::IDLE;
+  this->meleeAnimationState = MeleeAnimationState::FORWARD;
 }
 
 std::vector<Attack> *Player::getAttacks() { return &this->attacks; }
@@ -27,7 +29,10 @@ void Player::performAttack(Attack *atk, Rectangle targetBounds,
   this->currentAnimation = Animation::ATTACK;
   // TODO look up animation frames from vector
 
-  *animationPlaying = false;
+  //*animationPlaying = false;
+  this->animationPlaying = animationPlaying;
+  this->attackTarget = targetBounds;
+  this->currentAttack = atk;
 }
 
 void Player::takeDamage(int dmg) { this->currentHealth -= dmg; }
@@ -48,4 +53,34 @@ void Player::draw() {
 
 void Player::update() {
   // TODO logic for timing animation frames
+  // TODO attack class needs melee vs cast
+  // TODO movementSteps can overshoot, clamp to distance if <30
+  constexpr int movementSteps = 30;
+  if (this->currentAnimation == Animation::ATTACK &&
+      this->currentAttack->atkType == AttackType::PUNCH) {
+    if (this->meleeAnimationState == MeleeAnimationState::FORWARD) {
+      // move to enemy
+      if (this->pos.x < this->attackTarget.x) {
+        this->pos.x += movementSteps;
+      } else {
+        // reached enemy
+        // TODO play punch animation
+        this->meleeAnimationState = MeleeAnimationState::ATTACKING;
+      }
+    } else if (this->meleeAnimationState == MeleeAnimationState::ATTACKING) {
+      // TODO play animation
+      this->meleeAnimationState = MeleeAnimationState::BACKWARD;
+    } else {
+      // move back to starting position
+      if (this->pos.x > this->startingPos.x) {
+        this->pos.x -= movementSteps;
+      } else {
+        // reached starting position
+        this->pos.x = this->startingPos.x;
+        this->meleeAnimationState = MeleeAnimationState::FORWARD;
+        this->currentAnimation = Animation::IDLE;
+        *this->animationPlaying = false;
+      }
+    }
+  }
 }

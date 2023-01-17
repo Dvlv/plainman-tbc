@@ -5,6 +5,12 @@
 #include "raylib.h"
 #include <vector>
 
+enum MeleeAnimationState {
+  FORWARD,
+  ATTACKING,
+  BACKWARD,
+};
+
 class Player {
 private:
   Animation currentAnimation;
@@ -19,6 +25,12 @@ private:
   int speed;
 
   std::vector<Attack> attacks;
+
+  Rectangle startingPos;
+  Attack *currentAttack;
+  Rectangle attackTarget;
+  bool *animationPlaying;
+  MeleeAnimationState meleeAnimationState;
 
 public:
   Player(Rectangle pos, int health, int energy);
