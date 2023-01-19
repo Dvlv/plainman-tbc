@@ -45,4 +45,6 @@ public:
   void takeDamage(int dmg);
 
   void update();
+
+  virtual ~Enemy() = default;
 };

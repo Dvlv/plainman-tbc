@@ -23,12 +23,25 @@ void Enemy::takeDamage(int dmg) { this->currentHealth -= dmg; }
 bool Enemy::isDead() { return this->currentHealth < 1; }
 
 void Enemy::drawHealthBar() {
+  constexpr int barWidth = 100;
+  constexpr int barHeight = 20;
+  constexpr int healthFontSize = 20;
+
   int hp_percent =
       ((float)this->currentHealth / (float)this->maxHealth) * 100.0f;
 
-  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, 100, 10, RED);
+  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, barWidth, barHeight, RED);
 
-  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, hp_percent, 10, BLUE);
+  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, hp_percent, barHeight,
+                DARKGREEN);
+
+  std::string healthText = std::to_string(this->currentHealth) + "/" +
+                           std::to_string(this->maxHealth);
+
+  int textWidth = MeasureText(healthText.c_str(), healthFontSize);
+
+  DrawText(healthText.c_str(), this->pos.x + (barWidth / 2) - (textWidth / 2),
+           this->pos.y + 100 + 30, healthFontSize, WHITE);
 }
 
 void Enemy::performAttack(Attack *atk, Rectangle targetBounds,

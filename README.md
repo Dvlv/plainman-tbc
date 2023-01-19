@@ -1,8 +1,9 @@
 # PlainMan - Endless Turn-Based Combat Game
 
 ## TODO
+- [ ] Menu disappear when attacking
 - [ ] Damage Numbers on attack
-- [ ] Numbers in HP Bar
+- [x] Numbers in HP Bar
 - [ ] Show description of Attack in PlayerAttackMenu
 - [ ] Show description of enemy in PlayerAttackMenu
 
@@ -21,3 +22,11 @@
     - [ ] Take Dmg
 - [ ] Enemy Animation Logic
 - [ ] Ability to read Combat rounds from a file, or randomly generate them?
+
+- [ ] More enemy classes
+- [ ] Enemy immunities
+- [ ] Cast animations for enemy
+
+
+### QoL
+- [ ] Easing animations

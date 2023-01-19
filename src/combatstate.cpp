@@ -2,6 +2,7 @@
 #include "headers/attack.h"
 #include "headers/enemy.h"
 #include "headers/player.h"
+#include "headers/turtle.h"
 #include "headers/ui.h"
 #include "raylib.h"
 #include <vector>
@@ -31,9 +32,8 @@ CombatState::CombatState() {
   player->addAttack(atkShout);
 
   // TODO read these from a level file, or random gen
-  std::vector<Attack> enAtks{atkKick, atkShout};
-  Enemy turtle = Enemy(this->enemyPositions[0], "Turtle", 2, 1, 1, enAtks);
-  Enemy turtle2 = Enemy(this->enemyPositions[1], "Turtle", 3, 1, 1, enAtks);
+  Enemy turtle = Turtle(this->enemyPositions[0]);
+  Enemy turtle2 = Turtle(this->enemyPositions[1]);
 
   this->enemies = std::vector<Enemy>{turtle, turtle2};
 }

@@ -38,12 +38,25 @@ void Player::performAttack(Attack *atk, Rectangle targetBounds,
 void Player::takeDamage(int dmg) { this->currentHealth -= dmg; }
 
 void Player::drawHealthBar() {
-  int hp_percent =
+  constexpr int barWidth = 100;
+  constexpr int barHeight = 20;
+  constexpr int healthFontSize = 20;
+
+  int hpPercent =
       ((float)this->currentHealth / (float)this->maxHealth) * 100.0f;
 
-  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, 100, 10, RED);
+  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, barWidth, barHeight, RED);
 
-  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, hp_percent, 10, BLUE);
+  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, hpPercent, barHeight,
+                DARKGREEN);
+
+  std::string healthText = std::to_string(this->currentHealth) + "/" +
+                           std::to_string(this->maxHealth);
+
+  int textWidth = MeasureText(healthText.c_str(), healthFontSize);
+
+  DrawText(healthText.c_str(), this->pos.x + (barWidth / 2) - (textWidth / 2),
+           this->pos.y + 100 + 30, healthFontSize, WHITE);
 }
 
 void Player::draw() {
@@ -57,7 +70,8 @@ void Player::update() {
   // TODO movementSteps can overshoot, clamp to distance if <30
   constexpr int movementSteps = 30;
   if (this->currentAnimation == Animation::ATTACK &&
-      this->currentAttack->atkType == AttackType::PUNCH) {
+      (this->currentAttack->atkType == AttackType::PUNCH ||
+       this->currentAttack->atkType == AttackType::KICK)) {
     if (this->meleeAnimationState == MeleeAnimationState::FORWARD) {
       // move to enemy
       if (this->pos.x < this->attackTarget.x) {
@@ -81,6 +95,12 @@ void Player::update() {
         this->currentAnimation = Animation::IDLE;
         *this->animationPlaying = false;
       }
+    }
+  } else {
+    if (this->currentAnimation == Animation::ATTACK) {
+      // TODO play cast animation
+      this->currentAnimation = Animation::IDLE;
+      *this->animationPlaying = false;
     }
   }
 }

@@ -5,5 +5,6 @@ clang++ \
     src/ui.cpp \
     src/attack.cpp \
     src/enemy.cpp \
+    src/turtle.cpp \
     -o pm \
     -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
