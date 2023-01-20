@@ -20,8 +20,9 @@ public:
 };
 
 void drawArrowOverEnemy(Rectangle pos);
+void drawDamageHit(Rectangle pos, int dmg);
 
-void drawPlayerAttackMenu(PlayerAttackMenu *pam);
+void drawPlayerAttackMenu(PlayerAttackMenu *pam, Enemy *enemy = nullptr);
 
 void drawPlayerStats(Player *player);
 void drawEnemyStats(Enemy *enemy);

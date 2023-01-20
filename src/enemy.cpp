@@ -1,10 +1,11 @@
 #include "headers/enemy.h"
 #include <raylib.h>
 
-Enemy::Enemy(Rectangle pos, std::string name, int health, int energy, int speed,
-             std::vector<Attack> attacks) {
+Enemy::Enemy(Rectangle pos, std::string name, std::string description,
+             int health, int energy, int speed, std::vector<Attack> attacks) {
   this->pos = pos;
   this->name = name;
+  this->description = description;
   this->maxHealth = health;
   this->currentHealth = health;
   this->maxEnergy = energy;

@@ -1,5 +1,6 @@
 #include "headers/combatstate.h"
 #include "headers/attack.h"
+#include "headers/bird.h"
 #include "headers/enemy.h"
 #include "headers/player.h"
 #include "headers/turtle.h"
@@ -23,9 +24,9 @@ CombatState::CombatState() {
                                                 Rectangle{900, 350, 100, 100}};
 
   // TODO read these from a resource file
-  Attack atkPunch = Attack("Punch", AttackType::PUNCH, 1);
-  Attack atkKick = Attack("Kick", AttackType::KICK, 1);
-  Attack atkShout = Attack("Shout", AttackType::SHOUT, 1);
+  Attack atkPunch = Attack("Punch", "A plain punch", AttackType::PUNCH, 1);
+  Attack atkKick = Attack("Kick", "A plain kick", AttackType::KICK, 1);
+  Attack atkShout = Attack("Shout", "A plain shout", AttackType::SHOUT, 1);
 
   player->addAttack(atkPunch);
   player->addAttack(atkKick);
@@ -33,9 +34,9 @@ CombatState::CombatState() {
 
   // TODO read these from a level file, or random gen
   Enemy turtle = Turtle(this->enemyPositions[0]);
-  Enemy turtle2 = Turtle(this->enemyPositions[1]);
+  Enemy bird = Bird(this->enemyPositions[1]);
 
-  this->enemies = std::vector<Enemy>{turtle, turtle2};
+  this->enemies = std::vector<Enemy>{turtle, bird};
 }
 
 void CombatState::updatePlayerTurn() {
@@ -58,9 +59,9 @@ void CombatState::updatePlayerTurn() {
 
   // select attack
   if (!this->playerAtkMenu->attackSelected) {
-    if (IsKeyPressed(KEY_RIGHT)) {
+    if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_DOWN)) {
       this->playerAtkMenu->changeHighlighted(1);
-    } else if (IsKeyPressed(KEY_LEFT)) {
+    } else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_UP)) {
       this->playerAtkMenu->changeHighlighted(-1);
     }
 
@@ -224,6 +225,23 @@ void CombatState::draw() {
   // draw player on top if player's turn
   if (this->isPlayerTurn) {
     this->player->draw();
-    drawPlayerAttackMenu(this->playerAtkMenu);
+    // not performing attack, draw attack menu
+    if (!this->performingAttack && !this->animationPlaying) {
+      if (this->playerAtkMenu->attackSelected) {
+        drawPlayerAttackMenu(this->playerAtkMenu,
+                             &this->enemies.at(this->selectedEnemy));
+      } else {
+        drawPlayerAttackMenu(this->playerAtkMenu);
+      }
+    } else if (this->performingAttack && !this->animationPlaying) {
+      // damage just performed, draw in UI
+      Attack *selectedAttack = &this->player->getAttacks()->at(
+          this->playerAtkMenu->getHighlightedAttack());
+
+      // TODO this may need to be signalled by the player on their
+      // MeleeAnimationState::BACK movement
+      drawDamageHit(this->enemies.at(this->selectedEnemy).pos,
+                    selectedAttack->damage);
+    }
   }
 }

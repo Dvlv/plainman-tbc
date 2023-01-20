@@ -30,12 +30,13 @@ private:
   MeleeAnimationState meleeAnimationState;
 
 public:
-  Enemy(Rectangle pos, std::string name, int health, int energy, int speed,
-        std::vector<Attack> attacks);
-  bool isDead();
-  bool canBeDeleted;
+  Enemy(Rectangle pos, std::string name, std::string description, int health,
+        int energy, int speed, std::vector<Attack> attacks);
+  std::string description;
   Rectangle pos;
+  bool canBeDeleted;
 
+  bool isDead();
   void drawHealthBar();
   void draw();
 

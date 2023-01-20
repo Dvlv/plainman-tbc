@@ -1,11 +1,11 @@
 # PlainMan - Endless Turn-Based Combat Game
 
 ## TODO
-- [ ] Menu disappear when attacking
 - [ ] Damage Numbers on attack
+- [x] Menu disappear when attacking
 - [x] Numbers in HP Bar
-- [ ] Show description of Attack in PlayerAttackMenu
-- [ ] Show description of enemy in PlayerAttackMenu
+- [x] Show description of Attack in PlayerAttackMenu
+- [x] Show description of enemy in PlayerAttackMenu
 
 - [ ] Outer GameState object which holds data about the player and whether it's map or combat
     - [ ] Add new attacks to player
@@ -26,6 +26,8 @@
 - [ ] More enemy classes
 - [ ] Enemy immunities
 - [ ] Cast animations for enemy
+- [ ] Attacks costing Energy
+- [ ] Display Energy on UI
 
 
 ### QoL

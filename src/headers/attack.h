@@ -6,6 +6,10 @@ enum AttackType {
   PUNCH,
   KICK,
   SHOUT,
+};
+
+enum AttackElement {
+  NONE,
   ELECTRIC,
   FIRE,
   ICE,
@@ -17,9 +21,12 @@ class Attack {
 public:
   AttackType atkType;
   std::string name;
+  std::string description;
   int damage;
   int animationFrames; // TODO better type
+  AttackElement atkElement;
 
   // TODO energy cost
-  Attack(std::string name, AttackType atkType, int damage);
+  Attack(std::string name, std::string description, AttackType atkType,
+         int damage, AttackElement atkElement = AttackElement::NONE);
 };

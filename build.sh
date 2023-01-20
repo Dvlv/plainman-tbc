@@ -6,5 +6,6 @@ clang++ \
     src/attack.cpp \
     src/enemy.cpp \
     src/turtle.cpp \
+    src/bird.cpp \
     -o pm \
     -lraylib -lGL -lm -lpthread -ldl -lrt -lX11

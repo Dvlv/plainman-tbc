@@ -42,11 +42,16 @@ void drawArrowOverEnemy(Rectangle pos) {
   DrawTriangle(topRight, topLeft, bottom, DARKGRAY);
 }
 
-void drawPlayerAttackMenu(PlayerAttackMenu *pam) {
-  const int gap = 50;
+void drawPlayerAttackMenu(PlayerAttackMenu *pam, Enemy *enemy) {
+  const int gap = 15;
   const int topX = 100;
   const int topY = GetScreenHeight() - gap - 200;
   const int atkMenuWidth = GetScreenWidth() - (topX * 2);
+  const int textHeight = 20;
+
+  // description constants
+  const int descX = topX + (atkMenuWidth / 2);
+  const int descY = topY + textHeight;
 
   Rectangle pos = Rectangle{topX, (float)topY, (float)atkMenuWidth, 200};
   DrawRectangleRec(pos, BEIGE);
@@ -54,11 +59,13 @@ void drawPlayerAttackMenu(PlayerAttackMenu *pam) {
   int nextTextPosY = topY + gap;
   int nextTextPosX = topX + gap;
 
+  // Draw attack text
+  // TODO when this could overflow, move to a second column
   int idx = 0;
   for (Attack &atk : *pam->getPlayerAttacks()) {
-    DrawText(atk.name.c_str(), nextTextPosX, nextTextPosY, 20, BLACK);
+    DrawText(atk.name.c_str(), nextTextPosX, nextTextPosY, textHeight, BLACK);
 
-    int textWidth = MeasureText(atk.name.c_str(), 20);
+    int textWidth = MeasureText(atk.name.c_str(), textHeight);
 
     if (idx == pam->getHighlightedAttack()) {
       Color boxClr = pam->attackSelected ? RED : DARKGRAY;
@@ -66,10 +73,25 @@ void drawPlayerAttackMenu(PlayerAttackMenu *pam) {
                          boxClr);
     }
 
-    nextTextPosX += textWidth + gap;
+    nextTextPosY += textHeight + gap;
     idx++;
+  }
+
+  if (pam->attackSelected && enemy != nullptr) {
+    // Attack selected so show description of enemy being targeted
+    DrawText(enemy->description.c_str(), descX, descY, textHeight, BLACK);
+  } else {
+    // Draw description of move being hovered
+    DrawText(pam->getPlayerAttacks()
+                 ->at(pam->getHighlightedAttack())
+                 .description.c_str(),
+             descX, descY, textHeight, BLACK);
   }
 }
 
 void drawPlayerStats(Player *player) {}
 void drawEnemyStats(Enemy *enemy) {}
+
+void drawDamageHit(Rectangle pos, int dmg) {
+  // printf("Enemy at %d %d takes %d damage\n", (int)pos.x, (int)pos.y, dmg);
+}
