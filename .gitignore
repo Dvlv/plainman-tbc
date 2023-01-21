@@ -1,2 +1,4 @@
 sync.sh
 pm
+compile_commands.json
+.cache

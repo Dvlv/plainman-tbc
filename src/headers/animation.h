@@ -3,6 +3,8 @@
 enum Animation {
   IDLE,
   ATTACK,
+  MELEE_ATTACK,
+  CAST_ATTACK,
   TAKE_DAMAGE,
 };
 

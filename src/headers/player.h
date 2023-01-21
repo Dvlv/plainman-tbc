@@ -48,6 +48,8 @@ public:
 
   void drawHealthBar();
 
+  void updateCurrentTexture();
+
   void draw();
   void update();
 

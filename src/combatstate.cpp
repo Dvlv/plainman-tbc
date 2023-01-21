@@ -245,3 +245,8 @@ void CombatState::draw() {
     }
   }
 }
+
+CombatState::~CombatState() {
+  delete this->player;
+  delete this->playerAtkMenu;
+}
