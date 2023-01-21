@@ -11,21 +11,30 @@
     - [ ] Add new attacks to player
     - [ ] Add stats to player
     - [ ] Map state
-- [ ] Draw Player Animations
-    - [ ] Idle
-    - [ ] Attack / Walk?
-    - [ ] Take Dmg
+- [x] Draw Player Animations
+    - [x] Idle
+    - [x] Attack / Walk?
+    - [x] Cast
+    - [x] Take Dmg
 - [ ] Player Animation logic
+    - [x] Idle
+    - [x] Attack / Walk?
+    - [ ] Cast
+    - [ ] Take Dmg
 - [ ] Draw Enemy Animations
     - [ ] Idle
     - [ ] Attack / Walk?
+    - [ ] Cast
     - [ ] Take Dmg
 - [ ] Enemy Animation Logic
+    - [ ] Idle
+    - [ ] Attack / Walk?
+    - [ ] Cast
+    - [ ] Take Dmg
 - [ ] Ability to read Combat rounds from a file, or randomly generate them?
 
 - [ ] More enemy classes
 - [ ] Enemy immunities
-- [ ] Cast animations for enemy
 - [ ] Attacks costing Energy
 - [ ] Display Energy on UI
 

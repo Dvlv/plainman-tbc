@@ -182,7 +182,7 @@ void Player::updateCurrentTexture() {
       }
     } else {
       // moving fwd or bw, use walk anim
-      const int walkFrameSwap = 15; // 4FPS
+      const int walkFrameSwap = 4; // 4FPS
       const int walkFrameCount = 4;
 
       this->animationFrameCount += 1;
@@ -201,8 +201,6 @@ void Player::updateCurrentTexture() {
 
 Player::~Player() {
   for (auto t : this->textures) {
-    printf("unloading texture");
     UnloadTexture(t.second);
   }
-  printf("player destroyed\n");
 }
