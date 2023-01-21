@@ -3,6 +3,7 @@
 #include "headers/attack.h"
 #include "raylib.h"
 #include <cmath>
+#include <map>
 #include <vector>
 
 Player::Player(Rectangle pos, int health, int energy) {
@@ -15,6 +16,10 @@ Player::Player(Rectangle pos, int health, int energy) {
   this->startingPos = pos;
   this->currentAnimation = Animation::IDLE;
   this->meleeAnimationState = MeleeAnimationState::FORWARD;
+
+  this->animationFrameCount = 0;
+  this->currentanimationFrame = 0;
+  this->textures = std::map<Animation, Texture2D>();
 }
 
 std::vector<Attack> *Player::getAttacks() { return &this->attacks; }
@@ -60,7 +65,24 @@ void Player::drawHealthBar() {
 }
 
 void Player::draw() {
-  DrawRectangleRec(this->pos, RAYWHITE);
+  if (this->currentAnimation == Animation::IDLE) {
+    // for some reason it segfaults if I do this in the constructor
+    // this == 0 nonsense is the way to check if a map contains a val
+    if (this->textures.count(Animation::IDLE) == 0) {
+      this->textures[Animation::IDLE] =
+          LoadTexture("src/assets/art/combat/player/player-idle.png");
+
+      this->currentTexture = this->textures[Animation::IDLE];
+    }
+
+    Rectangle currentSpriteWindow =
+        Rectangle{64.0f * this->currentanimationFrame, 64, 64, 64};
+
+    DrawTextureRec(this->currentTexture, currentSpriteWindow,
+                   Vector2{this->pos.x, this->pos.y}, WHITE);
+  } else {
+    DrawRectangleRec(this->pos, RAYWHITE);
+  }
   drawHealthBar();
 }
 
@@ -68,6 +90,23 @@ void Player::update() {
   // TODO logic for timing animation frames
   // TODO attack class needs melee vs cast
   // TODO movementSteps can overshoot, clamp to distance if <30
+
+  if (this->currentAnimation == Animation::IDLE) {
+    const int idleFrameSwap = 10; // 6FPS
+    const int idleFrameCount = 2;
+
+    this->animationFrameCount += 1;
+    if (this->animationFrameCount >= idleFrameSwap) {
+      this->animationFrameCount = 0;
+
+      this->currentanimationFrame += 1;
+
+      if (this->currentanimationFrame > idleFrameCount) {
+        this->currentanimationFrame = 0;
+      }
+    }
+  }
+
   constexpr int movementSteps = 30;
   if (this->currentAnimation == Animation::ATTACK &&
       (this->currentAttack->atkType == AttackType::PUNCH ||
@@ -104,3 +143,5 @@ void Player::update() {
     }
   }
 }
+
+Player::~Player() { UnloadTexture(this->textures[Animation::IDLE]); }

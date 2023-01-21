@@ -3,6 +3,7 @@
 #include "animation.h"
 #include "attack.h"
 #include "raylib.h"
+#include <map>
 #include <vector>
 
 class Player {
@@ -25,6 +26,11 @@ private:
   bool *animationPlaying;
   MeleeAnimationState meleeAnimationState;
 
+  std::map<Animation, Texture2D> textures;
+  Texture2D currentTexture;
+  int animationFrameCount;
+  int currentanimationFrame;
+
 public:
   Player(Rectangle pos, int health, int energy);
 
@@ -44,4 +50,6 @@ public:
 
   void draw();
   void update();
+
+  ~Player();
 };
