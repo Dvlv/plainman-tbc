@@ -40,7 +40,12 @@ void Player::performAttack(Attack *atk, Rectangle targetBounds,
   this->currentAttack = atk;
 }
 
-void Player::takeDamage(int dmg) { this->currentHealth -= dmg; }
+void Player::takeDamage(int dmg) {
+  this->currentAnimation = Animation::TAKE_DAMAGE;
+  this->currentanimationFrame = 0;
+
+  this->currentHealth -= dmg;
+}
 
 void Player::drawHealthBar() {
   constexpr int barWidth = 100;
@@ -67,39 +72,18 @@ void Player::drawHealthBar() {
 void Player::draw() {
   const int spriteSize = 128;
 
-  if (this->currentAnimation == Animation::IDLE) {
-    // for some reason it segfaults if I do this in the constructor
-    // this == 0 nonsense is the way to check if a map contains a val
-    if (this->textures.count(Animation::IDLE) == 0) {
-      this->textures[Animation::IDLE] =
-          LoadTexture("src/assets/art/combat/player/player-idle.png");
-    }
-
-    this->currentTexture = this->textures[Animation::IDLE];
-
-  } else if (this->currentAnimation == Animation::ATTACK) {
-    if (this->textures.count(Animation::ATTACK) == 0) {
-      this->textures[Animation::ATTACK] =
-          LoadTexture("src/assets/art/combat/player/player-walk.png");
-      this->textures[Animation::MELEE_ATTACK] =
-          LoadTexture("src/assets/art/combat/player/player-melee.png");
-    }
-
-    if (this->meleeAnimationState == MeleeAnimationState::ATTACKING) {
-      this->currentTexture = this->textures[Animation::MELEE_ATTACK];
-    } else {
-      this->currentTexture = this->textures[Animation::ATTACK];
-    }
-  }
+  setCurrentTexture();
 
   // DrawRectangleRec(this->pos, RAYWHITE);
+  //
+  Color tint = this->currentAnimation == Animation::TAKE_DAMAGE ? RED : WHITE;
 
   Rectangle currentSpriteWindow =
       Rectangle{(float)spriteSize * this->currentanimationFrame, spriteSize,
                 spriteSize, spriteSize};
 
   DrawTextureRec(this->currentTexture, currentSpriteWindow,
-                 Vector2{this->pos.x, this->pos.y}, WHITE);
+                 Vector2{this->pos.x, this->pos.y}, tint);
 
   drawHealthBar();
 }
@@ -109,7 +93,7 @@ void Player::update() {
   // TODO attack class needs melee vs cast
   // TODO movementSteps can overshoot, clamp to distance if <30
 
-  this->updateCurrentTexture();
+  this->updateCurrentTextureFrame();
 
   constexpr int movementSteps = 15;
   if (this->currentAnimation == Animation::ATTACK &&
@@ -138,14 +122,15 @@ void Player::update() {
     }
   } else {
     if (this->currentAnimation == Animation::ATTACK) {
-      // TODO play cast animation
-      this->currentAnimation = Animation::IDLE;
-      *this->animationPlaying = false;
+      // TODO signal to combatstate to draw element on targeted enemy
+      this->currentAnimation = Animation::CAST_ATTACK;
+      this->currentanimationFrame = 0;
     }
   }
 }
 
-void Player::updateCurrentTexture() {
+void Player::updateCurrentTextureFrame() {
+  // TODO switch statement
   if (this->currentAnimation == Animation::IDLE) {
     const int idleFrameSwap = 30; // 2FPS
     const int idleFrameCount = 2;
@@ -160,9 +145,7 @@ void Player::updateCurrentTexture() {
         this->currentanimationFrame = 1;
       }
     }
-  }
-
-  else if (this->currentAnimation == Animation::ATTACK) {
+  } else if (this->currentAnimation == Animation::ATTACK) {
     if (this->meleeAnimationState == MeleeAnimationState::ATTACKING) {
       const int attackFrameSwap = 4; // 15FPS
       const int attackFrameCount = 8;
@@ -196,6 +179,79 @@ void Player::updateCurrentTexture() {
         }
       }
     }
+  } else if (this->currentAnimation == Animation::CAST_ATTACK) {
+    const int attackFrameSwap = 3; // 15FPS
+    const int attackFrameCount = 8;
+
+    this->animationFrameCount += 1;
+    if (this->animationFrameCount > attackFrameSwap) {
+      this->animationFrameCount = 0;
+
+      this->currentanimationFrame += 1;
+
+      if (this->currentanimationFrame > attackFrameCount) {
+        this->currentAnimation = Animation::IDLE;
+        *this->animationPlaying = false;
+      }
+    }
+  } else if (this->currentAnimation == Animation::TAKE_DAMAGE) {
+    const int dmgFrameSwap = 3;
+    const int dmgFrameCount = 4;
+
+    this->animationFrameCount += 1;
+    if (this->animationFrameCount > dmgFrameSwap) {
+      this->animationFrameCount = 0;
+
+      this->currentanimationFrame += 1;
+
+      if (this->currentanimationFrame > dmgFrameCount) {
+        this->currentAnimation = Animation::IDLE;
+      }
+    }
+  }
+}
+
+void Player::setCurrentTexture() {
+  // TODO switch statement
+
+  if (this->currentAnimation == Animation::IDLE) {
+    // for some reason it segfaults if I do this in the constructor
+    // this == 0 nonsense is the way to check if a map contains a val
+    if (this->textures.count(Animation::IDLE) == 0) {
+      this->textures[Animation::IDLE] =
+          LoadTexture("src/assets/art/combat/player/player-idle.png");
+    }
+
+    this->currentTexture = this->textures[Animation::IDLE];
+
+  } else if (this->currentAnimation == Animation::ATTACK) {
+    if (this->textures.count(Animation::ATTACK) == 0) {
+      this->textures[Animation::ATTACK] =
+          LoadTexture("src/assets/art/combat/player/player-walk.png");
+      this->textures[Animation::MELEE_ATTACK] =
+          LoadTexture("src/assets/art/combat/player/player-melee.png");
+    }
+
+    if (this->meleeAnimationState == MeleeAnimationState::ATTACKING) {
+      this->currentTexture = this->textures[Animation::MELEE_ATTACK];
+    } else {
+      this->currentTexture = this->textures[Animation::ATTACK];
+    }
+
+  } else if (this->currentAnimation == Animation::CAST_ATTACK) {
+    if (this->textures.count(Animation::CAST_ATTACK) == 0) {
+      this->textures[Animation::CAST_ATTACK] =
+          LoadTexture("src/assets/art/combat/player/player-cast.png");
+    }
+
+    this->currentTexture = this->textures[Animation::CAST_ATTACK];
+  } else if (this->currentAnimation == Animation::TAKE_DAMAGE) {
+    if (this->textures.count(Animation::TAKE_DAMAGE) == 0) {
+      this->textures[Animation::TAKE_DAMAGE] =
+          LoadTexture("src/assets/art/combat/player/player-takedmg.png");
+    }
+
+    this->currentTexture = this->textures[Animation::TAKE_DAMAGE];
   }
 }
 

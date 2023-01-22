@@ -48,7 +48,8 @@ public:
 
   void drawHealthBar();
 
-  void updateCurrentTexture();
+  void updateCurrentTextureFrame();
+  void setCurrentTexture();
 
   void draw();
   void update();

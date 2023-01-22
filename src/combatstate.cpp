@@ -163,7 +163,6 @@ void CombatState::update() {
     updatePlayerTurn();
     this->player->update();
   } else {
-
     // delete marked enemies
     std::vector<int> markedEnemies;
 
@@ -182,6 +181,7 @@ void CombatState::update() {
     }
 
     updateEnemyTurn();
+    this->player->update();
     for (auto &e : this->enemies) {
       e.update();
     }
