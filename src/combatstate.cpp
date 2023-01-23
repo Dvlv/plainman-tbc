@@ -37,6 +37,7 @@ CombatState::CombatState() {
   Enemy bird = Bird(this->enemyPositions[1]);
 
   this->enemies = std::vector<Enemy>{turtle, bird};
+  this->damageBubbles = std::vector<DamageBubble>{};
 }
 
 void CombatState::updatePlayerTurn() {
@@ -51,6 +52,12 @@ void CombatState::updatePlayerTurn() {
         this->playerAtkMenu->getHighlightedAttack());
 
     this->enemies[this->selectedEnemy].takeDamage(selectedAttack->damage);
+
+    // spawn damage bubble
+    Rectangle dmgBubblePos = this->enemies[this->selectedEnemy].pos;
+    dmgBubblePos.y -= 30;
+    this->damageBubbles.push_back(
+        DamageBubble(dmgBubblePos, selectedAttack->damage));
 
     this->performingAttack = false;
     this->isPlayerTurn = false;
@@ -121,7 +128,15 @@ void CombatState::updateEnemyTurn() {
       // TODO this and the player one both fetch twice
       Enemy *attackingEnemy = &this->enemies[this->currentlyAttackingEnemy];
       Attack *bestAtk = attackingEnemy->selectBestAttack();
+
       this->player->takeDamage(bestAtk->damage);
+
+      // spawn damage bubble
+      Rectangle dmgBubblePos = this->player->pos;
+      dmgBubblePos.y -= 30;
+      this->damageBubbles.push_back(
+          DamageBubble(dmgBubblePos, bestAtk->damage));
+
       this->isEnemyAttacking = false;
       if (this->player->currentHealth <= 0) {
         this->playerLost = true;
@@ -186,6 +201,16 @@ void CombatState::update() {
       e.update();
     }
   }
+
+  // update damage bubbles
+  int dbIdx = 0;
+  for (auto &db : this->damageBubbles) {
+    db.update();
+    if (db.canBeDeleted) {
+      // TODO filter this properly
+      this->damageBubbles.erase(this->damageBubbles.begin());
+    }
+  }
 }
 
 void CombatState::draw() {
@@ -243,6 +268,11 @@ void CombatState::draw() {
       drawDamageHit(this->enemies.at(this->selectedEnemy).pos,
                     selectedAttack->damage);
     }
+  }
+
+  // draw any damage bubbles
+  for (auto &db : this->damageBubbles) {
+    db.draw();
   }
 }
 

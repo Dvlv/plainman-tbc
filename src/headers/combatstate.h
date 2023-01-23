@@ -1,6 +1,7 @@
 #pragma once
 
 #include "attack.h"
+#include "damage-bubble.h"
 #include "enemy.h"
 #include "player.h"
 #include "ui.h"
@@ -25,6 +26,7 @@ private:
   std::vector<Attack> allAttacks;
   std::vector<Enemy> enemies;
   std::vector<Rectangle> enemyPositions;
+  std::vector<DamageBubble> damageBubbles;
 
 public:
   CombatState();
