@@ -16,6 +16,7 @@ CombatState::CombatState() {
   this->playerWon = false;
   this->playerLost = false;
   this->shouldQuit = false;
+  this->doAttack = false;
 
   this->player = new Player(Rectangle{350, 350, 100, 100}, 10, 5);
   this->playerAtkMenu = new PlayerAttackMenu(this->player);
@@ -45,19 +46,14 @@ void CombatState::updatePlayerTurn() {
   if (this->performingAttack) {
     if (this->animationPlaying) {
       // No logic, wait for animations to draw
+      // but perform attack if melee is calling back
+      if (this->doAttack) {
+        this->doAttack = false;
+        this->postPlayerAttack();
+      }
+
       return;
     }
-
-    Attack *selectedAttack = &this->player->getAttacks()->at(
-        this->playerAtkMenu->getHighlightedAttack());
-
-    this->enemies[this->selectedEnemy].takeDamage(selectedAttack->damage);
-
-    // spawn damage bubble
-    Rectangle dmgBubblePos = this->enemies[this->selectedEnemy].pos;
-    dmgBubblePos.y -= 30;
-    this->damageBubbles.push_back(
-        DamageBubble(dmgBubblePos, selectedAttack->damage));
 
     this->performingAttack = false;
     this->isPlayerTurn = false;
@@ -107,9 +103,22 @@ void CombatState::updatePlayerTurn() {
 
       this->animationPlaying = true;
       this->player->performAttack(selectedAttack, selectedEnemyBounds,
-                                  &this->animationPlaying);
+                                  &this->animationPlaying, &this->doAttack);
     }
   }
+}
+
+const void CombatState::postPlayerAttack() {
+  Attack *selectedAttack = &this->player->getAttacks()->at(
+      this->playerAtkMenu->getHighlightedAttack());
+
+  this->enemies[this->selectedEnemy].takeDamage(selectedAttack->damage);
+
+  // spawn damage bubble
+  Rectangle dmgBubblePos = this->enemies[this->selectedEnemy].pos;
+  dmgBubblePos.y -= 30;
+  this->damageBubbles.push_back(
+      DamageBubble(dmgBubblePos, selectedAttack->damage));
 }
 
 void CombatState::updateEnemyTurn() {

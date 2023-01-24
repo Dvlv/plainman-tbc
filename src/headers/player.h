@@ -3,6 +3,7 @@
 #include "animation.h"
 #include "attack.h"
 #include "raylib.h"
+#include <functional>
 #include <map>
 #include <vector>
 
@@ -31,6 +32,8 @@ private:
   int animationFrameCount;
   int currentanimationFrame;
 
+  bool *doAttack;
+
 public:
   Player(Rectangle pos, int health, int energy);
 
@@ -40,7 +43,7 @@ public:
   void addAttack(Attack a);
 
   void performAttack(Attack *attack, Rectangle targetBounds,
-                     bool *animationPlaying);
+                     bool *animationPlaying, bool *doAttack);
 
   std::vector<Attack> *getAttacks();
 

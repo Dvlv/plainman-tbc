@@ -16,6 +16,7 @@ private:
   int selectedEnemy;
   bool performingAttack;
   bool animationPlaying;
+  bool doAttack;
   bool isPlayerTurn;
   bool playerWon;
   bool playerLost;
@@ -33,6 +34,8 @@ public:
 
   void updatePlayerTurn();
   void updateEnemyTurn();
+
+  const void postPlayerAttack();
 
   bool shouldQuit;
 

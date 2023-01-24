@@ -1,8 +1,10 @@
 #include "headers/player.h"
 #include "headers/animation.h"
 #include "headers/attack.h"
+#include "headers/combatstate.h"
 #include "raylib.h"
 #include <cmath>
+#include <functional>
 #include <map>
 #include <vector>
 
@@ -27,7 +29,7 @@ std::vector<Attack> *Player::getAttacks() { return &this->attacks; }
 void Player::addAttack(Attack a) { this->attacks.push_back(a); }
 
 void Player::performAttack(Attack *atk, Rectangle targetBounds,
-                           bool *animationPlaying) {
+                           bool *animationPlaying, bool *doAttack) {
   // Plays attack animation, hands control back to GameState
 
   // get animation to play based on attack type
@@ -38,6 +40,8 @@ void Player::performAttack(Attack *atk, Rectangle targetBounds,
   this->animationPlaying = animationPlaying;
   this->attackTarget = targetBounds;
   this->currentAttack = atk;
+
+  this->doAttack = doAttack;
 }
 
 void Player::takeDamage(int dmg) {
@@ -109,7 +113,7 @@ void Player::update() {
         this->currentanimationFrame = 0;
       }
     } else if (this->meleeAnimationState == MeleeAnimationState::BACKWARD) {
-      // move back to starting position
+      // move back to original position
       if (this->pos.x > this->startingPos.x) {
         this->pos.x -= movementSteps;
       } else {
@@ -158,9 +162,9 @@ void Player::updateCurrentTextureFrame() {
 
         if (this->currentanimationFrame > attackFrameCount) {
           // move on to backwards
-          // TODO signal to combatstate to do damage and play ui graphic
           this->meleeAnimationState = MeleeAnimationState::BACKWARD;
           this->currentanimationFrame = 0;
+          *this->doAttack = true;
         }
       }
     } else {
@@ -189,6 +193,12 @@ void Player::updateCurrentTextureFrame() {
 
       this->currentanimationFrame += 1;
 
+      // frame before last, signal the attack to happen
+      if (this->currentanimationFrame == (attackFrameCount)) {
+        *this->doAttack = true;
+      }
+
+      // signal the attack is finished
       if (this->currentanimationFrame > attackFrameCount) {
         this->currentAnimation = Animation::IDLE;
         *this->animationPlaying = false;
