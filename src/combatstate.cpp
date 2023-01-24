@@ -25,9 +25,10 @@ CombatState::CombatState() {
                                                 Rectangle{900, 350, 100, 100}};
 
   // TODO read these from a resource file
-  Attack atkPunch = Attack("Punch", "A plain punch", AttackType::PUNCH, 1);
-  Attack atkKick = Attack("Kick", "A plain kick", AttackType::KICK, 1);
-  Attack atkShout = Attack("Shout", "A plain shout", AttackType::SHOUT, 1);
+  Attack atkPunch = Attack("Punch", "A plain punch.", AttackType::PUNCH, 1, 0);
+  Attack atkKick = Attack("Kick", "A plain kick.", AttackType::KICK, 1, 0);
+  Attack atkShout =
+      Attack("Shout", "A plain shout. \n1 Energy", AttackType::SHOUT, 2, 1);
 
   player->addAttack(atkPunch);
   player->addAttack(atkKick);
@@ -69,9 +70,14 @@ void CombatState::updatePlayerTurn() {
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
-      this->playerAtkMenu->attackSelected = true;
+      // only select atk if can afford energy cost
+      if (this->player->currentEnergy >=
+          this->playerAtkMenu->getPlayerAttacks()
+              ->at(this->playerAtkMenu->getHighlightedAttack())
+              .energyCost) {
+        this->playerAtkMenu->attackSelected = true;
+      }
     }
-
   } else {
     // select enemy or change attack
     if (IsKeyPressed(KEY_BACKSPACE)) {
@@ -247,7 +253,7 @@ void CombatState::draw() {
     e.draw();
 
     // if player selecting enemy to attack, draw arrow
-    if (this->playerAtkMenu->attackSelected) {
+    if (this->playerAtkMenu->attackSelected && !this->performingAttack) {
       if (idx == this->selectedEnemy) {
         drawArrowOverEnemy(this->enemies[idx].pos);
       }

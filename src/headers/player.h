@@ -15,7 +15,6 @@ private:
   int maxHealth;
 
   int maxEnergy;
-  int currentEnergy;
 
   int speed;
 
@@ -38,6 +37,7 @@ public:
   Player(Rectangle pos, int health, int energy);
 
   int currentHealth;
+  int currentEnergy;
   Rectangle pos;
 
   void addAttack(Attack a);
@@ -50,6 +50,7 @@ public:
   void takeDamage(int dmg);
 
   void drawHealthBar();
+  void drawEnergyBar();
 
   void updateCurrentTextureFrame();
   void setCurrentTexture();

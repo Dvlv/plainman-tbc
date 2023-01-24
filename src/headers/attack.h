@@ -23,10 +23,12 @@ public:
   std::string name;
   std::string description;
   int damage;
+  int energyCost;
   int animationFrames; // TODO better type
   AttackElement atkElement;
 
   // TODO energy cost
   Attack(std::string name, std::string description, AttackType atkType,
-         int damage, AttackElement atkElement = AttackElement::NONE);
+         int damage, int energyCost,
+         AttackElement atkElement = AttackElement::NONE);
 };

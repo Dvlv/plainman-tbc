@@ -12,7 +12,7 @@ Player::Player(Rectangle pos, int health, int energy) {
   this->maxHealth = health;
   this->currentHealth = health;
   this->maxEnergy = energy;
-  this->currentEnergy = energy;
+  this->currentEnergy = 2; // energy;
   this->attacks = std::vector<Attack>();
   this->pos = pos;
   this->startingPos = pos;
@@ -40,6 +40,7 @@ void Player::performAttack(Attack *atk, Rectangle targetBounds,
   this->animationPlaying = animationPlaying;
   this->attackTarget = targetBounds;
   this->currentAttack = atk;
+  this->currentEnergy -= atk->energyCost;
 
   this->doAttack = doAttack;
 }
@@ -55,14 +56,16 @@ void Player::drawHealthBar() {
   constexpr int barWidth = 100;
   constexpr int barHeight = 20;
   constexpr int healthFontSize = 20;
+  constexpr int healthBarPosBelowPlayer = 130;
 
   int hpPercent =
       ((float)this->currentHealth / (float)this->maxHealth) * 100.0f;
 
-  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, barWidth, barHeight, RED);
+  DrawRectangle(this->pos.x, this->pos.y + healthBarPosBelowPlayer, barWidth,
+                barHeight, RED);
 
-  DrawRectangle(this->pos.x, this->pos.y + 100 + 30, hpPercent, barHeight,
-                DARKGREEN);
+  DrawRectangle(this->pos.x, this->pos.y + healthBarPosBelowPlayer, hpPercent,
+                barHeight, DARKGREEN);
 
   std::string healthText = std::to_string(this->currentHealth) + "/" +
                            std::to_string(this->maxHealth);
@@ -70,7 +73,30 @@ void Player::drawHealthBar() {
   int textWidth = MeasureText(healthText.c_str(), healthFontSize);
 
   DrawText(healthText.c_str(), this->pos.x + (barWidth / 2) - (textWidth / 2),
-           this->pos.y + 100 + 30, healthFontSize, WHITE);
+           this->pos.y + healthBarPosBelowPlayer, healthFontSize, WHITE);
+}
+
+void Player::drawEnergyBar() {
+  constexpr int barWidth = 100;
+  constexpr int barHeight = 20;
+  constexpr int energyFontSize = 20;
+  constexpr int energyBarPosBelowPlayer = 160;
+
+  int ePercent = ((float)this->currentEnergy / (float)this->maxEnergy) * 100.0f;
+
+  DrawRectangle(this->pos.x, this->pos.y + energyBarPosBelowPlayer, barWidth,
+                barHeight, RED);
+
+  DrawRectangle(this->pos.x, this->pos.y + energyBarPosBelowPlayer, ePercent,
+                barHeight, DARKBLUE);
+
+  std::string energyText = std::to_string(this->currentEnergy) + "/" +
+                           std::to_string(this->maxEnergy);
+
+  int textWidth = MeasureText(energyText.c_str(), energyFontSize);
+
+  DrawText(energyText.c_str(), this->pos.x + (barWidth / 2) - (textWidth / 2),
+           this->pos.y + energyBarPosBelowPlayer, energyFontSize, WHITE);
 }
 
 void Player::draw() {
@@ -89,7 +115,11 @@ void Player::draw() {
   DrawTextureRec(this->currentTexture, currentSpriteWindow,
                  Vector2{this->pos.x, this->pos.y}, tint);
 
-  drawHealthBar();
+  if (this->currentAnimation != Animation::ATTACK &&
+      this->currentAnimation != Animation::CAST_ATTACK) {
+    drawHealthBar();
+    drawEnergyBar();
+  }
 }
 
 void Player::update() {

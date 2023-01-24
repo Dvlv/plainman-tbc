@@ -16,17 +16,17 @@
     - [x] Cast
     - [x] Take Dmg
 
+- [ ] Draw Sprites on attack
+    - [x] Signal system so takeDamage is called after performing melee animation finishes and state goes to BACKWARDS
+    - [x] Damage bubble class
+    - [x] Damage bubble vector in CombatState which animates and marks self for deletion
+    - [ ] Sprites for elemental types drawn
+        - [ ] Music (shout)
+    - [ ] Draw elemental sprite over enemy on player using cast attack
 - [ ] Outer GameState object which holds data about the player and whether it's map or combat
     - [ ] Add new attacks to player
     - [ ] Add stats to player
     - [ ] Map state
-- [ ] Draw Sprites on attack
-    - [ ] Signal system so takeDamage is called after performing melee animation finishes and state goes to BACKWARDS
-    - [ ] Damage bubble class
-    - [ ] Damage bubble vector in CombatState which animates and marks self for deletion
-    - [ ] Sprites for elemental types drawn
-        - [ ] Music (shout)
-    - [ ] Draw elemental sprite over enemy on player using cast attack
 - [ ] Draw Enemy Animations
     - [ ] Idle
     - [ ] Attack / Walk?
@@ -41,8 +41,8 @@
 - [ ] Ability to read Combat rounds from a file, or randomly generate them?
 - [ ] More enemy classes
 - [ ] Enemy immunities
-- [ ] Attacks costing Energy
-- [ ] Display Energy on UI
+- [x] Attacks costing Energy
+- [x] Display Energy on UI
 
 
 ### QoL

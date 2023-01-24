@@ -63,7 +63,12 @@ void drawPlayerAttackMenu(PlayerAttackMenu *pam, Enemy *enemy) {
   // TODO when this could overflow, move to a second column
   int idx = 0;
   for (Attack &atk : *pam->getPlayerAttacks()) {
-    DrawText(atk.name.c_str(), nextTextPosX, nextTextPosY, textHeight, BLACK);
+    bool hasEnergy = pam->player->currentEnergy >= atk.energyCost;
+
+    Color textColor = hasEnergy ? BLACK : GRAY;
+
+    DrawText(atk.name.c_str(), nextTextPosX, nextTextPosY, textHeight,
+             textColor);
 
     int textWidth = MeasureText(atk.name.c_str(), textHeight);
 

@@ -7,12 +7,13 @@
 
 class PlayerAttackMenu {
 private:
-  Player *player;
   int highlightedOption;
 
 public:
-  bool attackSelected;
   PlayerAttackMenu(Player *player);
+  Player *player;
+
+  bool attackSelected;
   void changeHighlighted(int dir);
   void selectAttack();
   int getHighlightedAttack();
