@@ -1,6 +1,7 @@
 #pragma once
 
 #include "attack.h"
+#include "cast-effect.h"
 #include "damage-bubble.h"
 #include "enemy.h"
 #include "player.h"
@@ -28,6 +29,7 @@ private:
   std::vector<Enemy> enemies;
   std::vector<Rectangle> enemyPositions;
   std::vector<DamageBubble> damageBubbles;
+  std::vector<CastEffect> castEffects;
 
 public:
   CombatState();

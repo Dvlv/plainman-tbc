@@ -8,6 +8,7 @@ clang++ \
     src/turtle.cpp \
     src/bird.cpp \
     src/damage-bubble.cpp \
+    src/cast-effect.cpp \
     -std=c++20 \
     -o pm \
     -lraylib -lGL -lm -lpthread -ldl -lrt -lX11

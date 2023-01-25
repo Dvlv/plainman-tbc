@@ -1,6 +1,7 @@
 #include "headers/combatstate.h"
 #include "headers/attack.h"
 #include "headers/bird.h"
+#include "headers/cast-effect.h"
 #include "headers/enemy.h"
 #include "headers/player.h"
 #include "headers/turtle.h"
@@ -40,6 +41,7 @@ CombatState::CombatState() {
 
   this->enemies = std::vector<Enemy>{turtle, bird};
   this->damageBubbles = std::vector<DamageBubble>{};
+  this->castEffects = std::vector<CastEffect>{};
 }
 
 void CombatState::updatePlayerTurn() {
@@ -110,6 +112,14 @@ void CombatState::updatePlayerTurn() {
       this->animationPlaying = true;
       this->player->performAttack(selectedAttack, selectedEnemyBounds,
                                   &this->animationPlaying, &this->doAttack);
+
+      if (selectedAttack->atkType == AttackType::SHOUT) {
+        // spawn cast effect
+        // TODO move this to be signalled by player during cast anim frame 1
+        this->castEffects.push_back(
+            CastEffect(this->enemies[this->selectedEnemy].pos,
+                       selectedAttack->atkElement));
+      }
     }
   }
 }
@@ -226,6 +236,16 @@ void CombatState::update() {
       this->damageBubbles.erase(this->damageBubbles.begin());
     }
   }
+
+  // update castEffects
+  int ceIdx = 0;
+  for (auto &ce : this->castEffects) {
+    ce.update();
+    if (ce.canBeDeleted) {
+      // TODO filter this properly
+      this->castEffects.erase(this->castEffects.begin());
+    }
+  }
 }
 
 void CombatState::draw() {
@@ -273,21 +293,17 @@ void CombatState::draw() {
       } else {
         drawPlayerAttackMenu(this->playerAtkMenu);
       }
-    } else if (this->performingAttack && !this->animationPlaying) {
-      // damage just performed, draw in UI
-      Attack *selectedAttack = &this->player->getAttacks()->at(
-          this->playerAtkMenu->getHighlightedAttack());
-
-      // TODO this may need to be signalled by the player on their
-      // MeleeAnimationState::BACK movement
-      drawDamageHit(this->enemies.at(this->selectedEnemy).pos,
-                    selectedAttack->damage);
     }
   }
 
   // draw any damage bubbles
   for (auto &db : this->damageBubbles) {
     db.draw();
+  }
+
+  // draw any cast effects
+  for (auto &ce : this->castEffects) {
+    ce.draw();
   }
 }
 

@@ -22,6 +22,7 @@ public:
 
 void drawArrowOverEnemy(Rectangle pos);
 void drawDamageHit(Rectangle pos, int dmg);
+void drawCastEffect(Rectangle pos);
 
 void drawPlayerAttackMenu(PlayerAttackMenu *pam, Enemy *enemy = nullptr);
 
