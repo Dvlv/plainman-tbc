@@ -7,18 +7,21 @@
 #include <map>
 #include <vector>
 
+struct PlayerCombatData {
+  int maxHealth;
+  int maxEnergy;
+  std::vector<Attack> *attacks;
+};
+
 class Player {
 private:
   Animation currentAnimation;
   Animation previousAnimation;
 
+  // combat data
   int maxHealth;
-
   int maxEnergy;
-
-  int speed;
-
-  std::vector<Attack> attacks;
+  std::vector<Attack> *attacks;
 
   Rectangle startingPos;
   Attack *currentAttack;
@@ -34,13 +37,11 @@ private:
   bool *doAttack;
 
 public:
-  Player(Rectangle pos, int health, int energy);
+  Player(Rectangle pos, PlayerCombatData combatData);
 
   int currentHealth;
   int currentEnergy;
   Rectangle pos;
-
-  void addAttack(Attack a);
 
   void performAttack(Attack *attack, Rectangle targetBounds,
                      bool *animationPlaying, bool *doAttack);

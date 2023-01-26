@@ -14,6 +14,8 @@ private:
 
   PlayerAttackMenu *playerAtkMenu;
 
+  PlayerCombatData playerCombatData;
+
   int selectedEnemy;
   bool performingAttack;
   bool animationPlaying;
@@ -32,7 +34,7 @@ private:
   std::vector<CastEffect> castEffects;
 
 public:
-  CombatState();
+  CombatState(PlayerCombatData playerCombatData);
 
   void updatePlayerTurn();
   void updateEnemyTurn();

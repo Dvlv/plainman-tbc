@@ -8,12 +8,12 @@
 #include <map>
 #include <vector>
 
-Player::Player(Rectangle pos, int health, int energy) {
-  this->maxHealth = health;
-  this->currentHealth = health;
-  this->maxEnergy = energy;
-  this->currentEnergy = 2; // energy;
-  this->attacks = std::vector<Attack>();
+Player::Player(Rectangle pos, PlayerCombatData combatData) {
+  this->maxHealth = combatData.maxHealth;
+  this->currentHealth = combatData.maxHealth;
+  this->maxEnergy = combatData.maxEnergy;
+  this->currentEnergy = combatData.maxEnergy;
+  this->attacks = combatData.attacks;
   this->pos = pos;
   this->startingPos = pos;
   this->currentAnimation = Animation::IDLE;
@@ -24,9 +24,7 @@ Player::Player(Rectangle pos, int health, int energy) {
   this->textures = std::map<Animation, Texture2D>();
 }
 
-std::vector<Attack> *Player::getAttacks() { return &this->attacks; }
-
-void Player::addAttack(Attack a) { this->attacks.push_back(a); }
+std::vector<Attack> *Player::getAttacks() { return this->attacks; }
 
 void Player::performAttack(Attack *atk, Rectangle targetBounds,
                            bool *animationPlaying, bool *doAttack) {

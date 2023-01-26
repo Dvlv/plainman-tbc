@@ -50,7 +50,7 @@ void drawPlayerAttackMenu(PlayerAttackMenu *pam, Enemy *enemy) {
   const int textHeight = 20;
 
   // description constants
-  const int descX = topX + (atkMenuWidth / 2);
+  const int descX = topX + (atkMenuWidth * 0.65);
   const int descY = topY + textHeight;
 
   Rectangle pos = Rectangle{topX, (float)topY, (float)atkMenuWidth, 200};
@@ -60,26 +60,37 @@ void drawPlayerAttackMenu(PlayerAttackMenu *pam, Enemy *enemy) {
   int nextTextPosX = topX + gap;
 
   // Draw attack text
-  // TODO when this could overflow, move to a second column
+  const int maxAttacksPerColumn = 5; // actually shows 5, but 0 indexed
+  const int attackTextWidth = 100;
+
   int idx = 0;
+  int currentCol = 1;
   for (Attack &atk : *pam->getPlayerAttacks()) {
     bool hasEnergy = pam->player->currentEnergy >= atk.energyCost;
 
     Color textColor = hasEnergy ? BLACK : GRAY;
 
-    DrawText(atk.name.c_str(), nextTextPosX, nextTextPosY, textHeight,
-             textColor);
+    DrawText(atk.name.c_str(), (nextTextPosX * currentCol), nextTextPosY,
+             textHeight, textColor);
 
     int textWidth = MeasureText(atk.name.c_str(), textHeight);
 
     if (idx == pam->getHighlightedAttack()) {
       Color boxClr = pam->attackSelected ? RED : DARKGRAY;
-      DrawRectangleLines(nextTextPosX - 5, nextTextPosY - 5, textWidth + 10, 30,
-                         boxClr);
+      DrawRectangleLines((nextTextPosX * currentCol) - 5, nextTextPosY - 5,
+                         textWidth + 10, 30, boxClr);
     }
 
     nextTextPosY += textHeight + gap;
+
     idx++;
+
+    // when this could overflow, move to a second column
+    int nextCol = (idx / maxAttacksPerColumn) + 1;
+    if (nextCol > currentCol) {
+      currentCol = nextCol;
+      nextTextPosY = topY + gap;
+    }
   }
 
   if (pam->attackSelected && enemy != nullptr) {

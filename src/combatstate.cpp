@@ -9,7 +9,7 @@
 #include "raylib.h"
 #include <vector>
 
-CombatState::CombatState() {
+CombatState::CombatState(PlayerCombatData playerCombatData) {
   this->selectedEnemy = 0;
   this->performingAttack = false;
   this->isPlayerTurn = true;
@@ -19,27 +19,16 @@ CombatState::CombatState() {
   this->shouldQuit = false;
   this->doAttack = false;
 
-  this->player = new Player(Rectangle{350, 350, 100, 100}, 10, 5);
+  this->player = new Player(Rectangle{350, 350, 100, 100}, playerCombatData);
   this->playerAtkMenu = new PlayerAttackMenu(this->player);
 
   this->enemyPositions = std::vector<Rectangle>{Rectangle{750, 350, 100, 100},
                                                 Rectangle{900, 350, 100, 100}};
 
-  // TODO read these from a resource file
-  Attack atkPunch = Attack("Punch", "A plain punch.", AttackType::PUNCH, 1, 0);
-  Attack atkKick = Attack("Kick", "A plain kick.", AttackType::KICK, 1, 0);
-  Attack atkShout =
-      Attack("Shout", "A plain shout. \n1 Energy", AttackType::SHOUT, 2, 1);
-
-  player->addAttack(atkPunch);
-  player->addAttack(atkKick);
-  player->addAttack(atkShout);
-
   // TODO read these from a level file, or random gen
-  Enemy turtle = Turtle(this->enemyPositions[0]);
-  Enemy bird = Bird(this->enemyPositions[1]);
+  Enemy bird = Bird(this->enemyPositions[0]);
 
-  this->enemies = std::vector<Enemy>{turtle, bird};
+  this->enemies = std::vector<Enemy>{bird};
   this->damageBubbles = std::vector<DamageBubble>{};
   this->castEffects = std::vector<CastEffect>{};
 }

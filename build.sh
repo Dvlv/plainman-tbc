@@ -9,6 +9,7 @@ clang++ \
     src/bird.cpp \
     src/damage-bubble.cpp \
     src/cast-effect.cpp \
+    src/necromancer-skilltree.cpp \
     -std=c++20 \
     -o pm \
     -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
