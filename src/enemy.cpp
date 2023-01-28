@@ -1,5 +1,7 @@
 #include "headers/enemy.h"
+#include <iostream>
 #include <raylib.h>
+#include <vector>
 
 Enemy::Enemy(Rectangle pos, std::string name, std::string description,
              int health, int energy, int speed, std::vector<Attack> attacks) {
@@ -17,9 +19,18 @@ Enemy::Enemy(Rectangle pos, std::string name, std::string description,
   this->pos = pos;
   this->startingPos = pos;
   this->meleeAnimationState = MeleeAnimationState::FORWARD;
+
+  this->animationFrameCount = 0;
+  this->currentanimationFrame = 0;
+  this->textures = std::map<Animation, Texture2D>();
 }
 
-void Enemy::takeDamage(int dmg) { this->currentHealth -= dmg; }
+void Enemy::takeDamage(int dmg) {
+  this->currentAnimation = Animation::TAKE_DAMAGE;
+  this->currentanimationFrame = 0;
+
+  this->currentHealth -= dmg;
+}
 
 bool Enemy::isDead() { return this->currentHealth < 1; }
 
@@ -46,7 +57,7 @@ void Enemy::drawHealthBar() {
 }
 
 void Enemy::performAttack(Attack *atk, Rectangle targetBounds,
-                          bool *animationPlaying) {
+                          bool *animationPlaying, bool *doAttack) {
   // Plays attack animation, hands control back to GameState
 
   // get animation to play based on attack type
@@ -57,6 +68,7 @@ void Enemy::performAttack(Attack *atk, Rectangle targetBounds,
   this->animationPlaying = animationPlaying;
   this->attackTarget = targetBounds;
   this->currentAttack = atk;
+  this->doAttack = doAttack;
 }
 
 Attack *Enemy::selectBestAttack() {
@@ -73,40 +85,52 @@ Attack *Enemy::selectBestAttack() {
   return bestAttack;
 }
 
-void Enemy::draw() {
+void Enemy::draw(Texture2D currentTexture) {
   if (this->isDead()) {
     // play death anim then mark canBeDeleted
     DrawRectangleRec(this->pos, RED);
     this->canBeDeleted = true;
-  } else {
-    DrawRectangleRec(this->pos, YELLOW);
+    return;
+  }
+
+  const int spriteSize = 128;
+
+  Color tint = this->currentAnimation == Animation::TAKE_DAMAGE ? RED : WHITE;
+
+  // passed from derived class
+  this->currentTexture = currentTexture;
+
+  Rectangle currentSpriteWindow =
+      Rectangle{(float)spriteSize * this->currentanimationFrame, spriteSize,
+                spriteSize, spriteSize};
+
+  DrawTextureRec(this->currentTexture, currentSpriteWindow,
+                 Vector2{this->pos.x, this->pos.y}, tint);
+
+  if (this->currentAnimation != Animation::ATTACK &&
+      this->currentAnimation != Animation::CAST_ATTACK) {
     drawHealthBar();
   }
 }
 
 void Enemy::update() {
-  // GetFrameTime();
+  this->updateCurrentTextureFrame();
 
-  // TODO logic for timing animation frames
-  // TODO attack class needs melee vs cast
-  // TODO movementSteps can overshoot, clamp to distance if <30
-  constexpr int movementSteps = 30;
+  constexpr int movementSteps = 15;
   if (this->currentAnimation == Animation::ATTACK &&
-      this->currentAttack->atkType == AttackType::KICK) {
+      (this->currentAttack->atkType == AttackType::PUNCH ||
+       this->currentAttack->atkType == AttackType::KICK)) {
     if (this->meleeAnimationState == MeleeAnimationState::FORWARD) {
-      // move to enemy
-      if (this->pos.x > this->attackTarget.x) {
+      // move to player
+      if (this->pos.x > (this->attackTarget.x + 100)) {
         this->pos.x -= movementSteps;
       } else {
-        // reached player
-        // TODO play punch animation
+        // reached enemy, play melee anim
         this->meleeAnimationState = MeleeAnimationState::ATTACKING;
+        this->currentanimationFrame = 0;
       }
-    } else if (this->meleeAnimationState == MeleeAnimationState::ATTACKING) {
-      // TODO play animation
-      this->meleeAnimationState = MeleeAnimationState::BACKWARD;
-    } else {
-      // move back to starting position
+    } else if (this->meleeAnimationState == MeleeAnimationState::BACKWARD) {
+      // move back to original position
       if (this->pos.x < this->startingPos.x) {
         this->pos.x += movementSteps;
       } else {
@@ -117,5 +141,100 @@ void Enemy::update() {
         *this->animationPlaying = false;
       }
     }
+  } else {
+    if (this->currentAnimation == Animation::ATTACK) {
+      this->currentAnimation = Animation::CAST_ATTACK;
+      this->currentanimationFrame = 0;
+    }
   }
 }
+
+void Enemy::updateCurrentTextureFrame() {
+  // TODO switch statement
+  if (this->currentAnimation == Animation::IDLE) {
+    const int idleFrameSwap = 30; // 2FPS
+    const int idleFrameCount = 3;
+
+    this->animationFrameCount += 1;
+    if (this->animationFrameCount > idleFrameSwap) {
+      this->animationFrameCount = 0;
+
+      this->currentanimationFrame += 1;
+
+      if (this->currentanimationFrame > idleFrameCount) {
+        this->currentanimationFrame = 1;
+      }
+    }
+  } else if (this->currentAnimation == Animation::ATTACK) {
+    if (this->meleeAnimationState == MeleeAnimationState::ATTACKING) {
+      const int attackFrameSwap = 8; // 15FPS
+      const int attackFrameCount = 4;
+
+      this->animationFrameCount += 1;
+      if (this->animationFrameCount > attackFrameSwap) {
+        this->animationFrameCount = 0;
+
+        this->currentanimationFrame += 1;
+
+        if (this->currentanimationFrame > attackFrameCount) {
+          // move on to backwards
+          this->meleeAnimationState = MeleeAnimationState::BACKWARD;
+          this->currentanimationFrame = 0;
+          *this->doAttack = true;
+        }
+      }
+    } else {
+      // moving fwd or bw, use walk anim
+      const int walkFrameSwap = 8; // 4FPS
+      const int walkFrameCount = 2;
+
+      this->animationFrameCount += 1;
+      if (this->animationFrameCount > walkFrameSwap) {
+        this->animationFrameCount = 0;
+
+        this->currentanimationFrame += 1;
+
+        if (this->currentanimationFrame > walkFrameCount) {
+          this->currentanimationFrame = 0;
+        }
+      }
+    }
+  } else if (this->currentAnimation == Animation::CAST_ATTACK) {
+    const int attackFrameSwap = 6; // 15FPS
+    const int attackFrameCount = 4;
+
+    this->animationFrameCount += 1;
+    if (this->animationFrameCount > attackFrameSwap) {
+      this->animationFrameCount = 0;
+
+      this->currentanimationFrame += 1;
+
+      // frame before last, signal the attack to happen
+      if (this->currentanimationFrame == (attackFrameCount)) {
+        *this->doAttack = true;
+      }
+
+      // signal the attack is finished
+      if (this->currentanimationFrame > attackFrameCount) {
+        this->currentAnimation = Animation::IDLE;
+        *this->animationPlaying = false;
+      }
+    }
+  } else if (this->currentAnimation == Animation::TAKE_DAMAGE) {
+    const int dmgFrameSwap = 3;
+    const int dmgFrameCount = 4;
+
+    this->animationFrameCount += 1;
+    if (this->animationFrameCount > dmgFrameSwap) {
+      this->animationFrameCount = 0;
+
+      this->currentanimationFrame += 1;
+
+      if (this->currentanimationFrame > dmgFrameCount) {
+        this->currentAnimation = Animation::IDLE;
+      }
+    }
+  }
+}
+
+Enemy::~Enemy() { printf("enemy dest\n"); }

@@ -26,9 +26,9 @@ CombatState::CombatState(PlayerCombatData playerCombatData) {
                                                 Rectangle{900, 350, 100, 100}};
 
   // TODO read these from a level file, or random gen
-  Enemy bird = Bird(this->enemyPositions[0]);
+  Turtle *turtle = new Turtle(this->enemyPositions[0]);
 
-  this->enemies = std::vector<Enemy>{bird};
+  this->enemies = std::vector<Enemy *>{turtle};
   this->damageBubbles = std::vector<DamageBubble>{};
   this->castEffects = std::vector<CastEffect>{};
 }
@@ -96,7 +96,7 @@ void CombatState::updatePlayerTurn() {
       Attack *selectedAttack =
           &this->player->getAttacks()->at(selectedAttackIdx);
 
-      Rectangle selectedEnemyBounds = this->enemies[this->selectedEnemy].pos;
+      Rectangle selectedEnemyBounds = this->enemies[this->selectedEnemy]->pos;
 
       this->animationPlaying = true;
       this->player->performAttack(selectedAttack, selectedEnemyBounds,
@@ -106,7 +106,7 @@ void CombatState::updatePlayerTurn() {
         // spawn cast effect
         // TODO move this to be signalled by player during cast anim frame 1
         this->castEffects.push_back(
-            CastEffect(this->enemies[this->selectedEnemy].pos,
+            CastEffect(this->enemies[this->selectedEnemy]->pos,
                        selectedAttack->atkElement));
       }
     }
@@ -117,13 +117,25 @@ const void CombatState::postPlayerAttack() {
   Attack *selectedAttack = &this->player->getAttacks()->at(
       this->playerAtkMenu->getHighlightedAttack());
 
-  this->enemies[this->selectedEnemy].takeDamage(selectedAttack->damage);
+  this->enemies[this->selectedEnemy]->takeDamage(selectedAttack->damage);
 
   // spawn damage bubble
-  Rectangle dmgBubblePos = this->enemies[this->selectedEnemy].pos;
+  Rectangle dmgBubblePos = this->enemies[this->selectedEnemy]->pos;
   dmgBubblePos.y -= 30;
   this->damageBubbles.push_back(
       DamageBubble(dmgBubblePos, selectedAttack->damage));
+}
+
+const void CombatState::postEnemyAttack() {
+  Enemy *attackingEnemy = this->enemies[this->currentlyAttackingEnemy];
+  Attack *bestAtk = attackingEnemy->selectBestAttack();
+
+  this->player->takeDamage(bestAtk->damage);
+
+  // spawn damage bubble
+  Rectangle dmgBubblePos = this->player->pos;
+  dmgBubblePos.y -= 30;
+  this->damageBubbles.push_back(DamageBubble(dmgBubblePos, bestAtk->damage));
 }
 
 void CombatState::updateEnemyTurn() {
@@ -136,20 +148,16 @@ void CombatState::updateEnemyTurn() {
   if (this->isEnemyAttacking) {
     if (this->animationPlaying) {
       // no logic, wait for animation to play
+      // but perform attack if melee is calling back
+      if (this->doAttack) {
+        this->doAttack = false;
+        this->postEnemyAttack();
+      }
+
       return;
     } else {
       // enemy attack animation is done, perform damage calcs and finish turn
       // TODO this and the player one both fetch twice
-      Enemy *attackingEnemy = &this->enemies[this->currentlyAttackingEnemy];
-      Attack *bestAtk = attackingEnemy->selectBestAttack();
-
-      this->player->takeDamage(bestAtk->damage);
-
-      // spawn damage bubble
-      Rectangle dmgBubblePos = this->player->pos;
-      dmgBubblePos.y -= 30;
-      this->damageBubbles.push_back(
-          DamageBubble(dmgBubblePos, bestAtk->damage));
 
       this->isEnemyAttacking = false;
       if (this->player->currentHealth <= 0) {
@@ -172,10 +180,10 @@ void CombatState::updateEnemyTurn() {
     this->isEnemyAttacking = true;
     this->animationPlaying = true;
 
-    Enemy *attackingEnemy = &this->enemies[this->currentlyAttackingEnemy];
+    Enemy *attackingEnemy = this->enemies[this->currentlyAttackingEnemy];
     Attack *bestAtk = attackingEnemy->selectBestAttack();
     attackingEnemy->performAttack(bestAtk, this->player->pos,
-                                  &this->animationPlaying);
+                                  &this->animationPlaying, &this->doAttack);
   }
 }
 
@@ -191,12 +199,17 @@ void CombatState::update() {
   if (this->isPlayerTurn) {
     updatePlayerTurn();
     this->player->update();
+
+    for (auto &enemy : this->enemies) {
+      enemy->update();
+    }
+
   } else {
     // delete marked enemies
     std::vector<int> markedEnemies;
 
     for (int i = 0; i < this->enemies.size(); i++) {
-      if (this->enemies[i].canBeDeleted) {
+      if (this->enemies[i]->canBeDeleted) {
         markedEnemies.push_back(i);
       }
     }
@@ -205,6 +218,7 @@ void CombatState::update() {
     if (markedEnemies.size() > 0) {
       this->selectedEnemy = 0;
       for (int i = 0; i < markedEnemies.size(); i++) {
+        delete this->enemies[markedEnemies[i]];
         this->enemies.erase(this->enemies.begin() + markedEnemies[i]);
       }
     }
@@ -212,7 +226,7 @@ void CombatState::update() {
     updateEnemyTurn();
     this->player->update();
     for (auto &e : this->enemies) {
-      e.update();
+      e->update();
     }
   }
 
@@ -259,12 +273,12 @@ void CombatState::draw() {
       break;
     }
 
-    e.draw();
+    e->draw();
 
     // if player selecting enemy to attack, draw arrow
     if (this->playerAtkMenu->attackSelected && !this->performingAttack) {
       if (idx == this->selectedEnemy) {
-        drawArrowOverEnemy(this->enemies[idx].pos);
+        drawArrowOverEnemy(this->enemies[idx]->pos);
       }
     }
 
@@ -278,7 +292,7 @@ void CombatState::draw() {
     if (!this->performingAttack && !this->animationPlaying) {
       if (this->playerAtkMenu->attackSelected) {
         drawPlayerAttackMenu(this->playerAtkMenu,
-                             &this->enemies.at(this->selectedEnemy));
+                             this->enemies.at(this->selectedEnemy));
       } else {
         drawPlayerAttackMenu(this->playerAtkMenu);
       }

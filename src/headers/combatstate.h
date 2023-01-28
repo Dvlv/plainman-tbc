@@ -28,7 +28,7 @@ private:
   bool isEnemyAttacking;
 
   std::vector<Attack> allAttacks;
-  std::vector<Enemy> enemies;
+  std::vector<Enemy *> enemies;
   std::vector<Rectangle> enemyPositions;
   std::vector<DamageBubble> damageBubbles;
   std::vector<CastEffect> castEffects;
@@ -40,6 +40,7 @@ public:
   void updateEnemyTurn();
 
   const void postPlayerAttack();
+  const void postEnemyAttack();
 
   bool shouldQuit;
 

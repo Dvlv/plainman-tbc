@@ -11,8 +11,6 @@ class Enemy {
 private:
   std::string name;
 
-  Animation currentAnimation;
-
   std::vector<Attack> attacks;
 
   int currentHealth;
@@ -28,12 +26,15 @@ private:
   Rectangle attackTarget;
   Rectangle startingPos;
   bool *animationPlaying;
-  MeleeAnimationState meleeAnimationState;
 
   std::map<Animation, Texture2D> textures;
   Texture2D currentTexture;
   int animationFrameCount;
   int currentanimationFrame;
+
+  bool *doAttack;
+
+  virtual void setCurrentTexture() = 0;
 
 public:
   Enemy(Rectangle pos, std::string name, std::string description, int health,
@@ -41,20 +42,22 @@ public:
   std::string description;
   Rectangle pos;
   bool canBeDeleted;
+  Animation currentAnimation;
+  MeleeAnimationState meleeAnimationState;
 
   bool isDead();
   void drawHealthBar();
 
   void performAttack(Attack *atk, Rectangle targetBounds,
-                     bool *animationPlaying);
+                     bool *animationPlaying, bool *doAttack);
   Attack *selectBestAttack();
   void takeDamage(int dmg);
 
   void updateCurrentTextureFrame();
-  void setCurrentTexture();
 
-  void draw();
+  virtual void draw(Texture2D currentTexture = Texture2D());
+
   void update();
 
-  virtual ~Enemy() = default;
+  virtual ~Enemy();
 };

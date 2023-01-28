@@ -6,7 +6,6 @@ clang++ \
     src/attack.cpp \
     src/enemy.cpp \
     src/turtle.cpp \
-    src/bird.cpp \
     src/damage-bubble.cpp \
     src/cast-effect.cpp \
     src/necromancer-skilltree.cpp \
