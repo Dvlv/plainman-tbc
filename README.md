@@ -34,16 +34,16 @@
     - [x] Add new attacks to player
     - [ ] Add stats to player
     - [ ] Map state
-- [ ] Draw Enemy Animations
-    - [ ] Idle
-    - [ ] Attack / Walk?
+- [x] Draw Enemy Animations
+    - [x] Idle
+    - [x] Attack / Walk?
     - [ ] Cast
-    - [ ] Take Dmg
-- [ ] Enemy Animation Logic
-    - [ ] Idle
-    - [ ] Attack / Walk?
+    - [x] Take Dmg
+- [x] Enemy Animation Logic
+    - [x] Idle
+    - [x] Attack / Walk?
     - [ ] Cast
-    - [ ] Take Dmg
+    - [x] Take Dmg
 
 - [ ] Ability to read Combat rounds from a file, or randomly generate them?
 - [ ] More enemy classes
