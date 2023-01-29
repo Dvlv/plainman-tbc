@@ -6,10 +6,13 @@
 class CastEffect {
 private:
   Rectangle pos;
+  Rectangle texturePos;
 
   int damageNumber;
   int lifetime;
   int currentFrameCount;
+  int animFrameCount;
+  int currentSpriteFrame;
 
   Texture2D sprite;
 
