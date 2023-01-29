@@ -24,16 +24,16 @@
     - [x] Damage bubble vector in CombatState which animates and marks self for deletion
     - [ ] Sprites for elemental types drawn
         - [x] Music (shout)
-        - [ ] Fire
-        - [ ] Electric
+        - [x] Fire
+        - [x] Electric
         - [ ] Ice
         - [ ] Earth
         - [ ] Air
     - [x] Draw elemental sprite over enemy on player using cast attack
 - [ ] Outer GameState object which holds data about the player and whether it's map or combat
-    - [x] Add new attacks to player
     - [ ] Add stats to player
-    - [ ] Map state
+- [ ] Skill Tree state
+    - [x] Add new attacks to player
 - [x] Draw Enemy Animations
     - [x] Idle
     - [x] Attack / Walk?
