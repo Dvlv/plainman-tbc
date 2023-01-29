@@ -6,7 +6,6 @@
 class CastEffect {
 private:
   Rectangle pos;
-  Rectangle texturePos;
 
   int damageNumber;
   int lifetime;

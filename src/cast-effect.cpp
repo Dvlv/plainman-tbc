@@ -8,7 +8,6 @@ CastEffect::CastEffect(Rectangle pos, AttackElement element) {
   this->canBeDeleted = false;
   this->element = element;
   this->spriteLoaded = false;
-  this->texturePos = Rectangle{0, 0, 128, 128};
   this->animFrameCount = 0;
   this->currentSpriteFrame = 0;
 }
