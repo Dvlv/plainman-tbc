@@ -1,8 +1,8 @@
 #include "raylib.h"
 
 #include "headers/combatstate.h"
-#include "headers/necromancer-skilltree.h"
 #include "headers/player.h"
+#include "headers/skilltree-state.h"
 #include <vector>
 
 void init();
@@ -11,18 +11,17 @@ void draw();
 
 int levelsComplete = 0;
 
-NecromancerSkilltree *nst = new NecromancerSkilltree();
-
-std::vector<Attack> *currentAttackSkillTree = &nst->level1Attacks;
-
 std::vector<Attack> playerAttacks{
     Attack("Punch", "A plain punch.", AttackType::PUNCH, 1, 0),
     Attack("Kick", "A plain kick.", AttackType::KICK, 1, 0),
     Attack("Shout", "A plain shout. \n1 Energy", AttackType::SHOUT, 2, 1),
 };
 
+bool isCombatState = true;
+
 PlayerCombatData *playerCombatData = new PlayerCombatData{5, 5, &playerAttacks};
 CombatState *cs = new CombatState(*playerCombatData);
+SkillTreeState *sts = new SkillTreeState(); // TODO
 
 int main() {
   init();
@@ -42,30 +41,29 @@ void draw() {
 
   ClearBackground(GREEN);
 
-  cs->draw();
+  if (isCombatState) {
+    cs->draw();
+  } else {
+    sts->draw();
+  }
 
   EndDrawing();
 }
 
 void update() {
-  if (!cs->shouldQuit) {
-    cs->update();
-  } else {
-    // new game state
-    // TODO go to map screen
-    delete cs;
+  if (isCombatState) {
+    if (!cs->shouldQuit) {
+      cs->update();
+    } else {
+      levelsComplete++;
 
-    Attack atk = currentAttackSkillTree->at(levelsComplete);
-    playerAttacks.push_back(atk);
-    levelsComplete++;
+      delete cs;
+      cs = new CombatState(*playerCombatData);
 
-    // TODO some kind of pointer to the current level in the skill tree class
-    if (levelsComplete > currentAttackSkillTree->size() - 1) {
-      currentAttackSkillTree = &nst->level2Attacks;
-      levelsComplete = 0;
+      isCombatState = false;
     }
-
-    cs = new CombatState(*playerCombatData);
+  } else {
+    sts->update();
   }
 }
 

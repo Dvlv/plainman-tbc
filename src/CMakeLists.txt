@@ -12,7 +12,9 @@ SET (MY_HEADERS headers/combatstate.h
     headers/turtle.h 
     headers/cast-effect.h 
     headers/damage-bubble.h 
-    headers/necromancer-skilltree.h
+    headers/skilltree.h
+    headers/skilltree-state.h
+    headers/skilltree-node.h
 )
 
 SET (MY_SOURCE combatstate.cpp
@@ -23,7 +25,9 @@ SET (MY_SOURCE combatstate.cpp
     turtle.cpp 
     cast-effect.cpp 
     damage-bubble.cpp 
-    necromancer-skilltree.cpp
+    skilltree.cpp
+    skilltree-state.cpp
+    skilltree-node.cpp
 )
 
 find_library(RAYLIB_LIBRARY raylib HINTS /usr/local/include)

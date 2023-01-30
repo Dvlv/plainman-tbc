@@ -4,7 +4,6 @@
 
 ```bash
 mkdir build
-cd build
 ./go.sh
 ```
 
@@ -25,7 +24,6 @@ cd build
     - [x] Attack / Walk?
     - [x] Cast
     - [x] Take Dmg
-
 - [x] Draw Sprites on attack
     - [x] Signal system so takeDamage is called after performing melee animation finishes and state goes to BACKWARDS
     - [x] Damage bubble class
@@ -41,10 +39,11 @@ cd build
 - [ ] Outer GameState object which holds data about the player and whether it's map or combat
     - [ ] Add stats to player
     - [ ] Add skill points to player?
-    - [ ] Transition anim between combat and skilltree
+    - [x] Transition anim between combat and skilltree
 - [ ] Skill Tree state
-    - [x] Add new attacks to player
-    - [ ] Draw Skill Tree (just squares to start off with)
+    - [x] Draw and select choice of skill tree
+    - [ ] Add new attacks to player
+    - [ ] Draw Skill Tree Attacks (just squares to start off with)
     - [ ] Display name and desc of attack when hovering
     - [ ] Skill points system
     - [ ] Call chosen attack back to main.cpp state
