@@ -8,6 +8,7 @@
 SkillTreeState::SkillTreeState() {
   this->chosenSkillTree = nullptr;
   this->highlightedOption = 0;
+  this->isFinished = false;
 
   this->availableSkillTrees = std::vector<SkillTree>{
       SkillTree("Necromancer", "Summons Creatures to Attack",
@@ -67,6 +68,7 @@ void SkillTreeState::update() {
 
     if (IsKeyPressed(KEY_ENTER)) {
       this->chooseSkillTree(this->highlightedOption);
+      this->isFinished = true;
     }
 
     return; // end no skill tree chosen
@@ -78,13 +80,16 @@ void SkillTreeState::draw() {
     // no tree chosen, draw choice of trees
     // TODO draw a title saying select a skill
     const int gap = 50;
-    const int cardWidth = GetScreenWidth() / this->availableSkillTrees.size() -
-                          (gap * (this->availableSkillTrees.size() + 1));
+    const int cardWidth = ((GetScreenWidth() - (gap * 2)) - (gap * (this->availableSkillTrees.size()-1))) / this->availableSkillTrees.size(); // 525
     const int cardHeight = 200;
+
+    int titleLen = MeasureText("Choose a Speciality", 30);
+
+    DrawText("Choose a Speciality", (GetScreenWidth()/2) - (titleLen/2), gap, 30, BLACK);
 
     for (int i = 0; i < this->availableSkillTrees.size(); i++) {
       const int cardX = gap + (i * (cardWidth + gap));
-      const int cardY = gap;
+      const int cardY = gap*2 + 30; //title font size
 
       this->drawTreePreview(cardX, cardY, cardWidth, cardHeight,
                             &this->availableSkillTrees[i],

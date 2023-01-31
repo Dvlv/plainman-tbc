@@ -7,7 +7,7 @@
 Turtle::Turtle(Rectangle pos)
     : Enemy(pos, "Turtle", "A small turtle. Kind of cute.", 3, 1, 1,
             std::vector<Attack>{
-                Attack("Bite", "A small bite", AttackType::KICK, 2, 0),
+                Attack("Bite", "A small bite", AttackType::KICK, 1, 0),
             }) {}
 
 void Turtle::setCurrentTexture() {

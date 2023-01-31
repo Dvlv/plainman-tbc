@@ -12,6 +12,7 @@ public:
   SkillTree *chosenSkillTree;
   std::vector<SkillTree> availableSkillTrees;
   int highlightedOption;
+  bool isFinished;
 
   // funcs
   void chooseSkillTree(int skillTreeIndex);

@@ -86,14 +86,21 @@ Attack *Enemy::selectBestAttack() {
 }
 
 void Enemy::draw(Texture2D currentTexture) {
+  const int spriteSize = 128;
+
   if (this->isDead()) {
     // play death anim then mark canBeDeleted
-    DrawRectangleRec(this->pos, RED);
+  Rectangle currentSpriteWindow =
+      Rectangle{(float)spriteSize * this->currentanimationFrame, spriteSize,
+                spriteSize, spriteSize};
+
+  DrawTextureRec(this->currentTexture, currentSpriteWindow,
+                 Vector2{this->pos.x, this->pos.y}, Color{255, 0, 0, 128});
     this->canBeDeleted = true;
+
     return;
   }
 
-  const int spriteSize = 128;
 
   Color tint = this->currentAnimation == Animation::TAKE_DAMAGE ? RED : WHITE;
 

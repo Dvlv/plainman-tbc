@@ -39,11 +39,12 @@ int main() {
 void draw() {
   BeginDrawing();
 
-  ClearBackground(GREEN);
 
   if (isCombatState) {
+    ClearBackground(GREEN);
     cs->draw();
   } else {
+    ClearBackground(BROWN);
     sts->draw();
   }
 
@@ -64,6 +65,11 @@ void update() {
     }
   } else {
     sts->update();
+
+    if (sts->isFinished) {
+        isCombatState = true;
+	sts->isFinished = false;
+    }
   }
 }
 

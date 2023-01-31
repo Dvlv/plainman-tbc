@@ -27,6 +27,7 @@ CombatState::CombatState(PlayerCombatData playerCombatData) {
 
   // TODO read these from a level file, or random gen
   Turtle *turtle = new Turtle(this->enemyPositions[0]);
+  Turtle *turtle2 = new Turtle(this->enemyPositions[1]);
 
   this->enemies = std::vector<Enemy *>{turtle};
   this->damageBubbles = std::vector<DamageBubble>{};
