@@ -17,7 +17,7 @@ std::vector<Attack> playerAttacks{
     Attack("Shout", "A plain shout. \n1 Energy", AttackType::SHOUT, 2, 1),
 };
 
-bool isCombatState = true;
+bool isCombatState = false;
 
 PlayerCombatData *playerCombatData = new PlayerCombatData{5, 5, &playerAttacks};
 CombatState *cs = new CombatState(*playerCombatData);
@@ -38,7 +38,6 @@ int main() {
 
 void draw() {
   BeginDrawing();
-
 
   if (isCombatState) {
     ClearBackground(GREEN);
@@ -67,8 +66,8 @@ void update() {
     sts->update();
 
     if (sts->isFinished) {
-        isCombatState = true;
-	sts->isFinished = false;
+      isCombatState = true;
+      sts->isFinished = false;
     }
   }
 }
