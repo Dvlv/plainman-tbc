@@ -39,14 +39,14 @@ mkdir build
 - [ ] Outer GameState object which holds data about the player and whether it's map or combat
     - [ ] Add stats to player
     - [ ] Add skill points to player?
-    - [x] Transition anim between combat and skilltree
+    - [ ] Transition anim between combat and skilltree
 - [ ] Skill Tree state
     - [x] Draw and select choice of skill tree
-    - [ ] Add new attacks to player
-    - [ ] Draw Skill Tree Attacks (just squares to start off with)
-    - [ ] Display name and desc of attack when hovering
+    - [x] Add new attacks to player
+    - [x] Draw Skill Tree Attacks (just squares to start off with)
+    - [x] Display name and desc of attack when hovering
     - [ ] Skill points system
-    - [ ] Call chosen attack back to main.cpp state
+    - [x] Call chosen attack back to main.cpp state
 - [x] Draw Enemy Animations
     - [x] Idle
     - [x] Attack / Walk?
@@ -59,8 +59,18 @@ mkdir build
     - [x] Take Dmg
 
 - [ ] Ability to read Combat rounds from a file, or randomly generate them?
+- [ ] Read Skill Trees from .h file
 - [ ] More enemy classes
 - [ ] Enemy immunities
+
+## Possible combat mechanics
+- [ ] Status
+    - [ ] Frozen / Para
+    - [ ] Bleed / Fire
+- [ ] Life Steal
+- [ ] Invincible Turn
+- [ ] Heal Attacks
+- [ ] Charge
 
 
 ### QoL
