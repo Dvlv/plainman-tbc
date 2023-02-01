@@ -13,6 +13,8 @@ public:
   std::vector<SkillTree> availableSkillTrees;
   int highlightedOption;
   bool isFinished;
+  Attack *selectedAttack;
+  std::vector<int> learnedAttacks;
 
   // funcs
   void chooseSkillTree(int skillTreeIndex);

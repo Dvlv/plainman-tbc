@@ -3,14 +3,17 @@
 #include "headers/skilltree-node.h"
 #include "headers/skilltree.h"
 #include "raylib.h"
+#include <algorithm>
 #include <vector>
 
-#define STS_GAP 40
+#define STS_GAP 35
 
 SkillTreeState::SkillTreeState() {
   this->chosenSkillTree = nullptr;
   this->highlightedOption = 0;
   this->isFinished = false;
+  this->selectedAttack = nullptr;
+  this->learnedAttacks = std::vector<int>();
 
   this->availableSkillTrees = std::vector<SkillTree>{
       SkillTree(
@@ -27,6 +30,12 @@ SkillTreeState::SkillTreeState() {
               SkillTreeNode(new Attack("Dog", "Summon a Dog", AttackType::SHOUT,
                                        3, 2, AttackElement::ELECTRIC),
                             2),
+              SkillTreeNode(new Attack("Cat", "Summon a Cat", AttackType::SHOUT,
+                                       5, 3, AttackElement::FIRE),
+                            2),
+              SkillTreeNode(new Attack("Bat", "Summon a Bat", AttackType::SHOUT,
+                                       5, 3, AttackElement::NONE),
+                            3),
           }),
       SkillTree(
           "Assassin", "Uses status effects",
@@ -99,7 +108,13 @@ void SkillTreeState::drawTree(int treeBgX, int y, int treeBgWidth, int height) {
                     SKYBLUE);
     }
 
-    DrawRectangle(nodeX, nodeY, nodeWidth, nodeWidth, PURPLE);
+    bool isLearned =
+        std::find(this->learnedAttacks.begin(), this->learnedAttacks.end(),
+                  idx) != this->learnedAttacks.end();
+
+    Color nodeColor = isLearned ? GREEN : PURPLE;
+
+    DrawRectangle(nodeX, nodeY, nodeWidth, nodeWidth, nodeColor);
     posIdx++;
     idx++;
   }
@@ -147,7 +162,6 @@ void SkillTreeState::update() {
 
   // skill tree chosen, listen for keyboard event to change selected attack to
   // learn
-  //
   if (IsKeyPressed(KEY_RIGHT)) {
     this->highlightedOption++;
     if (this->highlightedOption >= this->chosenSkillTree->nodes.size()) {
@@ -158,12 +172,39 @@ void SkillTreeState::update() {
     if (this->highlightedOption < 0) {
       this->highlightedOption++;
     }
+  } else if (IsKeyPressed(KEY_DOWN)) {
+    // select first atk on next level
+    int atkLevel = this->chosenSkillTree->nodes[this->highlightedOption].level;
+    for (int i = this->highlightedOption + 1;
+         i < this->chosenSkillTree->nodes.size(); i++) {
+      if (this->chosenSkillTree->nodes[i].level > atkLevel) {
+        this->highlightedOption = i;
+        break;
+      }
+    }
+  } else if (IsKeyPressed(KEY_UP)) {
+    // select last atk on previous level
+    int atkLevel = this->chosenSkillTree->nodes[this->highlightedOption].level;
+    for (int i = this->highlightedOption - 1; i >= 0; i--) {
+      if (this->chosenSkillTree->nodes[i].level < atkLevel) {
+        this->highlightedOption = i;
+        break;
+      }
+    }
   }
 
   if (IsKeyPressed(KEY_ENTER)) {
-    // TODO call attack back to main state
-    this->highlightedOption = 0;
-    this->isFinished = true;
+    bool isLearned =
+        std::find(this->learnedAttacks.begin(), this->learnedAttacks.end(),
+                  this->highlightedOption) != this->learnedAttacks.end();
+
+    if (!isLearned) {
+      this->selectedAttack =
+          this->chosenSkillTree->nodes[this->highlightedOption].atk;
+      this->learnedAttacks.push_back(this->highlightedOption);
+      this->highlightedOption = 0;
+      this->isFinished = true;
+    }
   }
 }
 

@@ -68,6 +68,9 @@ void update() {
     if (sts->isFinished) {
       isCombatState = true;
       sts->isFinished = false;
+      if (sts->selectedAttack != nullptr) {
+        playerCombatData->attacks->push_back(*sts->selectedAttack);
+      }
     }
   }
 }
