@@ -18,6 +18,8 @@ public:
   void chooseSkillTree(int skillTreeIndex);
   void drawTreePreview(int x, int y, int width, int height, SkillTree *tree,
                        bool isHighlighted);
+  void drawTree(int x, int y, int width, int height);
+  void drawAttackDescription(int x, int y, int width, int height);
   void update();
   void draw();
   Attack getChosenAttack();
