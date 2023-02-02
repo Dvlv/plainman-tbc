@@ -57,6 +57,13 @@ void update() {
       cs->update();
     } else {
       playerCombatData->skillPoints++;
+      levelsComplete++;
+
+      // TODO make this a choice, requires new state I guess
+      if (levelsComplete > 2 && levelsComplete % 3 == 0) {
+        playerCombatData->maxHealth++;
+        playerCombatData->maxEnergy++;
+      }
 
       delete cs;
       cs = new CombatState(*playerCombatData);
