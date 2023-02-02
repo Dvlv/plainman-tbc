@@ -14,6 +14,8 @@ SkillTreeState::SkillTreeState() {
   this->isFinished = false;
   this->selectedAttack = nullptr;
   this->learnedAttacks = std::vector<int>();
+  this->highestAttackLevel = 0;
+  this->playerSkillPoints = 0;
 
   this->availableSkillTrees = std::vector<SkillTree>{
       SkillTree(
@@ -22,27 +24,27 @@ SkillTreeState::SkillTreeState() {
               SkillTreeNode(new Attack("Skeleton", "Summon a Skeleton",
                                        AttackType::SHOUT, 2, 2,
                                        AttackElement::FIRE),
-                            1),
+                            1, 1),
               SkillTreeNode(new Attack("Zombie", "Summon a Zombie",
                                        AttackType::SHOUT, 2, 2,
                                        AttackElement::ELECTRIC),
-                            1),
+                            1, 1),
               SkillTreeNode(new Attack("Dog", "Summon a Dog", AttackType::SHOUT,
                                        3, 2, AttackElement::ELECTRIC),
-                            2),
+                            2, 2),
               SkillTreeNode(new Attack("Cat", "Summon a Cat", AttackType::SHOUT,
                                        5, 3, AttackElement::FIRE),
-                            2),
+                            2, 2),
               SkillTreeNode(new Attack("Bat", "Summon a Bat", AttackType::SHOUT,
                                        5, 3, AttackElement::NONE),
-                            3),
+                            3, 4),
           }),
       SkillTree(
           "Assassin", "Uses status effects",
           std::vector<SkillTreeNode>{SkillTreeNode(
               new Attack("Poison", "Throws a vial of poison", AttackType::SHOUT,
                          2, 2, AttackElement::ELECTRIC),
-              1)}),
+              1, 1)}),
 
   };
 }
@@ -112,12 +114,31 @@ void SkillTreeState::drawTree(int treeBgX, int y, int treeBgWidth, int height) {
         std::find(this->learnedAttacks.begin(), this->learnedAttacks.end(),
                   idx) != this->learnedAttacks.end();
 
-    Color nodeColor = isLearned ? GREEN : PURPLE;
+    bool canLearn = node.level <= this->highestAttackLevel + 1 &&
+                    node.skillPointCost <= this->playerSkillPoints;
+
+    Color nodeColor = isLearned ? GREEN : canLearn ? PURPLE : RED;
 
     DrawRectangle(nodeX, nodeY, nodeWidth, nodeWidth, nodeColor);
+
+    // draw cost
+    DrawCircle(nodeX + nodeWidth - 10, nodeY + 10, 10, YELLOW);
+
+    int numWidth = MeasureText(std::to_string(node.skillPointCost).c_str(), 20);
+
+    DrawText(std::to_string(node.skillPointCost).c_str(),
+             nodeX + nodeWidth - 10 - (numWidth / 2), nodeY + 1, 20, BLACK);
+
     posIdx++;
     idx++;
   }
+
+  // total skill points
+  std::string totalSkillPointsText =
+      "Available Points: " + std::to_string(this->playerSkillPoints);
+
+  DrawText(totalSkillPointsText.c_str(), treeBgX + STS_GAP, y + height - 50, 30,
+           BLACK);
 }
 
 void SkillTreeState::drawAttackDescription(int x, int y, int width,
@@ -126,11 +147,34 @@ void SkillTreeState::drawAttackDescription(int x, int y, int width,
   DrawRectangle(x, y, width, height, BEIGE);
 
   if (this->chosenSkillTree != nullptr) {
-    Attack *atk = this->chosenSkillTree->nodes[this->highlightedOption].atk;
+    SkillTreeNode *node =
+        &this->chosenSkillTree->nodes[this->highlightedOption];
+    Attack *atk = node->atk;
 
     DrawText(atk->name.c_str(), x + padding, y + padding, 30, BLACK);
     DrawText(atk->description.c_str(), x + padding, y + 30 + (padding * 2), 20,
              BLACK);
+
+    int helpTextX = x + padding;
+    int helpTextY = y + height - STS_GAP;
+
+    if (node->skillPointCost > this->playerSkillPoints) {
+      DrawText("Not enough skill points", helpTextX, helpTextY, 20, RED);
+
+    } else if (node->level > this->highestAttackLevel + 1) {
+      std::string helpText =
+          "Requires attack from level " + std::to_string(node->level - 1);
+      DrawText(helpText.c_str(), helpTextX, helpTextY, 20, RED);
+
+    } else if (std::find(this->learnedAttacks.begin(),
+                         this->learnedAttacks.end(), this->highlightedOption) !=
+               this->learnedAttacks.end()) {
+
+      DrawText("Learned", helpTextX, helpTextY, 20, RED);
+
+    } else {
+      DrawText("Learnable", helpTextX, helpTextY, 20, BLACK);
+    }
   }
 }
 
@@ -198,13 +242,29 @@ void SkillTreeState::update() {
         std::find(this->learnedAttacks.begin(), this->learnedAttacks.end(),
                   this->highlightedOption) != this->learnedAttacks.end();
 
-    if (!isLearned) {
+    bool canLearn =
+        this->chosenSkillTree->nodes[this->highlightedOption].level <=
+        this->highestAttackLevel + 1;
+
+    if (!isLearned && canLearn) {
       this->selectedAttack =
           this->chosenSkillTree->nodes[this->highlightedOption].atk;
+
+      this->selectedAttackSkillPointCost =
+          this->chosenSkillTree->nodes[this->highlightedOption].skillPointCost;
+
+      this->highestAttackLevel =
+          this->chosenSkillTree->nodes[this->highlightedOption].level;
+
       this->learnedAttacks.push_back(this->highlightedOption);
       this->highlightedOption = 0;
       this->isFinished = true;
     }
+  } else if (IsKeyPressed(KEY_BACKSPACE)) {
+    // cancel, TODO button
+    this->selectedAttack = nullptr;
+    this->highlightedOption = 0;
+    this->isFinished = true;
   }
 }
 

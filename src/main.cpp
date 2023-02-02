@@ -19,7 +19,8 @@ std::vector<Attack> playerAttacks{
 
 bool isCombatState = false;
 
-PlayerCombatData *playerCombatData = new PlayerCombatData{5, 5, &playerAttacks};
+PlayerCombatData *playerCombatData =
+    new PlayerCombatData{5, 5, &playerAttacks, 0};
 CombatState *cs = new CombatState(*playerCombatData);
 SkillTreeState *sts = new SkillTreeState(); // TODO
 
@@ -55,7 +56,7 @@ void update() {
     if (!cs->shouldQuit) {
       cs->update();
     } else {
-      levelsComplete++;
+      playerCombatData->skillPoints++;
 
       delete cs;
       cs = new CombatState(*playerCombatData);
@@ -63,13 +64,19 @@ void update() {
       isCombatState = false;
     }
   } else {
+    sts->playerSkillPoints = playerCombatData->skillPoints;
     sts->update();
 
     if (sts->isFinished) {
       isCombatState = true;
       sts->isFinished = false;
+
       if (sts->selectedAttack != nullptr) {
         playerCombatData->attacks->push_back(*sts->selectedAttack);
+        playerCombatData->skillPoints -= sts->selectedAttackSkillPointCost;
+
+        sts->selectedAttackSkillPointCost = 0;
+        sts->selectedAttack = nullptr;
       }
     }
   }

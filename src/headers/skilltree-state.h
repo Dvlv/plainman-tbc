@@ -12,9 +12,12 @@ public:
   SkillTree *chosenSkillTree;
   std::vector<SkillTree> availableSkillTrees;
   int highlightedOption;
-  bool isFinished;
-  Attack *selectedAttack;
   std::vector<int> learnedAttacks;
+  int highestAttackLevel;
+  Attack *selectedAttack;
+  int selectedAttackSkillPointCost;
+  int playerSkillPoints;
+  bool isFinished;
 
   // funcs
   void chooseSkillTree(int skillTreeIndex);
