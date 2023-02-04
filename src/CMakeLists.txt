@@ -16,6 +16,10 @@ SET (MY_HEADERS headers/combatstate.h
     headers/skilltree.h
     headers/skilltree-state.h
     headers/skilltree-node.h
+    headers/mage-skilltree.h
+    headers/bard-skilltree.h
+    headers/necromancer-skilltree.h
+    headers/combat-round.h
 )
 
 SET (MY_SOURCE combatstate.cpp
@@ -30,6 +34,7 @@ SET (MY_SOURCE combatstate.cpp
     skilltree.cpp
     skilltree-state.cpp
     skilltree-node.cpp
+    combat-round.cpp
 )
 
 find_library(RAYLIB_LIBRARY raylib HINTS /usr/local/include)

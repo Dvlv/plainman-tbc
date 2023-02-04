@@ -1,6 +1,7 @@
 #include "headers/ui.h"
 #include "headers/enemy.h"
 #include "raylib.h"
+#include <memory>
 #include <vector>
 
 // window is 1200 x 800
@@ -42,7 +43,7 @@ void drawArrowOverEnemy(Rectangle pos) {
   DrawTriangle(topRight, topLeft, bottom, DARKGRAY);
 }
 
-void drawPlayerAttackMenu(PlayerAttackMenu *pam, Enemy *enemy) {
+void drawPlayerAttackMenu(PlayerAttackMenu *pam, std::shared_ptr<Enemy> enemy) {
   const int gap = 15;
   const int topX = 100;
   const int topY = GetScreenHeight() - gap - 200;

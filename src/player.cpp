@@ -10,9 +10,9 @@
 
 Player::Player(Rectangle pos, PlayerCombatData combatData) {
   this->maxHealth = combatData.maxHealth;
-  this->currentHealth = combatData.maxHealth;
+  this->currentHealth = combatData.currentHealth;
   this->maxEnergy = combatData.maxEnergy;
-  this->currentEnergy = combatData.maxEnergy;
+  this->currentEnergy = combatData.currentEnergy;
   this->attacks = combatData.attacks;
   this->pos = pos;
   this->startingPos = pos;

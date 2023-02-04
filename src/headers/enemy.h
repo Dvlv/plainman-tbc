@@ -47,6 +47,7 @@ public:
 
   bool isDead();
   void drawHealthBar();
+  void drawEnergyBar();
 
   void performAttack(Attack *atk, Rectangle targetBounds,
                      bool *animationPlaying, bool *doAttack);

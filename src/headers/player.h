@@ -10,6 +10,8 @@
 struct PlayerCombatData {
   int maxHealth;
   int maxEnergy;
+  int currentHealth;
+  int currentEnergy;
   std::vector<Attack> *attacks;
   int skillPoints;
 };

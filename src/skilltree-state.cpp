@@ -1,6 +1,8 @@
 #include "headers/skilltree-state.h"
 #include "headers/attack.h"
-#include "headers/mage.h"
+#include "headers/bard-skilltree.h"
+#include "headers/mage-skilltree.h"
+#include "headers/necromancer-skilltree.h"
 #include "headers/skilltree-node.h"
 #include "headers/skilltree.h"
 #include "raylib.h"
@@ -19,33 +21,8 @@ SkillTreeState::SkillTreeState() {
   this->playerSkillPoints = 0;
 
   this->availableSkillTrees = std::vector<SkillTree>{
-      SkillTree(
-          "Necromancer", "Summons Creatures to Attack",
-          std::vector<SkillTreeNode>{
-              SkillTreeNode(new Attack("Skeleton", "Summon a Skeleton",
-                                       AttackType::SHOUT, 2, 2,
-                                       AttackElement::FIRE),
-                            1, 1),
-              SkillTreeNode(new Attack("Zombie", "Summon a Zombie",
-                                       AttackType::SHOUT, 2, 2,
-                                       AttackElement::ELECTRIC),
-                            1, 1),
-              SkillTreeNode(new Attack("Dog", "Summon a Dog", AttackType::SHOUT,
-                                       3, 2, AttackElement::AIR),
-                            2, 2),
-              SkillTreeNode(new Attack("Cat", "Summon a Cat", AttackType::SHOUT,
-                                       5, 3, AttackElement::EARTH),
-                            2, 2),
-              SkillTreeNode(new Attack("Bat", "Summon a Bat", AttackType::SHOUT,
-                                       5, 3, AttackElement::ICE),
-                            3, 4),
-          }),
-      SkillTree(
-          "Assassin", "Uses status effects",
-          std::vector<SkillTreeNode>{SkillTreeNode(
-              new Attack("Poison", "Throws a vial of poison", AttackType::SHOUT,
-                         2, 2, AttackElement::ELECTRIC),
-              1, 1)}),
+      Necromancer(),
+      Bard(),
       Mage(),
   };
 }

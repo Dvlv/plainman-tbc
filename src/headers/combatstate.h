@@ -6,12 +6,11 @@
 #include "enemy.h"
 #include "player.h"
 #include "ui.h"
+#include <memory>
 #include <vector>
 
 class CombatState {
 private:
-  Player *player;
-
   PlayerAttackMenu *playerAtkMenu;
 
   PlayerCombatData playerCombatData;
@@ -28,22 +27,22 @@ private:
   bool isEnemyAttacking;
 
   std::vector<Attack> allAttacks;
-  std::vector<Enemy *> enemies;
+  std::vector<std::shared_ptr<Enemy>> enemies;
   std::vector<Rectangle> enemyPositions;
   std::vector<DamageBubble> damageBubbles;
   std::vector<CastEffect> castEffects;
 
 public:
-  CombatState(PlayerCombatData playerCombatData);
+  CombatState(PlayerCombatData playerCombatData, int roundNumber);
+
+  bool shouldQuit;
+  Player *player;
 
   void updatePlayerTurn();
   void updateEnemyTurn();
 
   const void postPlayerAttack();
   const void postEnemyAttack();
-
-  bool shouldQuit;
-
   void update();
   void draw();
 

@@ -56,6 +56,29 @@ void Enemy::drawHealthBar() {
            this->pos.y + 100 + 30, healthFontSize, WHITE);
 }
 
+void Enemy::drawEnergyBar() {
+  constexpr int barWidth = 100;
+  constexpr int barHeight = 20;
+  constexpr int energyFontSize = 20;
+  constexpr int energyBarPosBelowPlayer = 160;
+
+  int ePercent = ((float)this->currentEnergy / (float)this->maxEnergy) * 100.0f;
+
+  DrawRectangle(this->pos.x, this->pos.y + energyBarPosBelowPlayer, barWidth,
+                barHeight, RED);
+
+  DrawRectangle(this->pos.x, this->pos.y + energyBarPosBelowPlayer, ePercent,
+                barHeight, DARKBLUE);
+
+  std::string energyText = std::to_string(this->currentEnergy) + "/" +
+                           std::to_string(this->maxEnergy);
+
+  int textWidth = MeasureText(energyText.c_str(), energyFontSize);
+
+  DrawText(energyText.c_str(), this->pos.x + (barWidth / 2) - (textWidth / 2),
+           this->pos.y + energyBarPosBelowPlayer, energyFontSize, WHITE);
+}
+
 void Enemy::performAttack(Attack *atk, Rectangle targetBounds,
                           bool *animationPlaying, bool *doAttack) {
   // Plays attack animation, hands control back to GameState
@@ -120,6 +143,7 @@ void Enemy::draw(Texture2D currentTexture) {
   if (this->currentAnimation != Animation::ATTACK &&
       this->currentAnimation != Animation::CAST_ATTACK) {
     drawHealthBar();
+    drawEnergyBar();
   }
 }
 

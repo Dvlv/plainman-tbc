@@ -20,8 +20,8 @@ std::vector<Attack> playerAttacks{
 bool isCombatState = false;
 
 PlayerCombatData *playerCombatData =
-    new PlayerCombatData{5, 5, &playerAttacks, 0};
-CombatState *cs = new CombatState(*playerCombatData);
+    new PlayerCombatData{5, 3, 5, 3, &playerAttacks, 0};
+CombatState *cs = new CombatState(*playerCombatData, levelsComplete);
 SkillTreeState *sts = new SkillTreeState(); // TODO
 
 int main() {
@@ -65,8 +65,23 @@ void update() {
         playerCombatData->maxEnergy++;
       }
 
+      // restore 50% of hp and energy
+      playerCombatData->currentHealth =
+          cs->player->currentHealth + (playerCombatData->maxHealth / 2);
+
+      if (playerCombatData->currentHealth > playerCombatData->maxHealth) {
+        playerCombatData->currentHealth = playerCombatData->maxHealth;
+      }
+
+      playerCombatData->currentEnergy =
+          cs->player->currentEnergy + (playerCombatData->maxEnergy / 2);
+
+      if (playerCombatData->currentEnergy > playerCombatData->maxEnergy) {
+        playerCombatData->currentEnergy = playerCombatData->maxEnergy;
+      }
+
       delete cs;
-      cs = new CombatState(*playerCombatData);
+      cs = new CombatState(*playerCombatData, levelsComplete);
 
       isCombatState = false;
     }

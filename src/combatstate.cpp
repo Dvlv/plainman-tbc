@@ -2,14 +2,16 @@
 #include "headers/attack.h"
 #include "headers/bird.h"
 #include "headers/cast-effect.h"
+#include "headers/combat-round.h"
 #include "headers/enemy.h"
 #include "headers/player.h"
 #include "headers/turtle.h"
 #include "headers/ui.h"
 #include "raylib.h"
+#include <memory>
 #include <vector>
 
-CombatState::CombatState(PlayerCombatData playerCombatData) {
+CombatState::CombatState(PlayerCombatData playerCombatData, int roundNumber) {
   this->selectedEnemy = 0;
   this->performingAttack = false;
   this->isPlayerTurn = true;
@@ -23,13 +25,15 @@ CombatState::CombatState(PlayerCombatData playerCombatData) {
   this->playerAtkMenu = new PlayerAttackMenu(this->player);
 
   this->enemyPositions = std::vector<Rectangle>{Rectangle{750, 350, 100, 100},
-                                                Rectangle{900, 350, 100, 100}};
+                                                Rectangle{900, 350, 100, 100},
+                                                Rectangle{1050, 350, 100, 100}};
+
+  std::unique_ptr<CombatRound> round =
+      std::make_unique<CombatRound>(roundNumber);
 
   // TODO read these from a level file, or random gen
-  Turtle *turtle = new Turtle(this->enemyPositions[0]);
-  Bird *bird = new Bird(this->enemyPositions[1]);
+  this->enemies = *round->getRoundEnemies(&this->enemyPositions);
 
-  this->enemies = std::vector<Enemy *>{turtle, bird};
   this->damageBubbles = std::vector<DamageBubble>{};
   this->castEffects = std::vector<CastEffect>{};
 }
@@ -123,10 +127,14 @@ const void CombatState::postPlayerAttack() {
     this->castEffects.push_back(CastEffect(
         this->enemies[this->selectedEnemy]->pos, selectedAttack->atkElement));
   }
+
+  // reset attack choice
+  this->playerAtkMenu->highlightedOption = 0;
 }
 
 const void CombatState::postEnemyAttack() {
-  Enemy *attackingEnemy = this->enemies[this->currentlyAttackingEnemy];
+  std::shared_ptr<Enemy> attackingEnemy =
+      this->enemies[this->currentlyAttackingEnemy];
   Attack *bestAtk = attackingEnemy->currentAttack;
 
   this->player->takeDamage(bestAtk->damage);
@@ -185,7 +193,9 @@ void CombatState::updateEnemyTurn() {
     this->isEnemyAttacking = true;
     this->animationPlaying = true;
 
-    Enemy *attackingEnemy = this->enemies[this->currentlyAttackingEnemy];
+    std::shared_ptr<Enemy> attackingEnemy =
+        this->enemies[this->currentlyAttackingEnemy];
+
     Attack *bestAtk = attackingEnemy->selectBestAttack();
     attackingEnemy->performAttack(bestAtk, this->player->pos,
                                   &this->animationPlaying, &this->doAttack);
@@ -223,7 +233,6 @@ void CombatState::update() {
     if (markedEnemies.size() > 0) {
       this->selectedEnemy = 0;
       for (int i = 0; i < markedEnemies.size(); i++) {
-        delete this->enemies[markedEnemies[i]];
         this->enemies.erase(this->enemies.begin() + markedEnemies[i]);
       }
     }
