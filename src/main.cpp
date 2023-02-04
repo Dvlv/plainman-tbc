@@ -12,9 +12,9 @@ void draw();
 int levelsComplete = 0;
 
 std::vector<Attack> playerAttacks{
-    Attack("Punch", "A plain punch.", AttackType::PUNCH, 1, 0),
-    Attack("Kick", "A plain kick.", AttackType::KICK, 1, 0),
-    Attack("Shout", "A plain shout. \n1 Energy", AttackType::SHOUT, 2, 1),
+    Attack("Punch", "A plain punch.\n1 Damage", AttackType::PUNCH, 1, 0),
+    Attack("Shout", "A plain shout.\n1 Damage\n1 Energy", AttackType::SHOUT, 1,
+           1),
 };
 
 bool isCombatState = false;

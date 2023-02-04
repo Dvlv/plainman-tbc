@@ -8,6 +8,8 @@ mkdir build
 ```
 
 ## TODO
+- [ ] Reset highlighted player attack to highest which you can afford if cant afford selected
+- [ ] Left and Right work as expected in PlayerAtkMenu
 - [ ] Ability to read Combat rounds from a file, or randomly generate them?
 - [ ] Read Skill Trees from .h file
 - [ ] More enemy classes

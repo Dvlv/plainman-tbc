@@ -1,5 +1,6 @@
 #include "headers/skilltree-state.h"
 #include "headers/attack.h"
+#include "headers/mage.h"
 #include "headers/skilltree-node.h"
 #include "headers/skilltree.h"
 #include "raylib.h"
@@ -45,6 +46,7 @@ SkillTreeState::SkillTreeState() {
               new Attack("Poison", "Throws a vial of poison", AttackType::SHOUT,
                          2, 2, AttackElement::ELECTRIC),
               1, 1)}),
+      Mage(),
   };
 }
 
