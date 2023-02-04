@@ -13,17 +13,22 @@ mkdir build
 - [ ] More enemy classes
 - [ ] Enemy immunities
 - [ ] AoE Attacks
-- [ ] Sprites for elemental types drawn
-    - [x] Music (shout)
-    - [x] Fire
-    - [x] Electric
-    - [ ] Ice
-    - [ ] Earth
-    - [ ] Air
+- [ ] Make some kind of texture cache for cast effects so they arent racing
 - [ ] Stat upgrade choice state
     - [ ] Swap isCombat flag for an enum
     - [ ] Transition anim between States, requires prevState in main
 
+### Possible combat mechanics
+- [ ] Status
+    - [ ] Frozen / Para
+    - [ ] Bleed / Fire
+- [ ] Invincible Turn
+- [ ] Heal Attacks
+    - [ ] Life Steal
+    - [ ] Heal bubble
+- [ ] Charge
+
+## Done
 
 - [x] Menu disappear when attacking
 - [x] Numbers in HP Bar
@@ -66,15 +71,14 @@ mkdir build
     - [x] Damage bubble class
     - [x] Damage bubble vector in CombatState which animates and marks self for deletion
     - [x] Draw elemental sprite over enemy on player using cast attack
+- [x] Sprites for elemental types drawn
+    - [x] Music (shout)
+    - [x] Fire
+    - [x] Electric
+    - [x] Ice
+    - [x] Earth
+    - [x] Air
 
-## Possible combat mechanics
-- [ ] Status
-    - [ ] Frozen / Para
-    - [ ] Bleed / Fire
-- [ ] Life Steal
-- [ ] Invincible Turn
-- [ ] Heal Attacks
-- [ ] Charge
 
 
 ### QoL

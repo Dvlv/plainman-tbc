@@ -5,7 +5,7 @@
 #include <vector>
 
 Bird::Bird(Rectangle pos)
-    : Enemy(pos, "Bird", "A small bird. Kind of cute.", 5, 2, 1,
+    : Enemy(pos, "Bird", "A small bird. Kind of cute.", 4, 2, 1,
             std::vector<Attack>{
                 Attack("Zap", "A small zap", AttackType::SHOUT, 2, 1,
                        AttackElement::ELECTRIC),

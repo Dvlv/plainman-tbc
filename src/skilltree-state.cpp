@@ -30,13 +30,13 @@ SkillTreeState::SkillTreeState() {
                                        AttackElement::ELECTRIC),
                             1, 1),
               SkillTreeNode(new Attack("Dog", "Summon a Dog", AttackType::SHOUT,
-                                       3, 2, AttackElement::ELECTRIC),
+                                       3, 2, AttackElement::AIR),
                             2, 2),
               SkillTreeNode(new Attack("Cat", "Summon a Cat", AttackType::SHOUT,
-                                       5, 3, AttackElement::FIRE),
+                                       5, 3, AttackElement::EARTH),
                             2, 2),
               SkillTreeNode(new Attack("Bat", "Summon a Bat", AttackType::SHOUT,
-                                       5, 3, AttackElement::NONE),
+                                       5, 3, AttackElement::ICE),
                             3, 4),
           }),
       SkillTree(
@@ -45,7 +45,6 @@ SkillTreeState::SkillTreeState() {
               new Attack("Poison", "Throws a vial of poison", AttackType::SHOUT,
                          2, 2, AttackElement::ELECTRIC),
               1, 1)}),
-
   };
 }
 

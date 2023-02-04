@@ -23,6 +23,18 @@ void CastEffect::loadSprite() {
         LoadTexture("src/assets/art/combat/attacks/cast-electric.png");
     break;
 
+  case AttackElement::ICE:
+    this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-ice.png");
+    break;
+
+  case AttackElement::AIR:
+    this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-air.png");
+    break;
+
+  case AttackElement::EARTH:
+    this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-earth.png");
+    break;
+
   default:
     this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-shout.png");
   }
