@@ -8,17 +8,16 @@ mkdir build
 ```
 
 ## TODO
-- [ ] Reset highlighted player attack to highest which you can afford if cant afford selected
 - [ ] Left and Right work as expected in PlayerAtkMenu
-- [ ] Ability to read Combat rounds from a file, or randomly generate them?
-- [ ] Read Skill Trees from .h file
-- [ ] More enemy classes
-- [ ] Enemy immunities
 - [ ] AoE Attacks
+- [ ] Heal / Buff attacks
 - [ ] Make some kind of texture cache for cast effects so they arent racing
 - [ ] Stat upgrade choice state
     - [ ] Swap isCombat flag for an enum
     - [ ] Transition anim between States, requires prevState in main
+- [ ] More enemy classes
+- [ ] Enemy immunities
+- [ ] Proper lose condition
 
 ### Possible combat mechanics
 - [ ] Status
@@ -32,6 +31,9 @@ mkdir build
 
 ## Done
 
+- [x] Reset highlighted player attack to highest which you can afford if cant afford selected
+- [x] Ability to read Combat rounds from a file, or randomly generate them?
+- [x] Read Skill Trees from .h file
 - [x] Menu disappear when attacking
 - [x] Numbers in HP Bar
 - [x] Show description of Attack in PlayerAttackMenu
