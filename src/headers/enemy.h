@@ -21,8 +21,6 @@ private:
 
   int speed;
 
-  Attack *currentAttack;
-
   Rectangle attackTarget;
   Rectangle startingPos;
   bool *animationPlaying;
@@ -39,11 +37,13 @@ private:
 public:
   Enemy(Rectangle pos, std::string name, std::string description, int health,
         int energy, int speed, std::vector<Attack> attacks);
+
   std::string description;
   Rectangle pos;
   bool canBeDeleted;
   Animation currentAnimation;
   MeleeAnimationState meleeAnimationState;
+  Attack *currentAttack;
 
   bool isDead();
   void drawHealthBar();

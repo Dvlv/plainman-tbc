@@ -13,31 +13,16 @@ mkdir build
 - [ ] More enemy classes
 - [ ] Enemy immunities
 - [ ] AoE Attacks
-- [x] Draw Sprites on attack
-    - [x] Signal system so takeDamage is called after performing melee animation finishes and state goes to BACKWARDS
-    - [x] Damage bubble class
-    - [x] Damage bubble vector in CombatState which animates and marks self for deletion
-    - [ ] Sprites for elemental types drawn
-        - [x] Music (shout)
-        - [x] Fire
-        - [x] Electric
-        - [ ] Ice
-        - [ ] Earth
-        - [ ] Air
-    - [x] Draw elemental sprite over enemy on player using cast attack
+- [ ] Sprites for elemental types drawn
+    - [x] Music (shout)
+    - [x] Fire
+    - [x] Electric
+    - [ ] Ice
+    - [ ] Earth
+    - [ ] Air
 - [ ] Stat upgrade choice state
     - [ ] Swap isCombat flag for an enum
     - [ ] Transition anim between States, requires prevState in main
-- [ ] Draw Enemy Animations
-    - [x] Idle
-    - [x] Attack / Walk?
-    - [ ] Cast
-    - [x] Take Dmg
-- [ ] Enemy Animation Logic
-    - [x] Idle
-    - [x] Attack / Walk?
-    - [ ] Cast
-    - [x] Take Dmg
 
 
 - [x] Menu disappear when attacking
@@ -66,6 +51,21 @@ mkdir build
     - [x] Display name and desc of attack when hovering
     - [x] Skill points system
     - [x] Call chosen attack back to main.cpp state
+- [x] Draw Enemy Animations
+    - [x] Idle
+    - [x] Attack / Walk?
+    - [x] Cast
+    - [x] Take Dmg
+- [x] Enemy Animation Logic
+    - [x] Idle
+    - [x] Attack / Walk?
+    - [x] Cast
+    - [x] Take Dmg
+- [x] Draw Sprites on attack
+    - [x] Signal system so takeDamage is called after performing melee animation finishes and state goes to BACKWARDS
+    - [x] Damage bubble class
+    - [x] Damage bubble vector in CombatState which animates and marks self for deletion
+    - [x] Draw elemental sprite over enemy on player using cast attack
 
 ## Possible combat mechanics
 - [ ] Status

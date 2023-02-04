@@ -67,4 +67,7 @@ void CastEffect::draw() {
                  Vector2{this->pos.x, this->pos.y}, WHITE);
 }
 
-CastEffect::~CastEffect() { UnloadTexture(this->sprite); }
+CastEffect::~CastEffect() {
+  printf("unloading cast effect\n");
+  UnloadTexture(this->sprite);
+}

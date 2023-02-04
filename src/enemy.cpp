@@ -69,6 +69,10 @@ void Enemy::performAttack(Attack *atk, Rectangle targetBounds,
   this->attackTarget = targetBounds;
   this->currentAttack = atk;
   this->doAttack = doAttack;
+
+  if (atk->energyCost > 0) {
+    this->currentEnergy -= atk->energyCost;
+  }
 }
 
 Attack *Enemy::selectBestAttack() {
@@ -76,7 +80,7 @@ Attack *Enemy::selectBestAttack() {
   Attack *bestAttack = &this->attacks[0];
 
   for (Attack &a : this->attacks) {
-    if (a.damage > highestDmg) {
+    if (a.damage > highestDmg && a.energyCost <= this->currentEnergy) {
       highestDmg = a.damage;
       bestAttack = &a;
     }
@@ -90,17 +94,16 @@ void Enemy::draw(Texture2D currentTexture) {
 
   if (this->isDead()) {
     // play death anim then mark canBeDeleted
-  Rectangle currentSpriteWindow =
-      Rectangle{(float)spriteSize * this->currentanimationFrame, spriteSize,
-                spriteSize, spriteSize};
+    Rectangle currentSpriteWindow =
+        Rectangle{(float)spriteSize * this->currentanimationFrame, spriteSize,
+                  spriteSize, spriteSize};
 
-  DrawTextureRec(this->currentTexture, currentSpriteWindow,
-                 Vector2{this->pos.x, this->pos.y}, Color{255, 0, 0, 128});
+    DrawTextureRec(this->currentTexture, currentSpriteWindow,
+                   Vector2{this->pos.x, this->pos.y}, Color{255, 0, 0, 128});
     this->canBeDeleted = true;
 
     return;
   }
-
 
   Color tint = this->currentAnimation == Animation::TAKE_DAMAGE ? RED : WHITE;
 
@@ -216,8 +219,8 @@ void Enemy::updateCurrentTextureFrame() {
 
       this->currentanimationFrame += 1;
 
-      // frame before last, signal the attack to happen
-      if (this->currentanimationFrame == (attackFrameCount)) {
+      // third frame signal to apply damage
+      if (this->currentanimationFrame == 1) {
         *this->doAttack = true;
       }
 

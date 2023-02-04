@@ -221,8 +221,8 @@ void Player::updateCurrentTextureFrame() {
 
       this->currentanimationFrame += 1;
 
-      // frame before last, signal the attack to happen
-      if (this->currentanimationFrame == (attackFrameCount)) {
+      // second frame signal to apply damage
+      if (this->currentanimationFrame == 3) {
         *this->doAttack = true;
       }
 

@@ -10,6 +10,7 @@ SET (MY_HEADERS headers/combatstate.h
     headers/attack.h 
     headers/enemy.h 
     headers/turtle.h 
+    headers/bird.h 
     headers/cast-effect.h 
     headers/damage-bubble.h 
     headers/skilltree.h
@@ -23,6 +24,7 @@ SET (MY_SOURCE combatstate.cpp
     attack.cpp 
     enemy.cpp 
     turtle.cpp 
+    bird.cpp 
     cast-effect.cpp 
     damage-bubble.cpp 
     skilltree.cpp

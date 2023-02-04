@@ -27,9 +27,9 @@ CombatState::CombatState(PlayerCombatData playerCombatData) {
 
   // TODO read these from a level file, or random gen
   Turtle *turtle = new Turtle(this->enemyPositions[0]);
-  Turtle *turtle2 = new Turtle(this->enemyPositions[1]);
+  Bird *bird = new Bird(this->enemyPositions[1]);
 
-  this->enemies = std::vector<Enemy *>{turtle};
+  this->enemies = std::vector<Enemy *>{turtle, bird};
   this->damageBubbles = std::vector<DamageBubble>{};
   this->castEffects = std::vector<CastEffect>{};
 }
@@ -102,14 +102,6 @@ void CombatState::updatePlayerTurn() {
       this->animationPlaying = true;
       this->player->performAttack(selectedAttack, selectedEnemyBounds,
                                   &this->animationPlaying, &this->doAttack);
-
-      if (selectedAttack->atkType == AttackType::SHOUT) {
-        // spawn cast effect
-        // TODO move this to be signalled by player during cast anim frame 1
-        this->castEffects.push_back(
-            CastEffect(this->enemies[this->selectedEnemy]->pos,
-                       selectedAttack->atkElement));
-      }
     }
   }
 }
@@ -125,11 +117,17 @@ const void CombatState::postPlayerAttack() {
   dmgBubblePos.y -= 30;
   this->damageBubbles.push_back(
       DamageBubble(dmgBubblePos, selectedAttack->damage));
+
+  if (selectedAttack->atkType == AttackType::SHOUT) {
+    // spawn cast effect
+    this->castEffects.push_back(CastEffect(
+        this->enemies[this->selectedEnemy]->pos, selectedAttack->atkElement));
+  }
 }
 
 const void CombatState::postEnemyAttack() {
   Enemy *attackingEnemy = this->enemies[this->currentlyAttackingEnemy];
-  Attack *bestAtk = attackingEnemy->selectBestAttack();
+  Attack *bestAtk = attackingEnemy->currentAttack;
 
   this->player->takeDamage(bestAtk->damage);
 
@@ -137,6 +135,12 @@ const void CombatState::postEnemyAttack() {
   Rectangle dmgBubblePos = this->player->pos;
   dmgBubblePos.y -= 30;
   this->damageBubbles.push_back(DamageBubble(dmgBubblePos, bestAtk->damage));
+
+  // cast anim if shout
+  if (bestAtk->atkType == AttackType::SHOUT) {
+    this->castEffects.push_back(
+        CastEffect(this->player->pos, bestAtk->atkElement));
+  }
 }
 
 void CombatState::updateEnemyTurn() {
