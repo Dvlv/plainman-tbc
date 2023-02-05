@@ -21,9 +21,22 @@ public:
                                          AttackElement::ELECTRIC),
                               1, 1),
                 SkillTreeNode(
+                    new Attack(
+                        "Blood Steal",
+                        "Steal enemy blood.\n1 Lifesteal Damage\n1 Energy",
+                        AttackType::SHOUT, 1, 1, AttackElement::ELECTRIC, false,
+                        1),
+                    1, 1),
+                SkillTreeNode(
                     new Attack("Vampire", "Summon a Vampire.\n2 Energy",
                                AttackType::SHOUT, 2, 2, AttackElement::ICE),
                     2, 1),
+                SkillTreeNode(new Attack("Curse",
+                                         "Steal HP from all Enemies.\n1 "
+                                         "Lifesteal Damage\n2 Energy",
+                                         AttackType::SHOUT, 1, 2,
+                                         AttackElement::ICE, true, 1),
+                              2, 2),
                 SkillTreeNode(
                     new Attack("Twin-Headed Zombie",
                                "Summon a Two-Headed Zombie.\n3 Energy",
@@ -37,14 +50,14 @@ public:
                                          "Throws Leech onto Enemy to Steal "
                                          "HP.\n5 Damage\n5 Energy",
                                          AttackType::SHOUT, 5, 5,
-                                         AttackElement::FIRE),
+                                         AttackElement::FIRE, false, 5),
                               3, 4),
 
                 SkillTreeNode(
                     new Attack("Summon Snack",
                                "Resurrect a Tasty Snack.\n+3 HP\n1 Energy",
-                               AttackType::SHOUT, 0, 1,
-                               AttackElement::ELECTRIC),
+                               AttackType::SHOUT, 0, 1, AttackElement::ELECTRIC,
+                               false, 3),
                     3, 5),
                 SkillTreeNode(
                     new Attack("Summon Armour",

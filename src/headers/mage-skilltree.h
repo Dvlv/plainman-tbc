@@ -11,11 +11,12 @@ public:
       : SkillTree(
             "Mage", "Uses Elemental Casts",
             std::vector<SkillTreeNode>{
-                SkillTreeNode(new Attack("Fireball",
-                                         "Cast a Fireball.\n1 Damage\n1 Energy",
-                                         AttackType::SHOUT, 1, 1,
-                                         AttackElement::FIRE),
-                              1, 1),
+                SkillTreeNode(
+                    new Attack(
+                        "Fire Rain",
+                        "Cast a Fire Rain on all enemies\n1 Damage\n2 Energy",
+                        AttackType::SHOUT, 1, 2, AttackElement::FIRE, true),
+                    1, 1),
                 SkillTreeNode(
                     new Attack(
                         "Thunderzap", "Zap with Thunder.\n1 Damage\n1 Energy",
@@ -31,22 +32,24 @@ public:
                                "Throw a Mud Ball.\n3 Damage\n3 Energy",
                                AttackType::SHOUT, 3, 3, AttackElement::EARTH),
                     2, 2),
+                SkillTreeNode(
+                    new Attack("Fire Spout",
+                               "Spout Fire on all enemies.\n3 Damage\n4 Energy",
+                               AttackType::SHOUT, 3, 4, AttackElement::FIRE,
+                               true),
+                    2, 4),
                 SkillTreeNode(new Attack("Air Blast",
                                          "Blast with Air.\n4 Damage\n4 Energy",
                                          AttackType::SHOUT, 4, 4,
                                          AttackElement::AIR),
                               3, 3),
-                SkillTreeNode(
-                    new Attack("Fire Spout", "Spout Fire.\n5 Damage\n5 Energy",
-                               AttackType::SHOUT, 5, 5, AttackElement::FIRE),
-                    3, 4),
 
-                SkillTreeNode(
-                    new Attack("Electric Storm",
-                               "Cause an Electric Storm.\n6 Damage\n5 Energy",
-                               AttackType::SHOUT, 6, 5,
-                               AttackElement::ELECTRIC),
-                    3, 5),
+                SkillTreeNode(new Attack("Electric Storm",
+                                         "Cause a Storm on all "
+                                         "Enemies.\n4 Damage\n5 Energy",
+                                         AttackType::SHOUT, 4, 5,
+                                         AttackElement::ELECTRIC, true),
+                              3, 5),
                 SkillTreeNode(
                     new Attack("Blizzard",
                                "Summon a Blizzard.\n7 Damage\n6 Energy",

@@ -59,10 +59,14 @@ void CombatState::updatePlayerTurn() {
 
   // select attack
   if (!this->playerAtkMenu->attackSelected) {
-    if (IsKeyPressed(KEY_RIGHT) || IsKeyPressed(KEY_DOWN)) {
+    if (IsKeyPressed(KEY_DOWN)) {
       this->playerAtkMenu->changeHighlighted(1);
-    } else if (IsKeyPressed(KEY_LEFT) || IsKeyPressed(KEY_UP)) {
+    } else if (IsKeyPressed(KEY_UP)) {
       this->playerAtkMenu->changeHighlighted(-1);
+    } else if (IsKeyPressed(KEY_RIGHT)) {
+      this->playerAtkMenu->changeHighlighted(5);
+    } else if (IsKeyPressed(KEY_LEFT)) {
+      this->playerAtkMenu->changeHighlighted(-5);
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
@@ -75,6 +79,20 @@ void CombatState::updatePlayerTurn() {
       }
     }
   } else {
+    // perform attack if is aoe
+    int selectedAttackIdx = this->playerAtkMenu->getHighlightedAttack();
+    Attack *selectedAttack = &this->player->getAttacks()->at(selectedAttackIdx);
+
+    if (selectedAttack->isAOE) {
+
+      this->performingAttack = true;
+      this->animationPlaying = true;
+      this->player->performAttack(selectedAttack, Rectangle{0, 0, 0, 0},
+                                  &this->animationPlaying, &this->doAttack);
+
+      return;
+    }
+
     // select enemy or change attack
     if (IsKeyPressed(KEY_BACKSPACE)) {
       // change attack
@@ -96,13 +114,10 @@ void CombatState::updatePlayerTurn() {
 
     } else if (IsKeyPressed(KEY_ENTER)) {
       // choose enemy and perform attack
-      this->performingAttack = true;
-      int selectedAttackIdx = this->playerAtkMenu->getHighlightedAttack();
-      Attack *selectedAttack =
-          &this->player->getAttacks()->at(selectedAttackIdx);
 
       Rectangle selectedEnemyBounds = this->enemies[this->selectedEnemy]->pos;
 
+      this->performingAttack = true;
       this->animationPlaying = true;
       this->player->performAttack(selectedAttack, selectedEnemyBounds,
                                   &this->animationPlaying, &this->doAttack);
@@ -114,18 +129,54 @@ const void CombatState::postPlayerAttack() {
   Attack *selectedAttack = &this->player->getAttacks()->at(
       this->playerAtkMenu->getHighlightedAttack());
 
-  this->enemies[this->selectedEnemy]->takeDamage(selectedAttack->damage);
+  // TODO could abstract this inner bit into a function
+  if (selectedAttack->isAOE) {
+    for (auto &enemy : this->enemies) {
+      enemy->takeDamage(selectedAttack->damage);
 
-  // spawn damage bubble
-  Rectangle dmgBubblePos = this->enemies[this->selectedEnemy]->pos;
-  dmgBubblePos.y -= 30;
-  this->damageBubbles.push_back(
-      DamageBubble(dmgBubblePos, selectedAttack->damage));
+      Rectangle dmgBubblePos = enemy->pos;
+      dmgBubblePos.y -= 30;
+      this->damageBubbles.push_back(
+          DamageBubble(dmgBubblePos, selectedAttack->damage));
 
-  if (selectedAttack->atkType == AttackType::SHOUT) {
-    // spawn cast effect
-    this->castEffects.push_back(CastEffect(
-        this->enemies[this->selectedEnemy]->pos, selectedAttack->atkElement));
+      if (selectedAttack->atkType == AttackType::SHOUT) {
+        // spawn cast effect
+        this->castEffects.push_back(
+            CastEffect(enemy->pos, selectedAttack->atkElement));
+      }
+    }
+  } else {
+    // single target attack
+    this->enemies[this->selectedEnemy]->takeDamage(selectedAttack->damage);
+
+    // spawn damage bubble
+    Rectangle dmgBubblePos = this->enemies[this->selectedEnemy]->pos;
+    dmgBubblePos.y -= 30;
+    this->damageBubbles.push_back(
+        DamageBubble(dmgBubblePos, selectedAttack->damage));
+
+    if (selectedAttack->atkType == AttackType::SHOUT) {
+      // spawn cast effect
+      this->castEffects.push_back(CastEffect(
+          this->enemies[this->selectedEnemy]->pos, selectedAttack->atkElement));
+    }
+  }
+
+  // if attack heals, apply it
+  if (selectedAttack->selfHeal > 0) {
+    int healAmt = selectedAttack->selfHeal;
+    if (selectedAttack->isAOE) {
+      healAmt *= this->enemies.size();
+    }
+    this->player->currentHealth += healAmt;
+    if (this->player->currentHealth > this->player->maxHealth) {
+      this->player->currentHealth = this->player->maxHealth;
+    }
+
+    Rectangle healBubblePos = this->player->pos;
+    healBubblePos.y -= 30;
+    // multiply heal amt by -1 so it appears green
+    this->damageBubbles.push_back(DamageBubble(healBubblePos, healAmt * -1));
   }
 
   // reset attack choice

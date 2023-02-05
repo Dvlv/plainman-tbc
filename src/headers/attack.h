@@ -23,12 +23,14 @@ public:
   std::string name;
   std::string description;
   int damage;
+  int selfHeal;
   int energyCost;
-  int animationFrames; // TODO better type
+  bool isAOE;
   AttackElement atkElement;
 
   // TODO energy cost
   Attack(std::string name, std::string description, AttackType atkType,
          int damage, int energyCost,
-         AttackElement atkElement = AttackElement::NONE);
+         AttackElement atkElement = AttackElement::NONE, bool isAOE = false,
+         int selfHeal = 0);
 };

@@ -8,9 +8,9 @@ mkdir build
 ```
 
 ## TODO
-- [ ] Left and Right work as expected in PlayerAtkMenu
-- [ ] AoE Attacks
 - [ ] Heal / Buff attacks
+  - [ ] Heal bubbles
+  - [ ] Energy bubbles
 - [ ] Make some kind of texture cache for cast effects so they arent racing
 - [ ] Stat upgrade choice state
     - [ ] Swap isCombat flag for an enum
@@ -18,6 +18,7 @@ mkdir build
 - [ ] More enemy classes
 - [ ] Enemy immunities
 - [ ] Proper lose condition
+- [ ] Difficulty Tweaks
 
 ### Possible combat mechanics
 - [ ] Status
@@ -31,6 +32,8 @@ mkdir build
 
 ## Done
 
+- [x] AoE Attacks
+- [x] Left and Right work as expected in PlayerAtkMenu
 - [x] Reset highlighted player attack to highest which you can afford if cant afford selected
 - [x] Ability to read Combat rounds from a file, or randomly generate them?
 - [x] Read Skill Trees from .h file

@@ -22,8 +22,6 @@ private:
   Animation previousAnimation;
 
   // combat data
-  int maxHealth;
-  int maxEnergy;
   std::vector<Attack> *attacks;
 
   Rectangle startingPos;
@@ -44,6 +42,8 @@ public:
 
   int currentHealth;
   int currentEnergy;
+  int maxHealth;
+  int maxEnergy;
   Rectangle pos;
 
   void performAttack(Attack *attack, Rectangle targetBounds,
