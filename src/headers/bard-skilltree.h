@@ -13,7 +13,7 @@ public:
             std::vector<SkillTreeNode>{
                 SkillTreeNode(
                     new Attack("Loud Song",
-                               "A Loud Song heard by all.\n2 Damage\n1 Energy",
+                               "A Loud Song heard by all.\n1 Damage\n1 Energy",
                                AttackType::SHOUT, 1, 1, AttackElement::NONE,
                                true),
                     1, 1),
@@ -33,10 +33,11 @@ public:
                                AttackType::SHOUT, 3, 3,
                                AttackElement::ELECTRIC),
                     2, 2),
-                SkillTreeNode(
-                    new Attack("Dance Track", "Get Pumped.\n+2HP\n2 Energy",
-                               AttackType::SHOUT, 0, 2, AttackElement::AIR),
-                    3, 3),
+                SkillTreeNode(new Attack("Dance Track",
+                                         "Get Pumped.\n+5HP\n2 Energy",
+                                         AttackType::SHOUT, 0, 2,
+                                         AttackElement::AIR, false, 5),
+                              3, 3),
                 SkillTreeNode(
                     new Attack("Calm Song", "A Calm Melody.\n+3 Energy",
                                AttackType::SHOUT, 0, 0, AttackElement::NONE),

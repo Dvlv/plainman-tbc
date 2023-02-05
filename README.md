@@ -16,13 +16,19 @@ mkdir build
   - [ ] Charge atk
       - [ ] Charge bubble
 - [ ] Make some kind of texture cache for cast effects so they arent racing
-- [ ] Stat upgrade choice state
-    - [ ] Swap isCombat flag for an enum
-    - [ ] Transition anim between States, requires prevState in main
+- [ ] Transition anim between States, requires prevState in main
 - [ ] More enemy classes
+    - [ ] Ghost
+    - [ ] Skeleton
+    - [ ] Frog
 - [ ] Enemy immunities
 - [ ] Proper lose condition
 - [ ] Difficulty Tweaks
+- [ ] Replace all raw pointers with smarts
+- [ ] Draw Backgrounds
+    - [ ] Combat
+    - [ ] Upgrade
+    - [ ] SkillTree
 
 ### Possible combat mechanics
 - [ ] Status
@@ -36,6 +42,8 @@ mkdir build
 
 ## Done
 
+- [x] Stat upgrade choice state
+    - [x] Swap isCombat flag for an enum
 - [x] AoE Attacks
 - [x] Left and Right work as expected in PlayerAtkMenu
 - [x] Reset highlighted player attack to highest which you can afford if cant afford selected
