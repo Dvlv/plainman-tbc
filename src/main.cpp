@@ -1,9 +1,16 @@
+#include "headers/upgrade-state.h"
 #include "raylib.h"
 
 #include "headers/combatstate.h"
 #include "headers/player.h"
 #include "headers/skilltree-state.h"
 #include <vector>
+
+enum class GameState {
+  COMBAT,
+  SKILLTREE,
+  UPGRADE,
+};
 
 void init();
 void update();
@@ -17,12 +24,13 @@ std::vector<Attack> playerAttacks{
            1),
 };
 
-bool isCombatState = false;
+GameState gs = GameState::UPGRADE;
 
 PlayerCombatData *playerCombatData =
     new PlayerCombatData{5, 3, 5, 3, &playerAttacks, 0};
 CombatState *cs = new CombatState(*playerCombatData, levelsComplete);
 SkillTreeState *sts = new SkillTreeState(); // TODO
+UpgradeState *us = new UpgradeState();
 
 int main() {
   init();
@@ -40,30 +48,27 @@ int main() {
 void draw() {
   BeginDrawing();
 
-  if (isCombatState) {
+  if (gs == GameState::COMBAT) {
     ClearBackground(GREEN);
     cs->draw();
-  } else {
+  } else if (gs == GameState::SKILLTREE) {
     ClearBackground(BROWN);
     sts->draw();
+  } else if (gs == GameState::UPGRADE) {
+    ClearBackground(DARKBLUE);
+    us->draw();
   }
 
   EndDrawing();
 }
 
 void update() {
-  if (isCombatState) {
+  if (gs == GameState::COMBAT) {
     if (!cs->shouldQuit) {
       cs->update();
     } else {
       playerCombatData->skillPoints++;
       levelsComplete++;
-
-      // TODO make this a choice, requires new state I guess
-      if (levelsComplete > 2 && levelsComplete % 3 == 0) {
-        playerCombatData->maxHealth++;
-        playerCombatData->maxEnergy++;
-      }
 
       // restore 50% of hp and energy
       playerCombatData->currentHealth =
@@ -83,14 +88,19 @@ void update() {
       delete cs;
       cs = new CombatState(*playerCombatData, levelsComplete);
 
-      isCombatState = false;
+      if (levelsComplete > 2 && levelsComplete % 3 == 0) {
+        gs = GameState::UPGRADE;
+      } else {
+        gs = GameState::SKILLTREE;
+      }
     }
-  } else {
+  } else if (gs == GameState::SKILLTREE) {
     sts->playerSkillPoints = playerCombatData->skillPoints;
     sts->update();
 
     if (sts->isFinished) {
-      isCombatState = true;
+      gs = GameState::COMBAT;
+
       sts->isFinished = false;
 
       if (sts->selectedAttack != nullptr) {
@@ -100,6 +110,32 @@ void update() {
         sts->selectedAttackSkillPointCost = 0;
         sts->selectedAttack = nullptr;
       }
+    }
+  } else if (gs == GameState::UPGRADE) {
+    // TODO
+    us->update();
+
+    if (us->shouldQuit) {
+      switch (us->chosenUpgrade) {
+      case ChosenUpgrade::HEALTH:
+        playerCombatData->maxHealth += 2;
+        playerCombatData->currentHealth += 1;
+        break;
+      case ChosenUpgrade::ENERGY:
+        playerCombatData->maxEnergy += 2;
+        playerCombatData->currentEnergy += 1;
+        break;
+      case ChosenUpgrade::BOTH:
+        playerCombatData->maxHealth += 1;
+        playerCombatData->maxEnergy += 1;
+        break;
+      default:
+        printf("defa\n");
+        break;
+      }
+
+      us->shouldQuit = false;
+      gs = GameState::COMBAT;
     }
   }
 }

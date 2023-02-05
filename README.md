@@ -9,8 +9,12 @@ mkdir build
 
 ## TODO
 - [ ] Heal / Buff attacks
-  - [ ] Heal bubbles
-  - [ ] Energy bubbles
+  - [x] Heal Atk
+      - [x] Heal bubbles
+  - [ ] Energy Atk
+      - [ ] Energy bubbles
+  - [ ] Charge atk
+      - [ ] Charge bubble
 - [ ] Make some kind of texture cache for cast effects so they arent racing
 - [ ] Stat upgrade choice state
     - [ ] Swap isCombat flag for an enum

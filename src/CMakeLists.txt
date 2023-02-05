@@ -20,6 +20,7 @@ SET (MY_HEADERS headers/combatstate.h
     headers/bard-skilltree.h
     headers/necromancer-skilltree.h
     headers/combat-round.h
+    headers/upgrade-state.h
 )
 
 SET (MY_SOURCE combatstate.cpp
@@ -35,6 +36,7 @@ SET (MY_SOURCE combatstate.cpp
     skilltree-state.cpp
     skilltree-node.cpp
     combat-round.cpp
+    upgrade-state.cpp
 )
 
 find_library(RAYLIB_LIBRARY raylib HINTS /usr/local/include)
