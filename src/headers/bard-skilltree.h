@@ -12,12 +12,19 @@ public:
             "Bard", "Plays Music for Buffs",
             std::vector<SkillTreeNode>{
                 SkillTreeNode(
-                    new Attack("Loud Song", "A Loud Song.\n1 Damage\n1 Energy",
-                               AttackType::SHOUT, 2, 1, AttackElement::NONE),
+                    new Attack("Loud Song",
+                               "A Loud Song heard by all.\n2 Damage\n1 Energy",
+                               AttackType::SHOUT, 1, 1, AttackElement::NONE,
+                               true),
                     1, 1),
+                SkillTreeNode(new Attack("Healing Song",
+                                         "A soothing melody.\n+2 HP\n1 Energy",
+                                         AttackType::SHOUT, 0, 1,
+                                         AttackElement::NONE, false, 2),
+                              1, 1),
                 SkillTreeNode(new Attack("Cool Song",
-                                         "A Cool Melody. \n2 Damage\n2 Energy",
-                                         AttackType::SHOUT, 2, 2,
+                                         "A Cool Melody. \n2 Damage\n1 Energy",
+                                         AttackType::SHOUT, 2, 1,
                                          AttackElement::ICE),
                               2, 1),
                 SkillTreeNode(

@@ -24,7 +24,7 @@ std::vector<Attack> playerAttacks{
            1),
 };
 
-GameState gs = GameState::UPGRADE;
+GameState gs = GameState::SKILLTREE;
 
 PlayerCombatData *playerCombatData =
     new PlayerCombatData{5, 3, 5, 3, &playerAttacks, 0};
@@ -86,7 +86,6 @@ void update() {
       }
 
       delete cs;
-      cs = new CombatState(*playerCombatData, levelsComplete);
 
       if (levelsComplete > 2 && levelsComplete % 3 == 0) {
         gs = GameState::UPGRADE;
@@ -99,7 +98,7 @@ void update() {
     sts->update();
 
     if (sts->isFinished) {
-      gs = GameState::COMBAT;
+      cs = new CombatState(*playerCombatData, levelsComplete);
 
       sts->isFinished = false;
 
@@ -110,6 +109,8 @@ void update() {
         sts->selectedAttackSkillPointCost = 0;
         sts->selectedAttack = nullptr;
       }
+
+      gs = GameState::COMBAT;
     }
   } else if (gs == GameState::UPGRADE) {
     // TODO
@@ -130,11 +131,13 @@ void update() {
         playerCombatData->maxEnergy += 1;
         break;
       default:
-        printf("defa\n");
         break;
       }
 
       us->shouldQuit = false;
+
+      cs = new CombatState(*playerCombatData, levelsComplete);
+
       gs = GameState::COMBAT;
     }
   }
