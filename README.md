@@ -8,14 +8,13 @@ mkdir build
 ```
 
 ## TODO
+- [ ] Skilltree-state delete unused skilltrees, probably using shared_ptr
 - [ ] Heal / Buff attacks
   - [x] Heal Atk
       - [x] Heal bubbles
   - [ ] Energy Atk
       - [ ] Energy bubbles
-  - [ ] Charge atk
-      - [ ] Charge bubble
-- [ ] Make some kind of texture cache for cast effects so they arent racing
+- [ ] Global texture handler with array of textures and returns an ID, then all unloaded on destroy
 - [ ] Transition anim between States, requires prevState in main
 - [ ] More enemy classes
     - [ ] Ghost
@@ -24,7 +23,6 @@ mkdir build
 - [ ] Enemy immunities
 - [ ] Proper lose condition
 - [ ] Difficulty Tweaks
-- [ ] Replace all raw pointers with smarts
 - [ ] Draw Backgrounds
     - [ ] Combat
     - [ ] Upgrade
@@ -35,13 +33,11 @@ mkdir build
     - [ ] Frozen / Para
     - [ ] Bleed / Fire
 - [ ] Invincible Turn
-- [ ] Heal Attacks
-    - [ ] Life Steal
-    - [ ] Heal bubble
 - [ ] Charge
 
 ## Done
 
+- [x] Replace all raw pointers with smarts
 - [x] Stat upgrade choice state
     - [x] Swap isCombat flag for an enum
 - [x] AoE Attacks

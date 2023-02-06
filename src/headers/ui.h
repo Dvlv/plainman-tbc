@@ -8,23 +8,23 @@
 
 class PlayerAttackMenu {
 public:
-  PlayerAttackMenu(Player *player);
-  Player *player;
+  PlayerAttackMenu(std::shared_ptr<Player> player);
+  std::shared_ptr<Player> player;
 
   int highlightedOption;
   bool attackSelected;
   void changeHighlighted(int dir);
   void selectAttack();
   int getHighlightedAttack();
-  std::vector<Attack> *getPlayerAttacks();
+  std::shared_ptr<std::vector<Attack>> getPlayerAttacks();
 };
 
 void drawArrowOverEnemy(Rectangle pos);
 void drawDamageHit(Rectangle pos, int dmg);
 void drawCastEffect(Rectangle pos);
 
-void drawPlayerAttackMenu(PlayerAttackMenu *pam,
+void drawPlayerAttackMenu(std::shared_ptr<PlayerAttackMenu> pam,
                           std::shared_ptr<Enemy> enemy = nullptr);
 
-void drawPlayerStats(Player *player);
-void drawEnemyStats(Enemy *enemy);
+void drawPlayerStats(std::shared_ptr<Player> player);
+void drawEnemyStats(std::shared_ptr<Enemy> enemy);

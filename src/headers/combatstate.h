@@ -11,7 +11,7 @@
 
 class CombatState {
 private:
-  PlayerAttackMenu *playerAtkMenu;
+  std::shared_ptr<PlayerAttackMenu> playerAtkMenu;
 
   PlayerCombatData playerCombatData;
 
@@ -33,10 +33,11 @@ private:
   std::vector<CastEffect> castEffects;
 
 public:
-  CombatState(PlayerCombatData playerCombatData, int roundNumber);
+  CombatState(std::shared_ptr<PlayerCombatData> playerCombatData,
+              int roundNumber);
 
   bool shouldQuit;
-  Player *player;
+  std::shared_ptr<Player> player;
 
   void updatePlayerTurn();
   void updateEnemyTurn();

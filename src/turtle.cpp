@@ -68,8 +68,8 @@ void Turtle::draw(Texture2D currentTexture) {
 }
 
 Turtle::~Turtle() {
-  printf("turt dest\n");
   for (auto t : this->textures) {
     UnloadTexture(t.second);
   }
+  printf("turt dest\n");
 }

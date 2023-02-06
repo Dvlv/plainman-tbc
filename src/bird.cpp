@@ -70,8 +70,8 @@ void Bird::draw(Texture2D currentTexture) {
 }
 
 Bird::~Bird() {
-  printf("bird dest\n");
   for (auto t : this->textures) {
     UnloadTexture(t.second);
   }
+  printf("bird dest\n");
 }

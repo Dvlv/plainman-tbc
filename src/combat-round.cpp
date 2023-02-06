@@ -26,7 +26,7 @@ CombatRound::getRoundEnemies(std::vector<Rectangle> *enemyPositions) {
   // toward 3 in later
   std::array<int, 6> weights;
   if (this->roundNumber < earlyRoundBoundary) {
-    weights = {1, 1, 1, 1, 2, 2};
+    weights = {1, 1, 1, 1, 1, 2};
   } else if (this->roundNumber >= lateRoundBoundary) {
     weights = {1, 2, 2, 3, 3, 3};
   } else {
@@ -44,12 +44,24 @@ CombatRound::getRoundEnemies(std::vector<Rectangle> *enemyPositions) {
   for (int i = 0; i < numEnemies; i++) {
     std::string enemyType = enemyTypes.at(randomChoice(enemyTypes.size()));
 
-    if (enemyType == "turtle") {
+    // prevent 2 birds before lateRoundBoundary
+    bool hasBird = false;
+
+    if (enemyType == "bird") {
+      if (!hasBird && roundNumber < lateRoundBoundary) {
+        this->roundEnemies.push_back(
+            std::make_shared<Bird>(enemyPositions->at(i)));
+
+        hasBird = true;
+      } else {
+        // TODO when there's more than 2 enemy types, this can be i-- to
+        // basically "re-roll"
+        this->roundEnemies.push_back(
+            std::make_shared<Turtle>(enemyPositions->at(i)));
+      }
+    } else if (enemyType == "turtle") {
       this->roundEnemies.push_back(
           std::make_shared<Turtle>(enemyPositions->at(i)));
-    } else if (enemyType == "bird") {
-      this->roundEnemies.push_back(
-          std::make_shared<Bird>(enemyPositions->at(i)));
     }
   }
 

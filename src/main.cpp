@@ -4,6 +4,7 @@
 #include "headers/combatstate.h"
 #include "headers/player.h"
 #include "headers/skilltree-state.h"
+#include <memory>
 #include <vector>
 
 enum class GameState {
@@ -26,11 +27,16 @@ std::vector<Attack> playerAttacks{
 
 GameState gs = GameState::SKILLTREE;
 
-PlayerCombatData *playerCombatData =
-    new PlayerCombatData{5, 3, 5, 3, &playerAttacks, 0};
-CombatState *cs = new CombatState(*playerCombatData, levelsComplete);
-SkillTreeState *sts = new SkillTreeState(); // TODO
-UpgradeState *us = new UpgradeState();
+std::shared_ptr<PlayerCombatData> playerCombatData =
+    std::make_shared<PlayerCombatData>(PlayerCombatData{
+        5, 3, 5, 3, std::make_shared<std::vector<Attack>>(playerAttacks), 0});
+
+std::unique_ptr<CombatState> cs =
+    std::make_unique<CombatState>(playerCombatData, levelsComplete);
+
+std::unique_ptr<SkillTreeState> sts = std::make_unique<SkillTreeState>();
+
+std::unique_ptr<UpgradeState> us = std::make_unique<UpgradeState>();
 
 int main() {
   init();
@@ -85,7 +91,7 @@ void update() {
         playerCombatData->currentEnergy = playerCombatData->maxEnergy;
       }
 
-      delete cs;
+      cs.reset();
 
       if (levelsComplete > 2 && levelsComplete % 3 == 0) {
         gs = GameState::UPGRADE;
@@ -98,7 +104,7 @@ void update() {
     sts->update();
 
     if (sts->isFinished) {
-      cs = new CombatState(*playerCombatData, levelsComplete);
+      cs = std::make_unique<CombatState>(playerCombatData, levelsComplete);
 
       sts->isFinished = false;
 
@@ -136,7 +142,7 @@ void update() {
 
       us->shouldQuit = false;
 
-      cs = new CombatState(*playerCombatData, levelsComplete);
+      cs = std::make_unique<CombatState>(playerCombatData, levelsComplete);
 
       gs = GameState::COMBAT;
     }

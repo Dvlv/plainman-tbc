@@ -6,14 +6,15 @@
 #include <cmath>
 #include <functional>
 #include <map>
+#include <memory>
 #include <vector>
 
-Player::Player(Rectangle pos, PlayerCombatData combatData) {
-  this->maxHealth = combatData.maxHealth;
-  this->currentHealth = combatData.currentHealth;
-  this->maxEnergy = combatData.maxEnergy;
-  this->currentEnergy = combatData.currentEnergy;
-  this->attacks = combatData.attacks;
+Player::Player(Rectangle pos, std::shared_ptr<PlayerCombatData> combatData) {
+  this->maxHealth = combatData->maxHealth;
+  this->currentHealth = combatData->currentHealth;
+  this->maxEnergy = combatData->maxEnergy;
+  this->currentEnergy = combatData->currentEnergy;
+  this->attacks = combatData->attacks;
   this->pos = pos;
   this->startingPos = pos;
   this->currentAnimation = Animation::IDLE;
@@ -24,7 +25,9 @@ Player::Player(Rectangle pos, PlayerCombatData combatData) {
   this->textures = std::map<Animation, Texture2D>();
 }
 
-std::vector<Attack> *Player::getAttacks() { return this->attacks; }
+std::shared_ptr<std::vector<Attack>> Player::getAttacks() {
+  return this->attacks;
+}
 
 void Player::performAttack(Attack *atk, Rectangle targetBounds,
                            bool *animationPlaying, bool *doAttack) {
@@ -297,4 +300,5 @@ Player::~Player() {
   for (auto t : this->textures) {
     UnloadTexture(t.second);
   }
+  printf("player destructor\n");
 }

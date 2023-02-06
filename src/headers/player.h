@@ -5,6 +5,7 @@
 #include "raylib.h"
 #include <functional>
 #include <map>
+#include <memory>
 #include <vector>
 
 struct PlayerCombatData {
@@ -12,7 +13,7 @@ struct PlayerCombatData {
   int maxEnergy;
   int currentHealth;
   int currentEnergy;
-  std::vector<Attack> *attacks;
+  std::shared_ptr<std::vector<Attack>> attacks;
   int skillPoints;
 };
 
@@ -22,7 +23,7 @@ private:
   Animation previousAnimation;
 
   // combat data
-  std::vector<Attack> *attacks;
+  std::shared_ptr<std::vector<Attack>> attacks;
 
   Rectangle startingPos;
   Attack *currentAttack;
@@ -38,7 +39,7 @@ private:
   bool *doAttack;
 
 public:
-  Player(Rectangle pos, PlayerCombatData combatData);
+  Player(Rectangle pos, std::shared_ptr<PlayerCombatData> combatData);
 
   int currentHealth;
   int currentEnergy;
@@ -49,7 +50,7 @@ public:
   void performAttack(Attack *attack, Rectangle targetBounds,
                      bool *animationPlaying, bool *doAttack);
 
-  std::vector<Attack> *getAttacks();
+  std::shared_ptr<std::vector<Attack>> getAttacks();
 
   void takeDamage(int dmg);
 

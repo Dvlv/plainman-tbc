@@ -11,7 +11,8 @@
 #include <memory>
 #include <vector>
 
-CombatState::CombatState(PlayerCombatData playerCombatData, int roundNumber) {
+CombatState::CombatState(std::shared_ptr<PlayerCombatData> playerCombatData,
+                         int roundNumber) {
   this->selectedEnemy = 0;
   this->performingAttack = false;
   this->isPlayerTurn = true;
@@ -21,8 +22,9 @@ CombatState::CombatState(PlayerCombatData playerCombatData, int roundNumber) {
   this->shouldQuit = false;
   this->doAttack = false;
 
-  this->player = new Player(Rectangle{350, 350, 100, 100}, playerCombatData);
-  this->playerAtkMenu = new PlayerAttackMenu(this->player);
+  this->player =
+      std::make_shared<Player>(Rectangle{350, 350, 100, 100}, playerCombatData);
+  this->playerAtkMenu = std::make_shared<PlayerAttackMenu>(this->player);
 
   this->enemyPositions = std::vector<Rectangle>{Rectangle{750, 350, 100, 100},
                                                 Rectangle{900, 350, 100, 100},
@@ -375,7 +377,4 @@ void CombatState::draw() {
   }
 }
 
-CombatState::~CombatState() {
-  delete this->player;
-  delete this->playerAtkMenu;
-}
+CombatState::~CombatState() { printf("CombatState destructor\n"); }

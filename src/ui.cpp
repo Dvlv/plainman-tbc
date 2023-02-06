@@ -6,7 +6,7 @@
 
 // window is 1200 x 800
 
-PlayerAttackMenu::PlayerAttackMenu(Player *player) {
+PlayerAttackMenu::PlayerAttackMenu(std::shared_ptr<Player> player) {
   this->player = player;
   this->highlightedOption = 0;
   this->attackSelected = false;
@@ -27,7 +27,7 @@ int PlayerAttackMenu::getHighlightedAttack() { return this->highlightedOption; }
 
 void PlayerAttackMenu::selectAttack() { this->attackSelected = true; }
 
-std::vector<Attack> *PlayerAttackMenu::getPlayerAttacks() {
+std::shared_ptr<std::vector<Attack>> PlayerAttackMenu::getPlayerAttacks() {
   return this->player->getAttacks();
 }
 
@@ -43,7 +43,8 @@ void drawArrowOverEnemy(Rectangle pos) {
   DrawTriangle(topRight, topLeft, bottom, DARKGRAY);
 }
 
-void drawPlayerAttackMenu(PlayerAttackMenu *pam, std::shared_ptr<Enemy> enemy) {
+void drawPlayerAttackMenu(std::shared_ptr<PlayerAttackMenu> pam,
+                          std::shared_ptr<Enemy> enemy) {
   const int gap = 15;
   const int topX = 100;
   const int topY = GetScreenHeight() - gap - 200;
@@ -106,8 +107,8 @@ void drawPlayerAttackMenu(PlayerAttackMenu *pam, std::shared_ptr<Enemy> enemy) {
   }
 }
 
-void drawPlayerStats(Player *player) {}
-void drawEnemyStats(Enemy *enemy) {}
+void drawPlayerStats(std::shared_ptr<Player> player) {}
+void drawEnemyStats(std::shared_ptr<Enemy> enemy) {}
 
 void drawDamageHit(Rectangle pos, int dmg) {
   // printf("Enemy at %d %d takes %d damage\n", (int)pos.x, (int)pos.y, dmg);
