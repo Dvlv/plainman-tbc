@@ -17,11 +17,12 @@ public:
                         "A Loud Song heard by all.\n1 Damage\n1 Energy",
                         AttackType::SHOUT, 1, 1, AttackElement::NONE, true),
                     1, 1),
-                SkillTreeNode(
-                    std::make_shared<Attack>(
-                        "Healing Song", "A soothing melody.\n+4 HP\n1 Energy",
-                        AttackType::SHOUT, 0, 1, AttackElement::NONE, false, 4),
-                    1, 1),
+                SkillTreeNode(std::make_shared<Attack>(
+                                  "Healing Song",
+                                  "A soothing melody.\n+4 HP\n1 Energy",
+                                  AttackType::SHOUT, 0, 1, AttackElement::NONE,
+                                  false, 4, 0),
+                              1, 1),
                 SkillTreeNode(std::make_shared<Attack>(
                                   "Cool Song",
                                   "A Cool Melody. \n2 Damage\n1 Energy",
@@ -33,11 +34,12 @@ public:
                                   AttackType::SHOUT, 3, 3,
                                   AttackElement::ELECTRIC),
                               2, 2),
-                SkillTreeNode(std::make_shared<Attack>(
-                                  "Dance Track", "Get Pumped.\n+5HP\n2 Energy",
-                                  AttackType::SHOUT, 0, 2, AttackElement::AIR,
-                                  false, 5),
-                              3, 3),
+                SkillTreeNode(
+                    std::make_shared<Attack>("Dance Track",
+                                             "Get Pumped.\n+1 HP, +4 Energy",
+                                             AttackType::SHOUT, 0, 0,
+                                             AttackElement::AIR, false, 1, 4),
+                    3, 3),
                 SkillTreeNode(std::make_shared<Attack>(
                                   "Calm Song", "A Calm Melody.\n+3 Energy",
                                   AttackType::SHOUT, 0, 0, AttackElement::NONE),

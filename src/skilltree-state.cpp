@@ -234,8 +234,11 @@ void SkillTreeState::update() {
       this->selectedAttackSkillPointCost =
           this->chosenSkillTree->nodes[this->highlightedOption].skillPointCost;
 
-      this->highestAttackLevel =
-          this->chosenSkillTree->nodes[this->highlightedOption].level;
+      if (this->chosenSkillTree->nodes[this->highlightedOption].level >
+          this->highestAttackLevel) {
+        this->highestAttackLevel =
+            this->chosenSkillTree->nodes[this->highlightedOption].level;
+      }
 
       this->learnedAttacks.push_back(this->highlightedOption);
       this->highlightedOption = 0;

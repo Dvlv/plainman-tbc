@@ -21,6 +21,7 @@ SET (MY_HEADERS headers/combatstate.h
     headers/necromancer-skilltree.h
     headers/combat-round.h
     headers/upgrade-state.h
+    headers/heal-bubble.h
 )
 
 SET (MY_SOURCE combatstate.cpp
@@ -37,6 +38,7 @@ SET (MY_SOURCE combatstate.cpp
     skilltree-node.cpp
     combat-round.cpp
     upgrade-state.cpp
+    heal-bubble.cpp
 )
 
 find_library(RAYLIB_LIBRARY raylib HINTS /usr/local/include)

@@ -4,6 +4,7 @@
 #include "headers/cast-effect.h"
 #include "headers/combat-round.h"
 #include "headers/enemy.h"
+#include "headers/heal-bubble.h"
 #include "headers/player.h"
 #include "headers/turtle.h"
 #include "headers/ui.h"
@@ -37,6 +38,7 @@ CombatState::CombatState(std::shared_ptr<PlayerCombatData> playerCombatData,
   this->enemies = *round->getRoundEnemies(&this->enemyPositions);
 
   this->damageBubbles = std::vector<DamageBubble>{};
+  this->healBubbles = std::vector<HealBubble>{};
   this->castEffects = std::vector<CastEffect>{};
 }
 
@@ -151,16 +153,19 @@ const void CombatState::postPlayerAttack() {
     // single target attack
     this->enemies[this->selectedEnemy]->takeDamage(selectedAttack->damage);
 
-    // spawn damage bubble
-    Rectangle dmgBubblePos = this->enemies[this->selectedEnemy]->pos;
-    dmgBubblePos.y -= 30;
-    this->damageBubbles.push_back(
-        DamageBubble(dmgBubblePos, selectedAttack->damage));
+    // spawn damage bubble and cast effect if dmg > 0
+    if (selectedAttack->damage > 0) {
+      Rectangle dmgBubblePos = this->enemies[this->selectedEnemy]->pos;
+      dmgBubblePos.y -= 30;
+      this->damageBubbles.push_back(
+          DamageBubble(dmgBubblePos, selectedAttack->damage));
 
-    if (selectedAttack->atkType == AttackType::SHOUT) {
-      // spawn cast effect
-      this->castEffects.push_back(CastEffect(
-          this->enemies[this->selectedEnemy]->pos, selectedAttack->atkElement));
+      if (selectedAttack->atkType == AttackType::SHOUT) {
+        // spawn cast effect
+        this->castEffects.push_back(
+            CastEffect(this->enemies[this->selectedEnemy]->pos,
+                       selectedAttack->atkElement));
+      }
     }
   }
 
@@ -177,8 +182,22 @@ const void CombatState::postPlayerAttack() {
 
     Rectangle healBubblePos = this->player->pos;
     healBubblePos.y -= 30;
-    // multiply heal amt by -1 so it appears green
-    this->damageBubbles.push_back(DamageBubble(healBubblePos, healAmt * -1));
+    this->healBubbles.push_back(
+        HealBubble(healBubblePos, healAmt, HealType::HEALTH_BUBBLE));
+  }
+
+  // if atk restores energy, apply
+  if (selectedAttack->selfEnergyHeal > 0) {
+    int healAmt = selectedAttack->selfEnergyHeal;
+    this->player->currentEnergy += healAmt;
+    if (this->player->currentEnergy > this->player->maxEnergy) {
+      this->player->currentEnergy = this->player->maxEnergy;
+    }
+
+    Rectangle healBubblePos = this->player->pos;
+    healBubblePos.y -= 80;
+    this->healBubbles.push_back(
+        HealBubble(healBubblePos, healAmt, HealType::ENERGY_BUBBLE));
   }
 
   // reset attack choice
@@ -307,6 +326,16 @@ void CombatState::update() {
     }
   }
 
+  // update heal bubbles
+  int hbIdx = 0;
+  for (auto &hb : this->healBubbles) {
+    hb.update();
+    if (hb.canBeDeleted) {
+      // TODO filter this properly
+      this->healBubbles.erase(this->healBubbles.begin());
+    }
+  }
+
   // update castEffects
   int ceIdx = 0;
   for (auto &ce : this->castEffects) {
@@ -369,6 +398,11 @@ void CombatState::draw() {
   // draw any damage bubbles
   for (auto &db : this->damageBubbles) {
     db.draw();
+  }
+
+  // draw any heal bubbles
+  for (auto &hb : this->healBubbles) {
+    hb.draw();
   }
 
   // draw any cast effects

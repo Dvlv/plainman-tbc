@@ -4,6 +4,7 @@
 #include "cast-effect.h"
 #include "damage-bubble.h"
 #include "enemy.h"
+#include "heal-bubble.h"
 #include "player.h"
 #include "ui.h"
 #include <memory>
@@ -30,6 +31,7 @@ private:
   std::vector<std::shared_ptr<Enemy>> enemies;
   std::vector<Rectangle> enemyPositions;
   std::vector<DamageBubble> damageBubbles;
+  std::vector<HealBubble> healBubbles;
   std::vector<CastEffect> castEffects;
 
 public:

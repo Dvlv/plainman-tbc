@@ -8,12 +8,7 @@ mkdir build
 ```
 
 ## TODO
-- [ ] Skilltree-state delete unused skilltrees, probably using shared_ptr
-- [ ] Heal / Buff attacks
-  - [x] Heal Atk
-      - [x] Heal bubbles
-  - [ ] Energy Atk
-      - [ ] Energy bubbles
+- [ ] Dont show enemy select or play damage anim on a pure-heal atk
 - [ ] Global texture handler with array of textures and returns an ID, then all unloaded on destroy
 - [ ] Transition anim between States, requires prevState in main
 - [ ] More enemy classes
@@ -36,7 +31,11 @@ mkdir build
 - [ ] Charge
 
 ## Done
-
+- [x] Heal / Buff attacks
+  - [x] Heal Atk
+      - [x] Heal bubbles
+  - [x] Energy Atk
+      - [x] Energy bubbles
 - [x] Replace all raw pointers with smarts
 - [x] Stat upgrade choice state
     - [x] Swap isCombat flag for an enum

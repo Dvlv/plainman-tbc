@@ -24,13 +24,13 @@ public:
   std::string description;
   int damage;
   int selfHeal;
+  int selfEnergyHeal;
   int energyCost;
   bool isAOE;
   AttackElement atkElement;
 
-  // TODO energy cost
   Attack(std::string name, std::string description, AttackType atkType,
          int damage, int energyCost,
          AttackElement atkElement = AttackElement::NONE, bool isAOE = false,
-         int selfHeal = 0);
+         int selfHeal = 0, int selfEnergyHeal = 0);
 };

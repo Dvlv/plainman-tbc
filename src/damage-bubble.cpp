@@ -23,18 +23,10 @@ void DamageBubble::update() {
 void DamageBubble::draw() {
 
   Color bubbleColor = {255, 20, 20, 188};
-  if (this->damageNumber < 0) {
-    // is a heal bubble, draw as green
-    bubbleColor = DARKGREEN;
-  }
 
   DrawCircle(this->pos.x + this->pos.width / 2, this->pos.y, 20, bubbleColor);
 
   std::string damageNumberStr = std::to_string(this->damageNumber);
-  if (this->damageNumber < 0) {
-    // remove negative sign if it's a heal bubble
-    damageNumberStr = damageNumberStr.substr(1);
-  }
 
   int textSize = MeasureText(damageNumberStr.c_str(), 20);
 
