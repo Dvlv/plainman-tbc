@@ -6,10 +6,10 @@
 
 class SkillTreeNode {
 public:
-  SkillTreeNode(Attack *atk, int level, int skillPointCost);
+  SkillTreeNode(std::shared_ptr<Attack> atk, int level, int skillPointCost);
 
   // vars
-  Attack *atk;
+  std::shared_ptr<Attack> atk;
   int level;
   int skillPointCost;
 

@@ -28,3 +28,5 @@ int SkillTree::getNumberOfLevels() const {
 
   return levels;
 }
+
+SkillTree::~SkillTree() { printf("SkillTree destructor called\n"); }

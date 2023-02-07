@@ -20,5 +20,5 @@ public:
 
   int getNumberOfLevels() const;
 
-  ~SkillTree() = default;
+  ~SkillTree();
 };

@@ -20,19 +20,22 @@ SkillTreeState::SkillTreeState() {
   this->highestAttackLevel = 0;
   this->playerSkillPoints = 0;
 
-  this->availableSkillTrees = std::vector<SkillTree>{
-      Necromancer(),
-      Bard(),
-      Mage(),
+  this->availableSkillTrees = std::vector<std::shared_ptr<SkillTree>>{
+      std::make_shared<Necromancer>(),
+      std::make_shared<Bard>(),
+      std::make_shared<Mage>(),
   };
 }
 
 void SkillTreeState::chooseSkillTree(int skillTreeIndex) {
-  this->chosenSkillTree = &this->availableSkillTrees[skillTreeIndex];
+  this->chosenSkillTree = this->availableSkillTrees[skillTreeIndex];
+  // empty this to free the memory of the 2 unused
+  this->availableSkillTrees = std::vector<std::shared_ptr<SkillTree>>();
 }
 
 void SkillTreeState::drawTreePreview(int x, int y, int width, int height,
-                                     SkillTree *tree, bool isHighlighted) {
+                                     std::shared_ptr<SkillTree> tree,
+                                     bool isHighlighted) {
   const int highlightWidth = 5;
 
   if (isHighlighted) {
@@ -127,7 +130,7 @@ void SkillTreeState::drawAttackDescription(int x, int y, int width,
   if (this->chosenSkillTree != nullptr) {
     SkillTreeNode *node =
         &this->chosenSkillTree->nodes[this->highlightedOption];
-    Attack *atk = node->atk;
+    std::shared_ptr<Attack> atk = node->atk;
 
     DrawText(atk->name.c_str(), x + padding, y + padding, 30, BLACK);
     DrawText(atk->description.c_str(), x + padding, y + 30 + (padding * 2), 20,
@@ -265,7 +268,7 @@ void SkillTreeState::draw() {
       const int cardY = STS_GAP * 2 + 30; // title font size
 
       this->drawTreePreview(cardX, cardY, cardWidth, cardHeight,
-                            &this->availableSkillTrees[i],
+                            this->availableSkillTrees[i],
                             i == this->highlightedOption);
     }
 
