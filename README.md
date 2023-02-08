@@ -8,9 +8,9 @@ mkdir build
 ```
 
 ## TODO
-- [ ] Dont show enemy select or play damage anim on a pure-heal atk
 - [ ] Global texture handler with array of textures and returns an ID, then all unloaded on destroy
 - [ ] Transition anim between States, requires prevState in main
+- [ ] Ally Partners
 - [ ] More enemy classes
     - [ ] Ghost
     - [ ] Skeleton
@@ -31,6 +31,7 @@ mkdir build
 - [ ] Charge
 
 ## Done
+- [x] Dont show enemy select or play damage anim on a pure-heal atk
 - [x] Heal / Buff attacks
   - [x] Heal Atk
       - [x] Heal bubbles

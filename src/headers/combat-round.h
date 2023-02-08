@@ -3,6 +3,7 @@
 #include "bird.h"
 #include "enemy.h"
 #include "raylib.h"
+#include "texture-store.h"
 #include "turtle.h"
 #include <memory>
 #include <vector>

@@ -22,6 +22,7 @@ SET (MY_HEADERS headers/combatstate.h
     headers/combat-round.h
     headers/upgrade-state.h
     headers/heal-bubble.h
+    headers/texture-store.h
 )
 
 SET (MY_SOURCE combatstate.cpp
@@ -39,7 +40,11 @@ SET (MY_SOURCE combatstate.cpp
     combat-round.cpp
     upgrade-state.cpp
     heal-bubble.cpp
+    texture-store.cpp
 )
+
+#TODO remove 
+set(CMAKE_BUILD_TYPE RelWithDebInfo)
 
 find_library(RAYLIB_LIBRARY raylib HINTS /usr/local/include)
 

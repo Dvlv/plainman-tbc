@@ -2,6 +2,7 @@
 #include "headers/animation.h"
 #include "headers/attack.h"
 #include "headers/combatstate.h"
+#include "headers/texture-store.h"
 #include "raylib.h"
 #include <cmath>
 #include <functional>
@@ -9,7 +10,8 @@
 #include <memory>
 #include <vector>
 
-Player::Player(Rectangle pos, std::shared_ptr<PlayerCombatData> combatData) {
+Player::Player(Rectangle pos, std::shared_ptr<PlayerCombatData> combatData,
+               std::shared_ptr<TextureStore> textureStore) {
   this->maxHealth = combatData->maxHealth;
   this->currentHealth = combatData->currentHealth;
   this->maxEnergy = combatData->maxEnergy;
@@ -22,7 +24,8 @@ Player::Player(Rectangle pos, std::shared_ptr<PlayerCombatData> combatData) {
 
   this->animationFrameCount = 0;
   this->currentanimationFrame = 0;
-  this->textures = std::map<Animation, Texture2D>();
+  this->textures = std::map<Animation, int>();
+  this->textureStore = textureStore;
 }
 
 std::shared_ptr<std::vector<Attack>> Player::getAttacks() {
@@ -113,8 +116,8 @@ void Player::draw() {
       Rectangle{(float)spriteSize * this->currentanimationFrame, spriteSize,
                 spriteSize, spriteSize};
 
-  DrawTextureRec(this->currentTexture, currentSpriteWindow,
-                 Vector2{this->pos.x, this->pos.y}, tint);
+  DrawTextureRec(this->textureStore->getTexture(this->currentTexture),
+                 currentSpriteWindow, Vector2{this->pos.x, this->pos.y}, tint);
 
   if (this->currentAnimation != Animation::ATTACK &&
       this->currentAnimation != Animation::CAST_ATTACK) {
@@ -259,18 +262,19 @@ void Player::setCurrentTexture() {
     // for some reason it segfaults if I do this in the constructor
     // this == 0 nonsense is the way to check if a map contains a val
     if (this->textures.count(Animation::IDLE) == 0) {
-      this->textures[Animation::IDLE] =
-          LoadTexture("src/assets/art/combat/player/player-idle.png");
+      this->textures[Animation::IDLE] = textureStore->storeTexture(
+          "src/assets/art/combat/player/player-idle.png");
     }
 
     this->currentTexture = this->textures[Animation::IDLE];
 
   } else if (this->currentAnimation == Animation::ATTACK) {
     if (this->textures.count(Animation::ATTACK) == 0) {
-      this->textures[Animation::ATTACK] =
-          LoadTexture("src/assets/art/combat/player/player-walk.png");
+      this->textures[Animation::ATTACK] = this->textureStore->storeTexture(
+          "src/assets/art/combat/player/player-walk.png");
       this->textures[Animation::MELEE_ATTACK] =
-          LoadTexture("src/assets/art/combat/player/player-melee.png");
+          this->textureStore->storeTexture(
+              "src/assets/art/combat/player/player-melee.png");
     }
 
     if (this->meleeAnimationState == MeleeAnimationState::ATTACKING) {
@@ -281,24 +285,19 @@ void Player::setCurrentTexture() {
 
   } else if (this->currentAnimation == Animation::CAST_ATTACK) {
     if (this->textures.count(Animation::CAST_ATTACK) == 0) {
-      this->textures[Animation::CAST_ATTACK] =
-          LoadTexture("src/assets/art/combat/player/player-cast.png");
+      this->textures[Animation::CAST_ATTACK] = this->textureStore->storeTexture(
+          "src/assets/art/combat/player/player-cast.png");
     }
 
     this->currentTexture = this->textures[Animation::CAST_ATTACK];
   } else if (this->currentAnimation == Animation::TAKE_DAMAGE) {
     if (this->textures.count(Animation::TAKE_DAMAGE) == 0) {
-      this->textures[Animation::TAKE_DAMAGE] =
-          LoadTexture("src/assets/art/combat/player/player-takedmg.png");
+      this->textures[Animation::TAKE_DAMAGE] = this->textureStore->storeTexture(
+          "src/assets/art/combat/player/player-takedmg.png");
     }
 
     this->currentTexture = this->textures[Animation::TAKE_DAMAGE];
   }
 }
 
-Player::~Player() {
-  for (auto t : this->textures) {
-    UnloadTexture(t.second);
-  }
-  printf("player destructor\n");
-}
+Player::~Player() { printf("player destructor\n"); }

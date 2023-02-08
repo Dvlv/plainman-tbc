@@ -6,6 +6,7 @@
 #include "headers/enemy.h"
 #include "headers/heal-bubble.h"
 #include "headers/player.h"
+#include "headers/texture-store.h"
 #include "headers/turtle.h"
 #include "headers/ui.h"
 #include "raylib.h"
@@ -23,8 +24,10 @@ CombatState::CombatState(std::shared_ptr<PlayerCombatData> playerCombatData,
   this->shouldQuit = false;
   this->doAttack = false;
 
-  this->player =
-      std::make_shared<Player>(Rectangle{350, 350, 100, 100}, playerCombatData);
+  this->textureStore = std::make_shared<TextureStore>();
+
+  this->player = std::make_shared<Player>(Rectangle{350, 350, 100, 100},
+                                          playerCombatData, this->textureStore);
   this->playerAtkMenu = std::make_shared<PlayerAttackMenu>(this->player);
 
   this->enemyPositions = std::vector<Rectangle>{Rectangle{750, 350, 100, 100},
@@ -83,11 +86,11 @@ void CombatState::updatePlayerTurn() {
       }
     }
   } else {
-    // perform attack if is aoe
+    // perform attack if is aoe or is heal
     int selectedAttackIdx = this->playerAtkMenu->getHighlightedAttack();
     Attack *selectedAttack = &this->player->getAttacks()->at(selectedAttackIdx);
 
-    if (selectedAttack->isAOE) {
+    if (selectedAttack->isAOE || selectedAttack->damage == 0) {
 
       this->performingAttack = true;
       this->animationPlaying = true;
@@ -372,7 +375,11 @@ void CombatState::draw() {
     e->draw();
 
     // if player selecting enemy to attack, draw arrow
-    if (this->playerAtkMenu->attackSelected && !this->performingAttack) {
+    Attack *selectedAttack = &this->player->getAttacks()->at(
+        this->playerAtkMenu->getHighlightedAttack());
+
+    if (this->playerAtkMenu->attackSelected && !this->performingAttack &&
+        selectedAttack->damage > 0 && !selectedAttack->isAOE) {
       if (idx == this->selectedEnemy) {
         drawArrowOverEnemy(this->enemies[idx]->pos);
       }

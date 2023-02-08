@@ -3,6 +3,7 @@
 #include "animation.h"
 #include "attack.h"
 #include "raylib.h"
+#include "texture-store.h"
 #include <functional>
 #include <map>
 #include <memory>
@@ -24,6 +25,7 @@ private:
 
   // combat data
   std::shared_ptr<std::vector<Attack>> attacks;
+  std::shared_ptr<TextureStore> textureStore;
 
   Rectangle startingPos;
   Attack *currentAttack;
@@ -31,15 +33,16 @@ private:
   bool *animationPlaying;
   MeleeAnimationState meleeAnimationState;
 
-  std::map<Animation, Texture2D> textures;
-  Texture2D currentTexture;
+  std::map<Animation, int> textures;
+  int currentTexture;
   int animationFrameCount;
   int currentanimationFrame;
 
   bool *doAttack;
 
 public:
-  Player(Rectangle pos, std::shared_ptr<PlayerCombatData> combatData);
+  Player(Rectangle pos, std::shared_ptr<PlayerCombatData> combatData,
+         std::shared_ptr<TextureStore> textureStore);
 
   int currentHealth;
   int currentEnergy;

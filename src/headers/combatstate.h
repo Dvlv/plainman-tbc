@@ -6,6 +6,7 @@
 #include "enemy.h"
 #include "heal-bubble.h"
 #include "player.h"
+#include "texture-store.h"
 #include "ui.h"
 #include <memory>
 #include <vector>
@@ -40,6 +41,7 @@ public:
 
   bool shouldQuit;
   std::shared_ptr<Player> player;
+  std::shared_ptr<TextureStore> textureStore;
 
   void updatePlayerTurn();
   void updateEnemyTurn();

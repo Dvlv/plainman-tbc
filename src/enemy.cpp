@@ -26,10 +26,12 @@ Enemy::Enemy(Rectangle pos, std::string name, std::string description,
 }
 
 void Enemy::takeDamage(int dmg) {
-  this->currentAnimation = Animation::TAKE_DAMAGE;
-  this->currentanimationFrame = 0;
+  if (dmg > 0) {
+    this->currentAnimation = Animation::TAKE_DAMAGE;
+    this->currentanimationFrame = 0;
 
-  this->currentHealth -= dmg;
+    this->currentHealth -= dmg;
+  }
 }
 
 bool Enemy::isDead() { return this->currentHealth < 1; }
