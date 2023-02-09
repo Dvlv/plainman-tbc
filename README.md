@@ -8,14 +8,8 @@ mkdir build
 ```
 
 ## TODO
-- [ ] Global texture handler with array of textures and returns an ID, then all unloaded on destroy
-    - [ ] Try using pointers to Texture2D
 - [ ] Transition anim between States, requires prevState in main
 - [ ] Ally Partners
-- [ ] More enemy classes
-    - [ ] Ghost
-    - [ ] Skeleton
-    - [ ] Frog
 - [ ] Enemy immunities
 - [ ] Proper lose condition
 - [ ] Difficulty Tweaks
@@ -23,6 +17,10 @@ mkdir build
     - [ ] Combat
     - [ ] Upgrade
     - [ ] SkillTree
+- [ ] More enemy classes
+    - [ ] Ghost
+    - [ ] Skeleton
+    - [ ] Frog
 
 ### Possible combat mechanics
 - [ ] Status
@@ -32,6 +30,7 @@ mkdir build
 - [ ] Charge
 
 ## Done
+- [x] Global texture handler with array of textures and returns an ID, then all unloaded on destroy
 - [x] Dont show enemy select or play damage anim on a pure-heal atk
 - [x] Heal / Buff attacks
   - [x] Heal Atk
