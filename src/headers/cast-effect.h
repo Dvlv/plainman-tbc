@@ -2,6 +2,8 @@
 
 #include "attack.h"
 #include "raylib.h"
+#include "texture-store.h"
+#include <memory>
 
 class CastEffect {
 private:
@@ -14,13 +16,17 @@ private:
   int currentSpriteFrame;
 
   Texture2D sprite;
+  int textureId;
 
   bool spriteLoaded;
 
   AttackElement element;
 
 public:
-  CastEffect(Rectangle pos, AttackElement element);
+  CastEffect(Rectangle pos, int textureId,
+             std::shared_ptr<TextureStore> textureStore);
+
+  std::shared_ptr<TextureStore> textureStore;
 
   bool canBeDeleted;
 

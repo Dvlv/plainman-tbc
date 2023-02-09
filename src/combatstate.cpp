@@ -43,6 +43,8 @@ CombatState::CombatState(std::shared_ptr<PlayerCombatData> playerCombatData,
   this->damageBubbles = std::vector<DamageBubble>{};
   this->healBubbles = std::vector<HealBubble>{};
   this->castEffects = std::vector<CastEffect>{};
+
+  this->castEffectTexCache = std::map<AttackElement, int>{};
 }
 
 void CombatState::updatePlayerTurn() {
@@ -132,6 +134,29 @@ void CombatState::updatePlayerTurn() {
   }
 }
 
+void CombatState::cacheCastEffects() {
+  this->castEffectTexCache[AttackElement::FIRE] =
+      this->textureStore->storeTexture(
+          "src/assets/art/combat/attacks/cast-fire.png");
+  this->castEffectTexCache[AttackElement::ICE] =
+      this->textureStore->storeTexture(
+          "src/assets/art/combat/attacks/cast-ice.png");
+  this->castEffectTexCache[AttackElement::EARTH] =
+      this->textureStore->storeTexture(
+          "src/assets/art/combat/attacks/cast-earth.png");
+  this->castEffectTexCache[AttackElement::AIR] =
+      this->textureStore->storeTexture(
+          "src/assets/art/combat/attacks/cast-air.png");
+  this->castEffectTexCache[AttackElement::ELECTRIC] =
+      this->textureStore->storeTexture(
+          "src/assets/art/combat/attacks/cast-electric.png");
+  this->castEffectTexCache[AttackElement::NONE] =
+      this->textureStore->storeTexture(
+          "src/assets/art/combat/attacks/cast-shout.png");
+
+  this->hasCachedCastEffects = true;
+}
+
 const void CombatState::postPlayerAttack() {
   Attack *selectedAttack = &this->player->getAttacks()->at(
       this->playerAtkMenu->getHighlightedAttack());
@@ -147,9 +172,13 @@ const void CombatState::postPlayerAttack() {
           DamageBubble(dmgBubblePos, selectedAttack->damage));
 
       if (selectedAttack->atkType == AttackType::SHOUT) {
+        if (!this->hasCachedCastEffects) {
+          this->cacheCastEffects();
+        }
         // spawn cast effect
-        this->castEffects.push_back(
-            CastEffect(enemy->pos, selectedAttack->atkElement));
+        this->castEffects.push_back(CastEffect(
+            enemy->pos, this->castEffectTexCache[selectedAttack->atkElement],
+            this->textureStore));
       }
     }
   } else {
@@ -164,10 +193,14 @@ const void CombatState::postPlayerAttack() {
           DamageBubble(dmgBubblePos, selectedAttack->damage));
 
       if (selectedAttack->atkType == AttackType::SHOUT) {
+        if (!this->hasCachedCastEffects) {
+          this->cacheCastEffects();
+        }
         // spawn cast effect
         this->castEffects.push_back(
             CastEffect(this->enemies[this->selectedEnemy]->pos,
-                       selectedAttack->atkElement));
+                       this->castEffectTexCache[selectedAttack->atkElement],
+                       this->textureStore));
       }
     }
   }
@@ -219,10 +252,14 @@ const void CombatState::postEnemyAttack() {
   dmgBubblePos.y -= 30;
   this->damageBubbles.push_back(DamageBubble(dmgBubblePos, bestAtk->damage));
 
-  // cast anim if shout
+  // cast anim if cast
   if (bestAtk->atkType == AttackType::SHOUT) {
-    this->castEffects.push_back(
-        CastEffect(this->player->pos, bestAtk->atkElement));
+    if (!this->hasCachedCastEffects) {
+      this->cacheCastEffects();
+    }
+    this->castEffects.push_back(CastEffect(
+        this->player->pos, this->castEffectTexCache[bestAtk->atkElement],
+        this->textureStore));
   }
 }
 

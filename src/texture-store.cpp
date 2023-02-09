@@ -3,8 +3,6 @@
 #include <array>
 #include <string>
 
-#define MAX_TEXTURES 40
-
 TextureStore::TextureStore() { this->textureCount = 0; }
 
 Texture2D TextureStore::getTexture(int index) { return textures.at(index); }

@@ -8,6 +8,7 @@
 #include "player.h"
 #include "texture-store.h"
 #include "ui.h"
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -35,6 +36,9 @@ private:
   std::vector<HealBubble> healBubbles;
   std::vector<CastEffect> castEffects;
 
+  bool hasCachedCastEffects = false;
+  std::map<AttackElement, int> castEffectTexCache;
+
 public:
   CombatState(std::shared_ptr<PlayerCombatData> playerCombatData,
               int roundNumber);
@@ -42,6 +46,8 @@ public:
   bool shouldQuit;
   std::shared_ptr<Player> player;
   std::shared_ptr<TextureStore> textureStore;
+
+  void cacheCastEffects();
 
   void updatePlayerTurn();
   void updateEnemyTurn();

@@ -9,6 +9,7 @@ mkdir build
 
 ## TODO
 - [ ] Global texture handler with array of textures and returns an ID, then all unloaded on destroy
+    - [ ] Try using pointers to Texture2D
 - [ ] Transition anim between States, requires prevState in main
 - [ ] Ally Partners
 - [ ] More enemy classes

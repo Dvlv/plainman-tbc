@@ -1,44 +1,23 @@
 #include "headers/cast-effect.h"
+#include "headers/texture-store.h"
 #include "raylib.h"
+#include <memory>
 
-CastEffect::CastEffect(Rectangle pos, AttackElement element) {
+CastEffect::CastEffect(Rectangle pos, int textureId,
+                       std::shared_ptr<TextureStore> textureStore) {
   this->pos = pos;
   this->lifetime = 30;
   this->currentFrameCount = 0;
   this->canBeDeleted = false;
-  this->element = element;
   this->spriteLoaded = false;
   this->animFrameCount = 0;
   this->currentSpriteFrame = 0;
+  this->textureStore = textureStore;
+  this->textureId = textureId;
 }
 
 void CastEffect::loadSprite() {
-  switch (this->element) {
-  case AttackElement::FIRE:
-    this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-fire.png");
-    break;
-
-  case AttackElement::ELECTRIC:
-    this->sprite =
-        LoadTexture("src/assets/art/combat/attacks/cast-electric.png");
-    break;
-
-  case AttackElement::ICE:
-    this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-ice.png");
-    break;
-
-  case AttackElement::AIR:
-    this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-air.png");
-    break;
-
-  case AttackElement::EARTH:
-    this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-earth.png");
-    break;
-
-  default:
-    this->sprite = LoadTexture("src/assets/art/combat/attacks/cast-shout.png");
-  }
-
+  this->sprite = this->textureStore->getTexture(this->textureId);
   this->spriteLoaded = true;
 }
 
@@ -79,7 +58,4 @@ void CastEffect::draw() {
                  Vector2{this->pos.x, this->pos.y}, WHITE);
 }
 
-CastEffect::~CastEffect() {
-  printf("unloading cast effect\n");
-  UnloadTexture(this->sprite);
-}
+CastEffect::~CastEffect() { printf("unloading cast effect\n"); }
