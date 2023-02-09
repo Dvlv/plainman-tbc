@@ -8,7 +8,6 @@ mkdir build
 ```
 
 ## TODO
-- [ ] Transition anim between States, requires prevState in main
 - [ ] Ally Partners
 - [ ] Enemy immunities
 - [ ] Proper lose condition
@@ -30,6 +29,7 @@ mkdir build
 - [ ] Charge
 
 ## Done
+- [x] Transition anim between States, requires prevState in main
 - [x] Global texture handler with array of textures and returns an ID, then all unloaded on destroy
 - [x] Dont show enemy select or play damage anim on a pure-heal atk
 - [x] Heal / Buff attacks

@@ -38,12 +38,23 @@ std::unique_ptr<SkillTreeState> sts = std::make_unique<SkillTreeState>();
 
 std::unique_ptr<UpgradeState> us = std::make_unique<UpgradeState>();
 
+// transitions between states
+bool playingTransition = false;
+bool stateEnding = true; // controls direction of wipe
+int transitionFrameCount = 0;
+const int transitionFrameMax = 20; // half a second each one
+
 int main() {
   init();
 
   while (!WindowShouldClose()) {
     update();
     draw();
+  }
+
+  if (gs == GameState::COMBAT) {
+    // avoids segfault if game closed during combat
+    cs.reset();
   }
 
   CloseWindow();
@@ -53,6 +64,14 @@ int main() {
 
 void draw() {
   BeginDrawing();
+
+  if (playingTransition && stateEnding) {
+    float mult = ((float)transitionFrameCount / (float)transitionFrameMax);
+    DrawRectangle(0, 0, GetScreenWidth() * mult, GetScreenHeight(), BLACK);
+    EndDrawing();
+
+    return;
+  }
 
   if (gs == GameState::COMBAT) {
     ClearBackground(GREEN);
@@ -65,10 +84,35 @@ void draw() {
     us->draw();
   }
 
+  if (playingTransition && !stateEnding) {
+    float mult = ((float)transitionFrameCount / (float)transitionFrameMax);
+    float x = GetScreenWidth() * mult;
+    int xint = (int)x;
+    int width = (int)(GetScreenWidth() - x);
+
+    DrawRectangle(xint, 0, width, GetScreenHeight(), BLACK);
+  }
   EndDrawing();
 }
 
 void update() {
+  if (playingTransition) {
+    transitionFrameCount++;
+
+    if (transitionFrameCount >= transitionFrameMax) {
+      if (stateEnding) {
+        transitionFrameCount = 0;
+        stateEnding = !stateEnding;
+      } else {
+        playingTransition = false;
+        transitionFrameCount = 0;
+        stateEnding = !stateEnding;
+      }
+    }
+
+    return;
+  }
+
   if (gs == GameState::COMBAT) {
     if (!cs->shouldQuit) {
       cs->update();
@@ -98,6 +142,7 @@ void update() {
       } else {
         gs = GameState::SKILLTREE;
       }
+      playingTransition = true;
     }
   } else if (gs == GameState::SKILLTREE) {
     sts->playerSkillPoints = playerCombatData->skillPoints;
@@ -117,9 +162,9 @@ void update() {
       }
 
       gs = GameState::COMBAT;
+      playingTransition = true;
     }
   } else if (gs == GameState::UPGRADE) {
-    // TODO
     us->update();
 
     if (us->shouldQuit) {
@@ -145,6 +190,7 @@ void update() {
       cs = std::make_unique<CombatState>(playerCombatData, levelsComplete);
 
       gs = GameState::COMBAT;
+      playingTransition = true;
     }
   }
 }
