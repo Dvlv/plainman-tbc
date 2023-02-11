@@ -44,6 +44,10 @@ bool stateEnding = true; // controls direction of wipe
 int transitionFrameCount = 0;
 const int transitionFrameMax = 20; // half a second each one
 
+// Load BGs
+bool texturesLoaded = false;
+Texture2D combatBG;
+
 int main() {
   init();
 
@@ -57,12 +61,18 @@ int main() {
     cs.reset();
   }
 
+  UnloadTexture(combatBG);
   CloseWindow();
 
   return 0;
 }
 
 void draw() {
+  if (!texturesLoaded) {
+    combatBG = LoadTexture("src/assets/art/combat/combat-bg-1.png");
+    texturesLoaded = true;
+  }
+
   BeginDrawing();
 
   if (playingTransition && stateEnding) {
@@ -75,6 +85,9 @@ void draw() {
 
   if (gs == GameState::COMBAT) {
     ClearBackground(GREEN);
+
+    DrawTexture(combatBG, 0, 0, WHITE);
+
     cs->draw();
   } else if (gs == GameState::SKILLTREE) {
     ClearBackground(BROWN);

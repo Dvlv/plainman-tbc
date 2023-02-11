@@ -40,7 +40,10 @@ void drawArrowOverEnemy(Rectangle pos) {
       Vector2{pos.x + pos.width - gap, pos.y - indicatorHeight - gap};
   Vector2 bottom = Vector2{pos.x + (pos.width / 2), pos.y - gap};
 
-  DrawTriangle(topRight, topLeft, bottom, DARKGRAY);
+  DrawTriangle(Vector2{topRight.x + 3, topRight.y - 3},
+               Vector2{topLeft.x - 3, topLeft.y - 3},
+               Vector2{bottom.x, bottom.y + 3}, DARKGRAY);
+  DrawTriangle(topRight, topLeft, bottom, LIGHTGRAY);
 }
 
 void drawPlayerAttackMenu(std::shared_ptr<PlayerAttackMenu> pam,

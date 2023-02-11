@@ -8,16 +8,20 @@ mkdir build
 ```
 
 ## TODO
+- [ ] Outline enemies
 - [ ] Ally Partners
 - [ ] Enemy immunities
-- [ ] Proper lose condition
 - [ ] Difficulty Tweaks
+- [ ] Proper lose condition
+- [ ] Menu state
+- [ ] How2play
+- [ ] 1 Continue
 - [ ] Draw Backgrounds
-    - [ ] Combat
+    - [x] Combat  - **revisit - too noisy, shouldnt match the darkgreen of health stuff**
     - [ ] Upgrade
     - [ ] SkillTree
 - [ ] More enemy classes
-    - [ ] Ghost
+    - [x] Ghost
     - [ ] Skeleton
     - [ ] Frog
 
