@@ -1,6 +1,7 @@
 #include "headers/combat-round.h"
 #include "headers/bird.h"
 #include "headers/enemy.h"
+#include "headers/ghost.h"
 #include "headers/turtle.h"
 #include "headers/utils.h"
 #include "raylib.h"
@@ -16,9 +17,11 @@ CombatRound::CombatRound(int roundNumber) {
 std::vector<std::shared_ptr<Enemy>> *
 CombatRound::getRoundEnemies(std::vector<Rectangle> *enemyPositions) {
   const int birdsRound = 2;
+  const int ghostsRound = 5;
 
   const int earlyRoundBoundary = 5;
-  const int lateRoundBoundary = 10;
+  const int midRoundBoundary = 10;
+  const int lateRoundBoundary = 15;
 
   this->roundEnemies = std::vector<std::shared_ptr<Enemy>>();
 
@@ -30,10 +33,14 @@ CombatRound::getRoundEnemies(std::vector<Rectangle> *enemyPositions) {
   } else if (this->roundNumber >= lateRoundBoundary) {
     weights = {1, 2, 2, 3, 3, 3};
   } else {
-    weights = {1, 1, 2, 2, 3, 3};
+    weights = {1, 1, 1, 2, 2, 3};
   }
 
   int numEnemies = weights.at(randomChoice(6));
+  if (this->roundNumber < 2) {
+    // 2 enemies on round 1 is pain
+    numEnemies = 1;
+  }
 
   std::vector<std::string> enemyTypes = {"turtle"};
 
@@ -41,27 +48,51 @@ CombatRound::getRoundEnemies(std::vector<Rectangle> *enemyPositions) {
     enemyTypes.push_back("bird");
   }
 
+  if (this->roundNumber >= ghostsRound) {
+    enemyTypes.push_back("ghost");
+  }
+
   for (int i = 0; i < numEnemies; i++) {
     std::string enemyType = enemyTypes.at(randomChoice(enemyTypes.size()));
+    int numStrongEnemies = 0;
 
     // prevent 2 birds before lateRoundBoundary
-    bool hasBird = false;
+    // also prevents 2 ghosts or bird/ghost combo
+    bool restShouldBeWeaker = false;
 
-    if (enemyType == "bird") {
-      if (!hasBird && roundNumber < lateRoundBoundary) {
-        this->roundEnemies.push_back(
-            std::make_shared<Bird>(enemyPositions->at(i)));
+    if (restShouldBeWeaker) {
+      enemyType = "turtle";
+    }
 
-        hasBird = true;
-      } else {
-        // TODO when there's more than 2 enemy types, this can be i-- to
-        // basically "re-roll"
-        this->roundEnemies.push_back(
-            std::make_shared<Turtle>(enemyPositions->at(i)));
+    // if we are in an early round, don't allow 2 tough enemies
+    if (this->roundNumber < midRoundBoundary) {
+      if (enemyType == "bird" || enemyType == "ghost") {
+        if (!restShouldBeWeaker) {
+          restShouldBeWeaker = true;
+        }
       }
-    } else if (enemyType == "turtle") {
+    } else if (this->roundNumber < lateRoundBoundary) {
+      // if we are in a mid round, don't allow 3 tough enemies
+      if (enemyType == "bird" || enemyType == "ghost") {
+        if (numStrongEnemies > 1) {
+          enemyType = "turtle";
+        }
+      }
+    }
+
+    if (enemyType != "turtle") {
+      numStrongEnemies++;
+    }
+
+    if (enemyType == "turtle") {
       this->roundEnemies.push_back(
-          std::make_shared<Turtle>(enemyPositions->at(i)));
+          std::make_shared<Turtle>(enemyPositions->at(i), this->roundNumber));
+    } else if (enemyType == "bird") {
+      this->roundEnemies.push_back(
+          std::make_shared<Bird>(enemyPositions->at(i)));
+    } else if (enemyType == "ghost") {
+      this->roundEnemies.push_back(
+          std::make_shared<Ghost>(enemyPositions->at(i)));
     }
   }
 

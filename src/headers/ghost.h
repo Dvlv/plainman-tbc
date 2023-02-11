@@ -2,7 +2,7 @@
 
 #include "enemy.h"
 
-class Turtle : public Enemy {
+class Ghost : public Enemy {
 private:
   Rectangle attackTarget;
   Rectangle startingPos;
@@ -14,9 +14,9 @@ private:
   int currentanimationFrame;
 
 public:
-  Turtle(Rectangle pos, int roundNumber);
+  Ghost(Rectangle pos);
 
   virtual void setCurrentTexture() override;
   virtual void draw(Texture2D currentTexture = Texture2D()) override;
-  virtual ~Turtle() override;
+  virtual ~Ghost() override;
 };

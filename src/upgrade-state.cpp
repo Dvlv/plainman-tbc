@@ -8,9 +8,14 @@ UpgradeState::UpgradeState() {
 
 void UpgradeState::draw() {
   const int gap = 50;
+
+  int textWidth = MeasureText("Choose an Upgrade", 30);
+  DrawText("Choose an Upgrade", (GetScreenWidth() - textWidth) / 2, gap, 30,
+           BLACK);
+
   int boxWidth = (int)(GetScreenWidth() / 3) - (gap * 1.5);
-  int boxHeight = GetScreenHeight() - (gap * 2);
-  int boxY = gap;
+  int boxHeight = GetScreenHeight() - (gap * 4) - 30;
+  int boxY = gap + 30 + gap;
 
   // draw box around selected
   int selectedPos =
@@ -21,21 +26,21 @@ void UpgradeState::draw() {
   // draw the boxes
   // HP
   DrawRectangle(gap, boxY, boxWidth, boxHeight, BEIGE);
-  int textWHp = MeasureText("+2 HP", 30);
+  int textWHp = MeasureText("+3 HP", 30);
   int textXHp = gap + (boxWidth / 2) - (textWHp / 2);
-  DrawText("+2 HP", textXHp, boxY + (boxHeight / 2) - 15, 30, BLACK);
+  DrawText("+3 HP", textXHp, boxY + (boxHeight / 2) - 15, 30, BLACK);
 
   // Energy
   DrawRectangle(boxWidth + gap * 2, boxY, boxWidth, boxHeight, BEIGE);
-  int textWEnergy = MeasureText("+2 Energy", 30);
+  int textWEnergy = MeasureText("+3 Energy", 30);
   int textXEnerg = boxWidth + gap * 2 + (boxWidth / 2) - (textWEnergy / 2);
-  DrawText("+2 Energy", textXEnerg, boxY + (boxHeight / 2) - 15, 30, BLACK);
+  DrawText("+3 Energy", textXEnerg, boxY + (boxHeight / 2) - 15, 30, BLACK);
 
   // Both
   DrawRectangle(boxWidth * 2 + gap * 3, boxY, boxWidth, boxHeight, BEIGE);
-  int textWBoth = MeasureText("+1 HP +1 Energy", 30);
+  int textWBoth = MeasureText("+2 HP +1 Energy", 30);
   int textXBoth = boxWidth * 2 + gap * 3 + (boxWidth / 2) - (textWBoth / 2);
-  DrawText("+1 HP +1 Energy", textXBoth, boxY + (boxHeight / 2) - 15, 30,
+  DrawText("+2 HP +1 Energy", textXBoth, boxY + (boxHeight / 2) - 15, 30,
            BLACK);
 }
 

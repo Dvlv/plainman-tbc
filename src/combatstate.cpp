@@ -23,6 +23,7 @@ CombatState::CombatState(std::shared_ptr<PlayerCombatData> playerCombatData,
   this->playerLost = false;
   this->shouldQuit = false;
   this->doAttack = false;
+  this->roundNumber = roundNumber;
 
   this->textureStore = std::make_shared<TextureStore>();
 
@@ -395,6 +396,10 @@ void CombatState::draw() {
     DrawText("You lost!", 400, 300, 40, BLACK);
     return;
   }
+
+  std::string roundText = "Round " + std::to_string(this->roundNumber);
+  DrawText(roundText.c_str(), 30, 30, 40, BLACK);
+
   // TODO calculate positions for player and enemy
 
   // Draw player on bottom if enemy's turn

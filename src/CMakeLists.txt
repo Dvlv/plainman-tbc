@@ -23,6 +23,7 @@ SET (MY_HEADERS headers/combatstate.h
     headers/upgrade-state.h
     headers/heal-bubble.h
     headers/texture-store.h
+    headers/ghost.h
 )
 
 SET (MY_SOURCE combatstate.cpp
@@ -41,6 +42,7 @@ SET (MY_SOURCE combatstate.cpp
     upgrade-state.cpp
     heal-bubble.cpp
     texture-store.cpp
+    ghost.cpp
 )
 
 #TODO remove 

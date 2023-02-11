@@ -25,6 +25,7 @@ private:
   bool isPlayerTurn;
   bool playerWon;
   bool playerLost;
+  int roundNumber;
 
   int currentlyAttackingEnemy;
   bool isEnemyAttacking;

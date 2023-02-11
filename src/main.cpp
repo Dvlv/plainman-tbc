@@ -137,7 +137,7 @@ void update() {
 
       cs.reset();
 
-      if (levelsComplete > 2 && levelsComplete % 3 == 0) {
+      if (levelsComplete > 1 && levelsComplete % 2 == 0) {
         gs = GameState::UPGRADE;
       } else {
         gs = GameState::SKILLTREE;
@@ -170,16 +170,27 @@ void update() {
     if (us->shouldQuit) {
       switch (us->chosenUpgrade) {
       case ChosenUpgrade::HEALTH:
-        playerCombatData->maxHealth += 2;
-        playerCombatData->currentHealth += 1;
+        playerCombatData->maxHealth += 3;
+        playerCombatData->currentHealth = playerCombatData->maxHealth;
         break;
       case ChosenUpgrade::ENERGY:
-        playerCombatData->maxEnergy += 2;
-        playerCombatData->currentEnergy += 1;
+        playerCombatData->maxEnergy += 3;
+        playerCombatData->currentEnergy = playerCombatData->maxEnergy;
         break;
       case ChosenUpgrade::BOTH:
-        playerCombatData->maxHealth += 1;
+        playerCombatData->maxHealth += 2;
         playerCombatData->maxEnergy += 1;
+
+        playerCombatData->currentHealth += 2;
+        playerCombatData->currentEnergy += 2;
+
+        if (playerCombatData->currentHealth > playerCombatData->maxHealth) {
+          playerCombatData->currentHealth = playerCombatData->maxHealth;
+        }
+        if (playerCombatData->currentEnergy > playerCombatData->maxEnergy) {
+          playerCombatData->currentEnergy = playerCombatData->maxEnergy;
+        }
+
         break;
       default:
         break;

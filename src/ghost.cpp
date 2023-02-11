@@ -1,18 +1,19 @@
-#include "headers/turtle.h"
+#include "headers/ghost.h"
 #include "headers/attack.h"
 #include "raylib.h"
 #include <iostream>
 #include <vector>
 
-Turtle::Turtle(Rectangle pos, int roundNumber)
-    : Enemy(pos, "Turtle", "A small turtle. Kind of cute.",
-            2 + (roundNumber / 4), 0, 1,
+Ghost::Ghost(Rectangle pos)
+    : Enemy(pos, "Ghost", "A spooky ghost", 3, 6, 1,
             std::vector<Attack>{
-                Attack("Bite", "A small bite", AttackType::KICK,
-                       1 + (roundNumber / 6), 0),
+                Attack("Chill", "A ghostly chill", AttackType::SHOUT, 2, 2,
+                       AttackElement::ICE),
+                Attack("Spook", "A scary noise", AttackType::SHOUT, 1, 0,
+                       AttackElement::NONE),
             }) {}
 
-void Turtle::setCurrentTexture() {
+void Ghost::setCurrentTexture() {
 
   switch (this->currentAnimation) {
 
@@ -21,7 +22,7 @@ void Turtle::setCurrentTexture() {
     // this == 0 nonsense is the way to check if a map contains a val
     if (this->textures.count(Animation::IDLE) == 0) {
       this->textures[Animation::IDLE] =
-          LoadTexture("src/assets/art/combat/enemies/turtle/turtle-idle.png");
+          LoadTexture("src/assets/art/combat/enemies/ghost/ghost-idle.png");
     }
 
     this->currentTexture = this->textures[Animation::IDLE];
@@ -31,9 +32,9 @@ void Turtle::setCurrentTexture() {
   case Animation::MELEE_ATTACK:
     if (this->textures.count(Animation::ATTACK) == 0) {
       this->textures[Animation::ATTACK] =
-          LoadTexture("src/assets/art/combat/enemies/turtle/turtle-walk.png");
+          LoadTexture("src/assets/art/combat/enemies/ghost/ghost-walk.png");
       this->textures[Animation::MELEE_ATTACK] =
-          LoadTexture("src/assets/art/combat/enemies/turtle/turtle-melee.png");
+          LoadTexture("src/assets/art/combat/enemies/ghost/ghost-cast.png");
     }
 
     if (this->meleeAnimationState == MeleeAnimationState::ATTACKING) {
@@ -46,8 +47,8 @@ void Turtle::setCurrentTexture() {
   case Animation::CAST_ATTACK:
     if (this->textures.count(Animation::CAST_ATTACK) == 0) {
       this->textures[Animation::CAST_ATTACK] =
-          // turtle cant cast
-          LoadTexture("src/assets/art/combat/enemies/turtle/turtle-melee.png");
+          // ghost cant cast
+          LoadTexture("src/assets/art/combat/enemies/ghost/ghost-cast.png");
     }
 
     this->currentTexture = this->textures[Animation::CAST_ATTACK];
@@ -55,8 +56,8 @@ void Turtle::setCurrentTexture() {
 
   case Animation::TAKE_DAMAGE:
     if (this->textures.count(Animation::TAKE_DAMAGE) == 0) {
-      this->textures[Animation::TAKE_DAMAGE] = LoadTexture(
-          "src/assets/art/combat/enemies/turtle/turtle-takedmg.png");
+      this->textures[Animation::TAKE_DAMAGE] =
+          LoadTexture("src/assets/art/combat/enemies/ghost/ghost-takedmg.png");
     }
 
     this->currentTexture = this->textures[Animation::TAKE_DAMAGE];
@@ -64,14 +65,14 @@ void Turtle::setCurrentTexture() {
   }
 }
 
-void Turtle::draw(Texture2D currentTexture) {
+void Ghost::draw(Texture2D currentTexture) {
   this->setCurrentTexture();
   Enemy::draw(this->currentTexture);
 }
 
-Turtle::~Turtle() {
+Ghost::~Ghost() {
   for (auto t : this->textures) {
     UnloadTexture(t.second);
   }
-  printf("turt dest\n");
+  printf("ghost dest\n");
 }
