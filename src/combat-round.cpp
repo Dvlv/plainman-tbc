@@ -52,13 +52,13 @@ CombatRound::getRoundEnemies(std::vector<Rectangle> *enemyPositions) {
     enemyTypes.push_back("ghost");
   }
 
+  // prevent 2 birds before lateRoundBoundary
+  // also prevents 2 ghosts or bird/ghost combo
+  bool restShouldBeWeaker = false;
+
   for (int i = 0; i < numEnemies; i++) {
     std::string enemyType = enemyTypes.at(randomChoice(enemyTypes.size()));
     int numStrongEnemies = 0;
-
-    // prevent 2 birds before lateRoundBoundary
-    // also prevents 2 ghosts or bird/ghost combo
-    bool restShouldBeWeaker = false;
 
     if (restShouldBeWeaker) {
       enemyType = "turtle";

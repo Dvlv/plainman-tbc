@@ -9,6 +9,8 @@ mkdir build
 
 ## TODO
 - [ ] Outline enemies
+- [ ] Cast effect on melee if atkelement
+- [ ] Allow AoE PUNCH attacks
 - [ ] Ally Partners
 - [ ] Enemy immunities
 - [ ] Difficulty Tweaks

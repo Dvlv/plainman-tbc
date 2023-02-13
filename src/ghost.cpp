@@ -11,7 +11,8 @@ Ghost::Ghost(Rectangle pos)
                        AttackElement::ICE),
                 Attack("Spook", "A scary noise", AttackType::SHOUT, 1, 0,
                        AttackElement::NONE),
-            }) {}
+            },
+            AttackElement::AIR, AttackElement::ELECTRIC) {}
 
 void Ghost::setCurrentTexture() {
 

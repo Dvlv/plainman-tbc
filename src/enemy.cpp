@@ -4,7 +4,9 @@
 #include <vector>
 
 Enemy::Enemy(Rectangle pos, std::string name, std::string description,
-             int health, int energy, int speed, std::vector<Attack> attacks) {
+             int health, int energy, int speed, std::vector<Attack> attacks,
+             AttackElement weakness, AttackElement resistance,
+             AttackElement immunity) {
   this->pos = pos;
   this->name = name;
   this->description = description;
@@ -20,18 +22,40 @@ Enemy::Enemy(Rectangle pos, std::string name, std::string description,
   this->startingPos = pos;
   this->meleeAnimationState = MeleeAnimationState::FORWARD;
 
+  this->weakness = weakness;
+  this->resistance = resistance;
+  this->immunity = immunity;
+
   this->animationFrameCount = 0;
   this->currentanimationFrame = 0;
   this->textures = std::map<Animation, Texture2D>();
 }
 
-void Enemy::takeDamage(int dmg) {
+void Enemy::takeDamage(int dmg, AttackElement element) {
+  dmg = this->damageCalc(dmg, element);
+
   if (dmg > 0) {
     this->currentAnimation = Animation::TAKE_DAMAGE;
     this->currentanimationFrame = 0;
 
     this->currentHealth -= dmg;
   }
+}
+
+int Enemy::damageCalc(int dmg, AttackElement element) {
+  if (element != AttackElement::NONE) {
+    if (element == this->weakness) {
+      dmg += 2;
+    } else if (element == this->resistance) {
+      dmg -= 2;
+    } else if (element == this->immunity) {
+      dmg = 0;
+    }
+  }
+
+  dmg = dmg < 0 ? 0 : dmg;
+
+  return dmg;
 }
 
 bool Enemy::isDead() { return this->currentHealth < 1; }

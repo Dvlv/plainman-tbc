@@ -1,6 +1,7 @@
 #include "headers/skilltree-state.h"
 #include "headers/attack.h"
 #include "headers/bard-skilltree.h"
+#include "headers/brawler-skilltree.h"
 #include "headers/mage-skilltree.h"
 #include "headers/necromancer-skilltree.h"
 #include "headers/skilltree-node.h"
@@ -24,6 +25,7 @@ SkillTreeState::SkillTreeState() {
       std::make_shared<Necromancer>(),
       std::make_shared<Bard>(),
       std::make_shared<Mage>(),
+      std::make_shared<Brawler>(),
   };
 }
 

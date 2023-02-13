@@ -40,8 +40,8 @@ void drawArrowOverEnemy(Rectangle pos) {
       Vector2{pos.x + pos.width - gap, pos.y - indicatorHeight - gap};
   Vector2 bottom = Vector2{pos.x + (pos.width / 2), pos.y - gap};
 
-  DrawTriangle(Vector2{topRight.x + 3, topRight.y - 3},
-               Vector2{topLeft.x - 3, topLeft.y - 3},
+  DrawTriangle(Vector2{topRight.x + 6, topRight.y - 3},
+               Vector2{topLeft.x - 6, topLeft.y - 3},
                Vector2{bottom.x, bottom.y + 3}, DARKGRAY);
   DrawTriangle(topRight, topLeft, bottom, LIGHTGRAY);
 }
@@ -49,6 +49,7 @@ void drawArrowOverEnemy(Rectangle pos) {
 void drawPlayerAttackMenu(std::shared_ptr<PlayerAttackMenu> pam,
                           std::shared_ptr<Enemy> enemy) {
   const int gap = 15;
+  const int gapX = 25;
   const int topX = 100;
   const int topY = GetScreenHeight() - gap - 200;
   const int atkMenuWidth = GetScreenWidth() - (topX * 2);
@@ -62,7 +63,7 @@ void drawPlayerAttackMenu(std::shared_ptr<PlayerAttackMenu> pam,
   DrawRectangleRec(pos, BEIGE);
 
   int nextTextPosY = topY + gap;
-  int nextTextPosX = topX + gap;
+  int nextTextPosX = topX + gapX;
 
   // Draw attack text
   const int maxAttacksPerColumn = 5; // actually shows 5, but 0 indexed

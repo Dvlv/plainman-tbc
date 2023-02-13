@@ -165,12 +165,13 @@ const void CombatState::postPlayerAttack() {
   // TODO could abstract this inner bit into a function
   if (selectedAttack->isAOE) {
     for (auto &enemy : this->enemies) {
-      enemy->takeDamage(selectedAttack->damage);
+      enemy->takeDamage(selectedAttack->damage, selectedAttack->atkElement);
 
       Rectangle dmgBubblePos = enemy->pos;
       dmgBubblePos.y -= 30;
-      this->damageBubbles.push_back(
-          DamageBubble(dmgBubblePos, selectedAttack->damage));
+      this->damageBubbles.push_back(DamageBubble(
+          dmgBubblePos, enemy->damageCalc(selectedAttack->damage,
+                                          selectedAttack->atkElement)));
 
       if (selectedAttack->atkType == AttackType::SHOUT) {
         if (!this->hasCachedCastEffects) {
@@ -184,14 +185,17 @@ const void CombatState::postPlayerAttack() {
     }
   } else {
     // single target attack
-    this->enemies[this->selectedEnemy]->takeDamage(selectedAttack->damage);
+    this->enemies[this->selectedEnemy]->takeDamage(selectedAttack->damage,
+                                                   selectedAttack->atkElement);
 
     // spawn damage bubble and cast effect if dmg > 0
     if (selectedAttack->damage > 0) {
       Rectangle dmgBubblePos = this->enemies[this->selectedEnemy]->pos;
       dmgBubblePos.y -= 30;
-      this->damageBubbles.push_back(
-          DamageBubble(dmgBubblePos, selectedAttack->damage));
+      this->damageBubbles.push_back(DamageBubble(
+          dmgBubblePos, this->enemies.at(this->selectedEnemy)
+                            ->damageCalc(selectedAttack->damage,
+                                         selectedAttack->atkElement)));
 
       if (selectedAttack->atkType == AttackType::SHOUT) {
         if (!this->hasCachedCastEffects) {

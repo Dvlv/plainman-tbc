@@ -13,6 +13,10 @@ private:
 
   std::vector<Attack> attacks;
 
+  AttackElement weakness;
+  AttackElement resistance;
+  AttackElement immunity;
+
   int currentHealth;
   int maxHealth;
 
@@ -36,7 +40,10 @@ private:
 
 public:
   Enemy(Rectangle pos, std::string name, std::string description, int health,
-        int energy, int speed, std::vector<Attack> attacks);
+        int energy, int speed, std::vector<Attack> attacks,
+        AttackElement weakness = AttackElement::NONE,
+        AttackElement resistance = AttackElement::NONE,
+        AttackElement immunity = AttackElement::NONE);
 
   std::string description;
   Rectangle pos;
@@ -52,7 +59,8 @@ public:
   void performAttack(Attack *atk, Rectangle targetBounds,
                      bool *animationPlaying, bool *doAttack);
   Attack *selectBestAttack();
-  void takeDamage(int dmg);
+  void takeDamage(int dmg, AttackElement element);
+  int damageCalc(int dmg, AttackElement element);
 
   void updateCurrentTextureFrame();
 

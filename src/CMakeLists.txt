@@ -19,6 +19,7 @@ SET (MY_HEADERS headers/combatstate.h
     headers/mage-skilltree.h
     headers/bard-skilltree.h
     headers/necromancer-skilltree.h
+    headers/brawler-skilltree.h
     headers/combat-round.h
     headers/upgrade-state.h
     headers/heal-bubble.h

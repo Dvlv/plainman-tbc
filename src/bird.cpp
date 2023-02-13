@@ -11,7 +11,9 @@ Bird::Bird(Rectangle pos)
                        AttackElement::ELECTRIC),
                 Attack("Kick", "An awkward kick", AttackType::PUNCH, 1, 0,
                        AttackElement::NONE),
-            }) {}
+            },
+            AttackElement::ELECTRIC, AttackElement::NONE,
+            AttackElement::EARTH) {}
 
 void Bird::setCurrentTexture() {
 
