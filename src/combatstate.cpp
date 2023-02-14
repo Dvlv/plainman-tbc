@@ -97,7 +97,8 @@ void CombatState::updatePlayerTurn() {
 
       this->performingAttack = true;
       this->animationPlaying = true;
-      this->player->performAttack(selectedAttack, Rectangle{0, 0, 0, 0},
+      this->player->performAttack(selectedAttack,
+                                  Rectangle{this->player->pos.x + 101, 0, 0, 0},
                                   &this->animationPlaying, &this->doAttack);
 
       return;
@@ -173,7 +174,8 @@ const void CombatState::postPlayerAttack() {
           dmgBubblePos, enemy->damageCalc(selectedAttack->damage,
                                           selectedAttack->atkElement)));
 
-      if (selectedAttack->atkType == AttackType::SHOUT) {
+      if (selectedAttack->atkType == AttackType::SHOUT ||
+          selectedAttack->atkElement != AttackElement::NONE) {
         if (!this->hasCachedCastEffects) {
           this->cacheCastEffects();
         }
@@ -197,7 +199,8 @@ const void CombatState::postPlayerAttack() {
                             ->damageCalc(selectedAttack->damage,
                                          selectedAttack->atkElement)));
 
-      if (selectedAttack->atkType == AttackType::SHOUT) {
+      if (selectedAttack->atkType == AttackType::SHOUT ||
+          selectedAttack->atkElement != AttackElement::NONE) {
         if (!this->hasCachedCastEffects) {
           this->cacheCastEffects();
         }
@@ -258,7 +261,7 @@ const void CombatState::postEnemyAttack() {
   this->damageBubbles.push_back(DamageBubble(dmgBubblePos, bestAtk->damage));
 
   // cast anim if cast
-  if (bestAtk->atkType == AttackType::SHOUT) {
+  if (bestAtk->atkType == AttackType::SHOUT || bestAtk->atkElement != NONE) {
     if (!this->hasCachedCastEffects) {
       this->cacheCastEffects();
     }

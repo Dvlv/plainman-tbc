@@ -9,17 +9,14 @@ mkdir build
 
 ## TODO
 - [ ] Outline enemies
-- [ ] Cast effect on melee if atkelement
-- [ ] Allow AoE PUNCH attacks
 - [ ] Ally Partners
-- [ ] Enemy immunities
 - [ ] Difficulty Tweaks
 - [ ] Proper lose condition
 - [ ] Menu state
 - [ ] How2play
 - [ ] 1 Continue
 - [ ] Draw Backgrounds
-    - [x] Combat  - **revisit - too noisy, shouldnt match the darkgreen of health stuff**
+    - [x] Combat
     - [ ] Upgrade
     - [ ] SkillTree
 - [ ] More enemy classes
@@ -35,6 +32,9 @@ mkdir build
 - [ ] Charge
 
 ## Done
+- [x] Enemy immunities
+- [x] Cast effect on melee if atkelement
+- [x] Allow AoE PUNCH attacks
 - [x] Transition anim between States, requires prevState in main
 - [x] Global texture handler with array of textures and returns an ID, then all unloaded on destroy
 - [x] Dont show enemy select or play damage anim on a pure-heal atk

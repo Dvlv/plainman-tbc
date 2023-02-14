@@ -47,7 +47,7 @@ public:
                                   "Thief Punch",
                                   "Steal HP from an enemy\n2 Damage\n2 Energy",
                                   AttackType::PUNCH, 2, 2, AttackElement::NONE,
-                                  true, 2),
+                                  false, 2),
                               2, 2),
                 SkillTreeNode(std::make_shared<Attack>(
                                   "Jumping Punch",
@@ -58,7 +58,7 @@ public:
                 SkillTreeNode(std::make_shared<Attack>(
                                   "Double-Fire Punch",
                                   "Punch with fire...twice\n4 Damage\n3 Energy",
-                                  AttackType::PUNCH, 4, 3, AttackElement::AIR),
+                                  AttackType::PUNCH, 4, 3, AttackElement::FIRE),
                               3, 3),
                 SkillTreeNode(
                     std::make_shared<Attack>("Super Punch",
@@ -74,7 +74,7 @@ public:
                                              "HP.\n4 Damage\n6 Energy",
                                              AttackType::PUNCH, 4, 6,
                                              AttackElement::NONE, true),
-                    3, 4),
+                    1, 1),
 
                 SkillTreeNode(std::make_shared<Attack>(
                                   "Eat Energy Bar", "Restore 5 HP and 5 Energy",
