@@ -10,7 +10,7 @@ class Necromancer : public SkillTree {
 public:
   Necromancer()
       : SkillTree(
-            "Necromancer", "Summons Allies and Saps\n Enemy HP",
+            "Necromancer", "Summons Allies and Saps Enemy HP",
             std::vector<SkillTreeNode>{
                 SkillTreeNode(std::make_shared<Attack>(
                                   "Zombie", "Summon a Zombie.\n1 Energy",

@@ -23,8 +23,6 @@ private:
   bool animationPlaying;
   bool doAttack;
   bool isPlayerTurn;
-  bool playerWon;
-  bool playerLost;
   int roundNumber;
 
   int currentlyAttackingEnemy;
@@ -44,6 +42,8 @@ public:
   CombatState(std::shared_ptr<PlayerCombatData> playerCombatData,
               int roundNumber);
 
+  bool playerWon;
+  bool playerLost;
   bool shouldQuit;
   std::shared_ptr<Player> player;
   std::shared_ptr<TextureStore> textureStore;

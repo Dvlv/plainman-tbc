@@ -25,6 +25,7 @@ SET (MY_HEADERS headers/combatstate.h
     headers/heal-bubble.h
     headers/texture-store.h
     headers/ghost.h
+    headers/menu-state.h
 )
 
 SET (MY_SOURCE combatstate.cpp
@@ -44,6 +45,7 @@ SET (MY_SOURCE combatstate.cpp
     heal-bubble.cpp
     texture-store.cpp
     ghost.cpp
+    menu-state.cpp
 )
 
 #TODO remove 

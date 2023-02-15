@@ -10,11 +10,10 @@ mkdir build
 ## TODO
 - [ ] Outline enemies
 - [ ] Ally Partners
-- [ ] Difficulty Tweaks
-- [ ] Proper lose condition
-- [ ] Menu state
-- [ ] How2play
-- [ ] 1 Continue
+- [x] Menu state
+    - [ ] How2play
+    - [ ] credits
+- [ ] Continue message and Game Over Message in main.cpp
 - [ ] Draw Backgrounds
     - [x] Combat
     - [ ] Upgrade
@@ -23,6 +22,10 @@ mkdir build
     - [x] Ghost
     - [ ] Skeleton
     - [ ] Frog
+- [ ] Difficulty Tweaks
+    - [ ] Make numbers bigger (hp, atk)
+    - [ ] Add Randomness in damage calcs 
+    - [ ] Randomness in enemy hp, dmg, energy
 
 ### Possible combat mechanics
 - [ ] Status
@@ -32,6 +35,8 @@ mkdir build
 - [ ] Charge
 
 ## Done
+- [x] Proper lose condition
+- [x] 1 Continue
 - [x] Enemy immunities
 - [x] Cast effect on melee if atkelement
 - [x] Allow AoE PUNCH attacks

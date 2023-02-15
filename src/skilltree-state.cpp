@@ -52,7 +52,7 @@ void SkillTreeState::drawTreePreview(int x, int y, int width, int height,
   DrawText(tree->className.c_str(), x + 10, y + 10, 30, BLACK);
 
   // description
-  DrawText(tree->description.c_str(), x + 10, y + 50, 20, BLACK);
+  DrawText(tree->description.c_str(), x + 10, y + 70, 20, BLACK);
 }
 
 void SkillTreeState::drawTree(int treeBgX, int y, int treeBgWidth, int height) {
@@ -176,6 +176,16 @@ void SkillTreeState::update() {
       if (this->highlightedOption < 0) {
         this->highlightedOption++;
       }
+    } else if (IsKeyPressed(KEY_DOWN)) {
+      this->highlightedOption += 2;
+      if (this->highlightedOption >= this->availableSkillTrees.size()) {
+        this->highlightedOption = this->availableSkillTrees.size() - 1;
+      }
+    } else if (IsKeyPressed(KEY_UP)) {
+      this->highlightedOption -= 2;
+      if (this->highlightedOption < 0) {
+        this->highlightedOption = 0;
+      }
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
@@ -258,23 +268,32 @@ void SkillTreeState::draw() {
   if (this->chosenSkillTree == nullptr) {
     // no tree chosen, draw choice of trees
     // TODO draw a title saying select a skill
-    const int cardWidth = ((GetScreenWidth() - (STS_GAP * 2)) -
-                           (STS_GAP * (this->availableSkillTrees.size() - 1))) /
-                          this->availableSkillTrees.size(); // 525
-    const int cardHeight = 200;
+    const int cardWidth = GetScreenWidth() / 2 - (STS_GAP * 2);
+    const int cardHeight = 300;
 
     int titleLen = MeasureText("Choose a Speciality", 30);
 
     DrawText("Choose a Speciality", (GetScreenWidth() / 2) - (titleLen / 2),
              STS_GAP, 30, BLACK);
 
+    int col = 0;
+    int row = 0;
     for (int i = 0; i < this->availableSkillTrees.size(); i++) {
-      const int cardX = STS_GAP + (i * (cardWidth + STS_GAP));
-      const int cardY = STS_GAP * 2 + 30; // title font size
+      if (i > 1 && i % 2 == 0) {
+        col++;
+        row = 0;
+      }
+
+      int cardX = STS_GAP + ((cardWidth + STS_GAP) * row);
+      int cardY = STS_GAP * 2 + 30; // title font size
+      if (col > 0) {
+        cardY += cardHeight + STS_GAP;
+      }
 
       this->drawTreePreview(cardX, cardY, cardWidth, cardHeight,
                             this->availableSkillTrees[i],
                             i == this->highlightedOption);
+      row++;
     }
 
     return; // end no tree chosen

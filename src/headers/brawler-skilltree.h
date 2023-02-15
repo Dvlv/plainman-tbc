@@ -60,21 +60,21 @@ public:
                                   "Punch with fire...twice\n4 Damage\n3 Energy",
                                   AttackType::PUNCH, 4, 3, AttackElement::FIRE),
                               3, 3),
-                SkillTreeNode(
-                    std::make_shared<Attack>("Super Punch",
-                                             "Very strong punch"
-                                             "HP.\n8 Damage\n6 Energy",
-                                             AttackType::PUNCH, 8, 6,
-                                             AttackElement::NONE, false),
-                    3, 4),
+                SkillTreeNode(std::make_shared<Attack>("Super Punch",
+                                                       "Very strong punch"
+                                                       "\n8 Damage\n6 Energy",
+                                                       AttackType::PUNCH, 8, 6,
+                                                       AttackElement::NONE,
+                                                       false),
+                              3, 4),
 
                 SkillTreeNode(
                     std::make_shared<Attack>("Punch-All",
                                              "Punch all enemies in one"
-                                             "HP.\n4 Damage\n6 Energy",
+                                             "\n4 Damage\n6 Energy",
                                              AttackType::PUNCH, 4, 6,
                                              AttackElement::NONE, true),
-                    1, 1),
+                    3, 4),
 
                 SkillTreeNode(std::make_shared<Attack>(
                                   "Eat Energy Bar", "Restore 5 HP and 5 Energy",

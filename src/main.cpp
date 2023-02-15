@@ -2,6 +2,7 @@
 #include "raylib.h"
 
 #include "headers/combatstate.h"
+#include "headers/menu-state.h"
 #include "headers/player.h"
 #include "headers/skilltree-state.h"
 #include <memory>
@@ -11,13 +12,16 @@ enum class GameState {
   COMBAT,
   SKILLTREE,
   UPGRADE,
+  MAIN_MENU,
 };
 
 void init();
 void update();
 void draw();
+void resetGame();
 
 int levelsComplete = 0;
+int deaths = 0;
 
 std::vector<Attack> playerAttacks{
     Attack("Punch", "A plain punch.\n1 Damage", AttackType::PUNCH, 1, 0),
@@ -25,7 +29,7 @@ std::vector<Attack> playerAttacks{
            1),
 };
 
-GameState gs = GameState::SKILLTREE;
+GameState gs = GameState::MAIN_MENU;
 
 std::shared_ptr<PlayerCombatData> playerCombatData =
     std::make_shared<PlayerCombatData>(PlayerCombatData{
@@ -37,6 +41,8 @@ std::unique_ptr<CombatState> cs =
 std::unique_ptr<SkillTreeState> sts = std::make_unique<SkillTreeState>();
 
 std::unique_ptr<UpgradeState> us = std::make_unique<UpgradeState>();
+
+std::unique_ptr<MenuState> ms = std::make_unique<MenuState>();
 
 // transitions between states
 bool playingTransition = false;
@@ -95,6 +101,9 @@ void draw() {
   } else if (gs == GameState::UPGRADE) {
     ClearBackground(DARKBLUE);
     us->draw();
+  } else if (gs == GameState::MAIN_MENU) {
+    ClearBackground(LIGHTGRAY);
+    ms->draw();
   }
 
   if (playingTransition && !stateEnding) {
@@ -130,8 +139,17 @@ void update() {
     if (!cs->shouldQuit) {
       cs->update();
     } else {
+      if (cs->playerLost) {
+        deaths++;
+        if (deaths > 1) {
+          // lose entirely, reset
+          resetGame();
+          return;
+        }
+      } else {
+        levelsComplete++;
+      }
       playerCombatData->skillPoints++;
-      levelsComplete++;
 
       // restore 50% of hp and energy
       playerCombatData->currentHealth =
@@ -216,7 +234,44 @@ void update() {
       gs = GameState::COMBAT;
       playingTransition = true;
     }
+  } else if (gs == GameState::MAIN_MENU) {
+    ms->update();
+
+    if (ms->isFinished) {
+      ms->isFinished = false;
+
+      gs = GameState::SKILLTREE;
+      playingTransition = true;
+    }
   }
+}
+
+void resetGame() {
+  // reset all variables which track progress to the
+  // same as they are at the top  of this file
+  // TODO draw something saying they lose 5ever and back to main menu
+
+  levelsComplete = 0;
+  deaths = 0;
+
+  playerAttacks = {
+      Attack("Punch", "A plain punch.\n1 Damage", AttackType::PUNCH, 1, 0),
+      Attack("Shout", "A plain shout.\n1 Damage\n1 Energy", AttackType::SHOUT,
+             1, 1),
+  };
+
+  gs = GameState::MAIN_MENU;
+
+  playerCombatData = std::make_shared<PlayerCombatData>(PlayerCombatData{
+      5, 3, 5, 3, std::make_shared<std::vector<Attack>>(playerAttacks), 0});
+
+  cs = std::make_unique<CombatState>(playerCombatData, levelsComplete);
+
+  sts = std::make_unique<SkillTreeState>();
+
+  us = std::make_unique<UpgradeState>();
+
+  ms = std::make_unique<MenuState>();
 }
 
 void init() {
