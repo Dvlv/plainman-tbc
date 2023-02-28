@@ -12,18 +12,18 @@ class CombatEntity {
     std::vector<Attack> attacks;
 
     // funcs
-    virtual void damageCalc(int damage, AttackElement attack);
+    virtual void damageCalc(int baseDamage, AttackElement attack);
     virtual void draw();
     virtual void drawEnergyBar();
     virtual void drawHealthBar();
     virtual void performAttack();
     virtual void takeDamage(int damage);
-    virtual void update();
     virtual void updateCurrentTextureFrame();
 
     virtual void setCurrentTexture() = 0;
+    virtual void update() = 0;
 
-  private:
+  protected:
     int currentHealth;
     int currentEnergy;
     int maxHealth;

@@ -6,9 +6,10 @@ class Attack {
   public:
     // vars
     AttackElement element;
-    int damage;
-    int energyCost;
+    AttackType type;
+    int power;
+    int cost;
 
     // funcs
-    Attack(AttackElement element, int damage, int energyCost);
+    Attack(AttackType type, int damage, int energyCost, AttackElement element);
 };

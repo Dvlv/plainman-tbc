@@ -5,16 +5,22 @@ set(CMAKE_CXX_STANDARD 20)
 SET (CMAKE_CXX_COMPILER "/usr/bin/clang++")
 
 SET (MY_HEADERS
-    src/headers/enums.h
-    src/headers/utils.h
     src/headers/attack.h
     src/headers/combat-entity.h
+    src/headers/combat-state.h
+    src/headers/enums.h
+    src/headers/player.h
+    src/headers/texture-cache.h
+    src/headers/utils.h
 )
 
 SET (MY_SOURCE 
-    src/main.cpp
     src/attack.cpp
     src/combat-entity.cpp
+    src/combat-state.cpp
+    src/main.cpp
+    src/player.cpp
+    src/texture-cache.cpp
 )
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
